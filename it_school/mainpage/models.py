@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from multiselectfield import MultiSelectField
 from django.core.validators import MaxValueValidator
+from django.utils import timezone
 
 
 class CustomUser(AbstractUser):
@@ -29,7 +30,7 @@ class Course(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=1)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     mentor = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
-    start_date = models.DateField(default=datetime.date.today())  # Поле даты начала курса
+    start_date = models.DateField(default=timezone.now)  # Поле даты начала курса
     start_time = models.TimeField(default=datetime.time(19, 0))  # Поле времени начала курса
     DAYS_OF_WEEK_CHOICES = [
         ('monday', 'Понедельник'),
@@ -42,17 +43,20 @@ class Course(models.Model):
     ]
     days_of_week = MultiSelectField(choices=DAYS_OF_WEEK_CHOICES,
                                     validators=[MaxValueValidator(7)], default='monday')  # Поле для выбора дней недели
-    lessons_count = models.IntegerField(default=0)
+    lessons_count = models.IntegerField(default=1)
 
     def save(self, *args, **kwargs):
         if not self.days_of_week:
-            self.days_of_week = ['wednesday', 'saturday' ]
+            self.days_of_week = ['wednesday', 'saturday']
         tmp_pk = self.pk
         is_created = not self.pk
         super().save(*args, **kwargs)
         if is_created:
             for i in range(self.lessons_count):
-                Lesson.objects.create(course_owner=self, title=f'{self.title}. Lesson {i + 1}')
+                count = len(self.days_of_week)
+                day = i % count
+                Lesson.objects.create(course_owner=self, title=f'{self.title}. {self.difficulty}. Lesson {i + 1}',
+                                      day_of_week=self.days_of_week[day])
 
     def __str__(self):
         return self.title
@@ -61,6 +65,16 @@ class Course(models.Model):
 class Lesson(models.Model):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lessons', null=False)
     title = models.CharField(max_length=255, default='Lesson 1', blank=True)
+    DAYS_OF_WEEK_CHOICES = [
+        ('monday', 'Понедельник'),
+        ('tuesday', 'Вторник'),
+        ('wednesday', 'Среда'),
+        ('thursday', 'Четверг'),
+        ('friday', 'Пятница'),
+        ('saturday', 'Суббота'),
+        ('sunday', 'Воскресенье'),
+    ]
+    day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
