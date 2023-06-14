@@ -46,7 +46,7 @@ class Course(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.days_of_week:
-            self.days_of_week = ['wednesday', 'friday']
+            self.days_of_week = ['wednesday', 'saturday' ]
         tmp_pk = self.pk
         is_created = not self.pk
         super().save(*args, **kwargs)
