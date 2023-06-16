@@ -53,7 +53,8 @@ class Course(models.Model):
                                     validators=[MaxValueValidator(7)],
                                     default='monday')  # Чекбоксы для выбора дней недели
     lessons_count = models.IntegerField(default=1)  # Кол-во уроков в курсе
-    image = models.ImageField()  # Обложка курса
+
+    # image = models.ImageField()  # Обложка курса
 
     def save(self, *args, **kwargs):
         """Функция срабатывает при сохранении курса
@@ -62,22 +63,34 @@ class Course(models.Model):
         """
         if not self.days_of_week:
             self.days_of_week = ['wednesday', 'saturday']
+
         is_created = not bool(self.pk)
         super().save(*args, **kwargs)
         lesson_count = Lesson.objects.filter(course_owner_id=self.pk).count()
 
         if is_created:
+            next_date = self.start_date
             for i in range(self.lessons_count):
                 count = len(self.days_of_week)
                 day = i % count
+
+                while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
+                    next_date += datetime.timedelta(days=1)
+
                 Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
-                                      day_of_week=self.days_of_week[day], start_date=self.start_date,
+                                      day_of_week=self.days_of_week[day], start_date=next_date.isoformat(),
                                       start_time=self.start_time)
         elif lesson_count < self.lessons_count:
+
+            last_lesson = Lesson.objects.filter(course_owner=self).order_by('-pk').first()
+            next_date = last_lesson.start_date
+
             for i in range(lesson_count, self.lessons_count):
                 count = len(self.days_of_week)
                 day = i % count
+                while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
+                    next_date += datetime.timedelta(days=1)
                 Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
                                       day_of_week=self.days_of_week[day], start_date=self.start_date,
@@ -85,8 +98,14 @@ class Course(models.Model):
 
         elif lesson_count > self.lessons_count:
             for i in range(self.lessons_count, lesson_count):
-                max_pk = Lesson.objects.filter(course_owner=self).aggregate(max_pk=models.Max('pk'))['max_pk']
-                Lesson.objects.filter(pk=max_pk).delete()
+                last_lesson = Lesson.objects.filter(course_owner=self).order_by('-pk').first()
+                if last_lesson:
+                    last_lesson.delete()
+
+    @staticmethod
+    def get_weekday_index(weekday):
+        return {'monday': 0, 'tuesday': 1, 'wednesday': 2, 'thursday': 3, 'friday': 4, 'saturday': 5, 'sunday': 6}[
+            weekday]
 
     def __str__(self):
         return self.title
