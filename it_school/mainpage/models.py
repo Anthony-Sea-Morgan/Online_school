@@ -19,13 +19,13 @@ DAYS_OF_WEEK_CHOICES = [
 
 
 class CustomUser(AbstractUser):
-    price = models.DecimalField(max_digits=6, decimal_places=2, default=0)  # кошелёк
-    is_student = models.BooleanField(default=True)  # является студентом
-    is_mentor = models.BooleanField(default=not is_student)  # является ментором
+    wallet = models.DecimalField(max_digits=6, decimal_places=2, default=0)  # кошелёк
+    is_student = models.BooleanField(default=True)  # чекбокс является ли студентом
+    is_mentor = models.BooleanField(default=not is_student)  # чекбокс является ли ментором
     courses = models.ManyToManyField('Course', blank=True)  # список курсов к которому у порльзователя имеется доступ
-    groups = models.ManyToManyField('auth.Group', blank=True, related_name='customuser_set')  #
+    groups = models.ManyToManyField('auth.Group', blank=True, related_name='customuser_set')
     user_permissions = models.ManyToManyField('auth.Permission', blank=True, related_name='customuser_set')
-    phone_number = PhoneNumberField(null=False, blank=False, unique=True)
+    phone_number = PhoneNumberField(null=False, blank=False, unique=True)  # телефонный номер с проверкой
 
     def __str__(self):
         return self.username
@@ -36,24 +36,30 @@ class CustomUser(AbstractUser):
 
 
 class Course(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField()
+    title = models.CharField(max_length=100)  # Тема курса
+    description = models.TextField()  # Описание
     DIFFICULTY_CHOICES = [
         ('Beginner', 'Начинающий'),
         ('Advanced', 'Продвинутый'),
     ]
-    difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES)
-    rating = models.DecimalField(max_digits=3, decimal_places=1)
-    price = models.DecimalField(max_digits=6, decimal_places=2)
-    mentor = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
+    difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES)  # Сложность
+    rating = models.DecimalField(max_digits=3, decimal_places=1)  # Рейтинг(оценка) курса
+    price = models.DecimalField(max_digits=6, decimal_places=2)  # Стоимость курса
+    mentor = models.ForeignKey('CustomUser', on_delete=models.CASCADE)  # Ведущий ментор курса
     start_date = models.DateField(default=timezone.now)  # Поле даты начала курса
     start_time = models.TimeField(default=datetime.time(19, 0))  # Поле времени начала курса
 
     days_of_week = MultiSelectField(choices=DAYS_OF_WEEK_CHOICES,
-                                    validators=[MaxValueValidator(7)], default='monday')  # Поле для выбора дней недели
-    lessons_count = models.IntegerField(default=1)
+                                    validators=[MaxValueValidator(7)],
+                                    default='monday')  # Чекбоксы для выбора дней недели
+    lessons_count = models.IntegerField(default=1)  # Кол-во уроков в курсе
+    image = models.ImageField()  # Обложка курса
 
     def save(self, *args, **kwargs):
+        """Функция срабатывает при сохранении курса
+        В функции происходит создание Занятий, согласно их количеству.
+        При редактировании количества занятий, либо добавляются новые, либо удаляются последние.
+        """
         if not self.days_of_week:
             self.days_of_week = ['wednesday', 'saturday']
         is_created = not bool(self.pk)
@@ -66,14 +72,16 @@ class Course(models.Model):
                 day = i % count
                 Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
-                                      day_of_week=self.days_of_week[day])
+                                      day_of_week=self.days_of_week[day], start_date=self.start_date,
+                                      start_time=self.start_time)
         elif lesson_count < self.lessons_count:
             for i in range(lesson_count, self.lessons_count):
                 count = len(self.days_of_week)
                 day = i % count
                 Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
-                                      day_of_week=self.days_of_week[day])
+                                      day_of_week=self.days_of_week[day], start_date=self.start_date,
+                                      start_time=self.start_time)
 
         elif lesson_count > self.lessons_count:
             for i in range(self.lessons_count, lesson_count):
@@ -89,12 +97,16 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
-    course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lesson_course', null=False)
+    course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lesson_course',
+                                     null=False)  # Курс, к которому принадлежит занятие
     mentor_owner = models.ForeignKey('CustomUser', on_delete=models.CASCADE, related_name='lesson_mentor', null=False,
-                                     default=1)
 
-    title = models.CharField(max_length=255, default='Lesson 1', blank=True)
-    day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')
+                                     default=1)  # Ментор, который проводит занятие
+
+    title = models.CharField(max_length=255, default='Lesson 1', blank=True)  # Название занятия
+    day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')  # день недели
+    start_date = models.DateField(default=timezone.now)  # Поле даты начала занятия
+    start_time = models.TimeField(default=datetime.time(19, 0))  # Поле времени начала занятия
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
