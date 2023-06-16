@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from multiselectfield import MultiSelectField
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
+
 from phonenumber_field.modelfields import PhoneNumberField
 
 DAYS_OF_WEEK_CHOICES = [
@@ -16,6 +17,7 @@ DAYS_OF_WEEK_CHOICES = [
     ('saturday', 'суббота'),
     ('sunday', 'воскресенье'),
 ]
+
 
 
 class CustomUser(AbstractUser):
@@ -42,19 +44,23 @@ class Course(models.Model):
         ('Beginner', 'Начинающий'),
         ('Advanced', 'Продвинутый'),
     ]
+
     difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES)  # Сложность
     rating = models.DecimalField(max_digits=3, decimal_places=1)  # Рейтинг(оценка) курса
     price = models.DecimalField(max_digits=6, decimal_places=2)  # Стоимость курса
     mentor = models.ForeignKey('CustomUser', on_delete=models.CASCADE)  # Ведущий ментор курса
+
     start_date = models.DateField(default=timezone.now)  # Поле даты начала курса
     start_time = models.TimeField(default=datetime.time(19, 0))  # Поле времени начала курса
 
     days_of_week = MultiSelectField(choices=DAYS_OF_WEEK_CHOICES,
+
                                     validators=[MaxValueValidator(7)],
                                     default='monday')  # Чекбоксы для выбора дней недели
     lessons_count = models.IntegerField(default=1)  # Кол-во уроков в курсе
 
     # image = models.ImageField()  # Обложка курса
+
 
     def save(self, *args, **kwargs):
         """Функция срабатывает при сохранении курса
@@ -64,7 +70,9 @@ class Course(models.Model):
         if not self.days_of_week:
             self.days_of_week = ['wednesday', 'saturday']
 
+
         is_created = not bool(self.pk)
+
         super().save(*args, **kwargs)
         lesson_count = Lesson.objects.filter(course_owner_id=self.pk).count()
 
@@ -73,6 +81,7 @@ class Course(models.Model):
             for i in range(self.lessons_count):
                 count = len(self.days_of_week)
                 day = i % count
+
 
                 while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
                     next_date += datetime.timedelta(days=1)
@@ -107,6 +116,7 @@ class Course(models.Model):
         return {'monday': 0, 'tuesday': 1, 'wednesday': 2, 'thursday': 3, 'friday': 4, 'saturday': 5, 'sunday': 6}[
             weekday]
 
+
     def __str__(self):
         return self.title
 
@@ -116,6 +126,7 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
+
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lesson_course',
                                      null=False)  # Курс, к которому принадлежит занятие
     mentor_owner = models.ForeignKey('CustomUser', on_delete=models.CASCADE, related_name='lesson_mentor', null=False,
@@ -126,6 +137,7 @@ class Lesson(models.Model):
     day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')  # день недели
     start_date = models.DateField(default=timezone.now)  # Поле даты начала занятия
     start_time = models.TimeField(default=datetime.time(19, 0))  # Поле времени начала занятия
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

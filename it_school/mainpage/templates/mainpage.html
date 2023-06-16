@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block page_label %}
+{{ title }}
+{% endblock %}
+
+{% block header %}
+{% include "header.html" %}
+{% endblock %}
+
+{% block content %}
+{% include "courses.html" %}
+{% endblock %}
+
+{% block script %}
+<script src="/static/dist/js/script.js"></script>
+{% endblock %}
