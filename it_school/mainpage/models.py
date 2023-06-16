@@ -59,28 +59,26 @@ class Course(models.Model):
         is_created = not bool(self.pk)
         super().save(*args, **kwargs)
         lesson_count = Lesson.objects.filter(course_owner_id=self.pk).count()
-        max_pk = Lesson.objects.filter(course_owner=self).aggregate(max_pk=models.Max('pk'))['max_pk']
-        initial_i = max_pk + 1 if max_pk is not None else 0
+
         if is_created:
             for i in range(self.lessons_count):
                 count = len(self.days_of_week)
                 day = i % count
-                Lesson.objects.create(pk=initial_i, course_owner=self, mentor_owner=self.mentor,
+                Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
                                       day_of_week=self.days_of_week[day])
-                initial_i += 1
         elif lesson_count < self.lessons_count:
             for i in range(lesson_count, self.lessons_count):
                 count = len(self.days_of_week)
                 day = i % count
-                Lesson.objects.create(pk=initial_i, course_owner=self, mentor_owner=self.mentor,
+                Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
                                       day_of_week=self.days_of_week[day])
-                initial_i += 1
+
         elif lesson_count > self.lessons_count:
             for i in range(self.lessons_count, lesson_count):
-                Lesson.objects.filter(pk=initial_i - 1).delete()
-                initial_i -= 1
+                max_pk = Lesson.objects.filter(course_owner=self).aggregate(max_pk=models.Max('pk'))['max_pk']
+                Lesson.objects.filter(pk=max_pk).delete()
 
     def __str__(self):
         return self.title
