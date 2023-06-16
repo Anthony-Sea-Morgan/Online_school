@@ -1,0 +1,13 @@
+<div class="blank-global-container" id="reg-blank-login" data-action="login" style="display: none; backdrop-filter: url(filters.svg#filter) blur(4px) saturate(150%) brightness(60%); ">
+    <div class="blank-decor" style="background-image: url('/static/dist/img/body_bck/loginBlank.jpg'); width: 30%; box-shadow: 0px 0px 1px 1px #1a5852;">
+<div class="blank-input login">
+<h1>Login</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p>Are you a new member? Join us now</p><p class="header"><a href=""><b>Sing up</b></a></p>
+    <button type="submit" class="form-btn">Login in</button>
+</form>
+</div>
+</div>
+</div>

@@ -1,0 +1,33 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'DINN-Light';
+  font-size: 20px;
+  color: aliceblue;
+  overflow: hidden;
+  /*background: linear-gradient(to top, #3c3c3c, #2c2c2c#1e5058)*/
+}
+
+body {
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background: linear-gradient(to top, #F4ECE1, #F4ECE1);/*#2c2c2c#1e5058#2c2823);*/
+  background-size: cover;
+}
+.ib{display: inline-block;}
+.jc-c{justify-content: center;}
+.va{vertical-align: top; position: relative;}
+.ws-nw{white-space:nowrap;}
+
+.white-space{
+width: 100%;
+height: 0px;
+position: relative;
+}

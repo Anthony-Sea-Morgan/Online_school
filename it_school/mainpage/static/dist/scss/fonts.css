@@ -1,0 +1,58 @@
+@include font("Jost", "Jost-Bold", "700", "normal");
+@include font("Jost", "Jost-Medium", "400", "normal");
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,200&display=swap');
+
+@font-face {
+  font-family: "Jost-Bold";
+  font-display: swap;
+  src: url("../fonts/Jost-Bold.woff") format("woff"), url("../fonts/Jost-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jost-Medium";
+  font-display: swap;
+  src: url("../fonts/Jost-Medium.woff") format("woff"), url("../fonts/Jost-Medium.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Avenir-Black";
+  font-display: swap;
+  src: url("../fonts/AvenirLTStd-Black.woff") format("woff"), url("../fonts/AvenirLTStd-Black.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Avenir-Roman";
+  font-display: swap;
+  src: url("../fonts/AvenirLTStd-Roman.woff") format("woff"), url("../fonts/AvenirLTStd-Roman.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Avenir-Book";
+  font-display: swap;
+  src: url("../fonts/AvenirLTStd-Book.woff") format("woff"), url("../fonts/AvenirLTStd-Book.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DINN-Light";
+  font-display: swap;
+  src: url("../fonts/DINNextCYR-Light.woff") format("woff"), url("../fonts/DINNextCYR-Light.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roboto';
+  font-display: swap;
+  src: url("../fonts/AvenirLTStd-Black.woff") format("woff"), url("https://fonts.googleapis.com/css?family=Roboto") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}

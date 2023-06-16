@@ -16,13 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import path, include, re_path
+from django.conf import settings
+from django.conf.urls.static import static
+from mainpage.views import *
 
 from django.urls import path
 from registration.views import UserRegistrationView, RegistrationView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
     path('register/', UserRegistrationView.as_view(), name='user-registration'),
     path('registration/', RegistrationView.as_view(), name='registration'),
-    ]
+    path('', include('mainpage.urls')),
+]
 
