@@ -1,0 +1,27 @@
+{% extends 'index/index.html' %}
+{% load static %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+{% block style%}
+<link rel="stylesheet" href="{% static 'dist/scss/create.css'%}">
+{% endblock%}
+
+{% block content %}
+<div class="blank-global-container">
+<div class="blank-decor">
+<div class="blank-input register">
+<div id="HookWood" data-action="home" ><div><b style="color: #44dbcc; font-size: 26px;">  SC2</b>    units  </div></div>
+    <h1>Registration</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="form-btn">Submit</button>
+    </form>
+</div></div></div>
+{% endblock %}
+{% block script %}
+<script src="/static/dist/js/bck.js"></script>
+<!--<script src="/static/dist/js/regBlankChanger.js"></script>-->
+{% endblock %}
