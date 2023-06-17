@@ -1,4 +1,4 @@
-from .models import  CustomUser, Course, Lesson
+from .models import  CustomUser, Course, Lesson, TECHNOLOGIES
 from django.forms import model_to_dict
 from django.shortcuts import render, redirect
 import os
@@ -17,6 +17,9 @@ from django.contrib.auth import get_user_model
 @csrf_protect
 def index(request):
     course_object = Course.objects.all()
+    for i in course_object:
+        i.img = str(i.img)[5:]
+        i.imgTech = str(i.tech_img)[5:]
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -32,6 +35,8 @@ def index(request):
         'title': 'Online school',
         'page_label': 'Главная страница',
         'courses': course_object,
+        'technology': ['Все технологии']+TECHNOLOGIES ,
+        'difficulty': ['Любая сложность', 'Начинающий','Продвинутый'],
         'form': form,
     }
     template = 'mainpage.html'

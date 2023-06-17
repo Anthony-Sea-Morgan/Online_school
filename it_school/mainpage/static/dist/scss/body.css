@@ -31,3 +31,7 @@ width: 100%;
 height: 0px;
 position: relative;
 }
+a {
+text-decoration: none;
+color: black;
+}
