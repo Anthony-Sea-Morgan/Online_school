@@ -139,4 +139,4 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-AUTH_USER_MODEL = 'registration.User'
+AUTH_USER_MODEL = 'registration.CustomUser'

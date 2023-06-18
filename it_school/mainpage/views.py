@@ -1,4 +1,5 @@
-from .models import  CustomUser, Course, Lesson, TECHNOLOGIES
+from .models import Course, Lesson, TECHNOLOGIES
+from registration.models import CustomUser
 from django.forms import model_to_dict
 from django.shortcuts import render, redirect
 import os
@@ -14,6 +15,8 @@ from django.http import HttpResponse
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import get_user_model
+
+
 @csrf_protect
 def index(request):
     course_object = Course.objects.all()
@@ -29,14 +32,12 @@ def index(request):
     else:
         form = AuthenticationForm()
 
-
-
     data = {
         'title': 'Online school',
         'page_label': 'Главная страница',
         'courses': course_object,
-        'technology': ['Все технологии']+TECHNOLOGIES ,
-        'difficulty': ['Любая сложность', 'Начинающий','Продвинутый'],
+        'technology': ['Все технологии'] + TECHNOLOGIES,
+        'difficulty': ['Любая сложность', 'Начинающий', 'Продвинутый'],
         'form': form,
     }
     template = 'mainpage.html'
