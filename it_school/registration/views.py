@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserSerializer
-from .models import User
+from .models import CustomUser
 from django.shortcuts import render, redirect
 from django.views import View
 from .forms import RegistrationForm
@@ -13,7 +13,7 @@ from .serializers import UserSerializer
 
 
 class UserRegistrationView(generics.CreateAPIView):
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
 
