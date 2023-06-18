@@ -19,6 +19,7 @@ from django.urls import path
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import include
 from mainpage.views import *
 
 from django.urls import path
@@ -30,5 +31,9 @@ urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name='user-registration'),
     path('registration/', RegistrationView.as_view(), name='registration'),
     path('', include('mainpage.urls')),
+    path('summernote/', include('django_summernote.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

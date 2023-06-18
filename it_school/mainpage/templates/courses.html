@@ -1,31 +1,31 @@
 <div class="courses-base">
     <div class="courses-filter-wrapper">
-           <select class="form__input" onchange="frChange()">
-   <option value="Al">Все технологии</option>
-   <option value="Py">Python</option>
-   <option value="Cp">C++</option>
-   <option value="Ja">Java</option>
-   <option value="Cs">C#</option>
-   <option value="Pa">Pascal</option>
-              </select>
-        <select class="form__input" onchange="frChange()">
-   <option value="AD">Любая сложность</option>
-   <option value="St">Начальная</option>
-   <option value="Pr">Продвинутая</option>
+           <select class="form__input" id="technology-filter">
+
+   {% for tech in technology %}
+    <option value="{{ tech }}">{{ tech }}</option>
+  {% endfor %}
+                 </select>
+        <select class="form__input" id="difficulty-filter">
+   {% for diffic in difficulty %}
+    <option value="{{ diffic }}">{{ diffic }}</option>
+  {% endfor %}
               </select>
 
     </div>
     <div class="courses-list-wrapper jc-c">
     <div class="courses-list-align">
         {% for x in courses %}
-    <div class="courses-unit-wrapper ib va">
+    <div class="courses-unit-wrapper ib va" data-technology="{{ x.technologies }}" data-difficulty="{{ x.difficulty }}">
+        <div class="courses-unit-texture">
         <div class="courses-unit-rating ws-nw va">{{ x.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="" style="width:20px;height:15px;"></div>
         <div class="courses-unit-title"><h2>{{ x.title }}</h2></div>
-        <div class="courses-unit-a"><a href="#">(Узнать о курсе)</a></div>
+        <div class="courses-unit-a"><a href="#">Подробнее→ </a></div>
         <div class="courses-unit-difficulty">{{ x.difficulty }}</div>
         <div class="courses-unit-shortdes">{{ x.description }}</div>
         <div class="courses-unit-price">{{ x.price }}$</div>
         <div class="courses-unit-dos">Старт занятий с:<br> {{ x.start_date }}</div>
+            </div>
     </div>
         {% endfor %}
         </div>

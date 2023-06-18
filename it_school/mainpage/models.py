@@ -5,7 +5,8 @@ from django.contrib.auth.models import AbstractUser
 from multiselectfield import MultiSelectField
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
-
+from .fields import WEBPField
+import uuid
 from phonenumber_field.modelfields import PhoneNumberField
 
 DAYS_OF_WEEK_CHOICES = [
@@ -17,6 +18,17 @@ DAYS_OF_WEEK_CHOICES = [
     ('saturday', 'суббота'),
     ('sunday', 'воскресенье'),
 ]
+TECHNOLOGIES =  ['Python', 'C++', 'Java', 'C#', 'Pascal']
+TECHNOLOGY_CHOICES = [(tech, tech) for tech in TECHNOLOGIES]
+DIFFICULTY_CHOICES = [
+    ('Начинающий', 'Beginner'),
+    ('Продвинутый', 'Advanced'),
+]
+
+def image_folder_Course(instance, filename):
+    return 'mainpage/static/dist/img/Models/Course/CourseIcons/{}.webp'.format(uuid.uuid4().hex)
+def image_folder_Technology(instance, filename):
+    return 'mainpage/static/dist/img/Models/Course/TechIcons/{}.webp'.format(uuid.uuid4().hex)
 
 
 
@@ -39,25 +51,36 @@ class CustomUser(AbstractUser):
 
 class Course(models.Model):
     title = models.CharField(max_length=100)  # Тема курса
-    description = models.TextField()  # Описание
-    DIFFICULTY_CHOICES = [
-        ('Beginner', 'Начинающий'),
-        ('Advanced', 'Продвинутый'),
-    ]
+    description = models.TextField('Полное описание')  # Описание
+    short_des = models.TextField('Краткое описание', default='')
 
-    difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES)  # Сложность
-    rating = models.DecimalField(max_digits=3, decimal_places=1)  # Рейтинг(оценка) курса
-    price = models.DecimalField(max_digits=6, decimal_places=2)  # Стоимость курса
+
+    difficulty = models.CharField('Сложность курса',max_length=15, choices=DIFFICULTY_CHOICES)  # Сложность
+    rating = models.DecimalField('Рейтинг курса',max_digits=3, decimal_places=1)  # Рейтинг(оценка) курса
+    price = models.DecimalField('Стоимость курса',max_digits=6, decimal_places=2)  # Стоимость курса
     mentor = models.ForeignKey('CustomUser', on_delete=models.CASCADE)  # Ведущий ментор курса
+    start_date = models.DateField('Дата начала курса',default=timezone.now)  # Поле даты начала курса
+    start_time = models.TimeField('Время начала курса',default=datetime.time(19, 0))  # Поле времени начала курса
 
-    start_date = models.DateField(default=timezone.now)  # Поле даты начала курса
-    start_time = models.TimeField(default=datetime.time(19, 0))  # Поле времени начала курса
-
-    days_of_week = MultiSelectField(choices=DAYS_OF_WEEK_CHOICES,
+    days_of_week = MultiSelectField('Дни недели занятий',choices=DAYS_OF_WEEK_CHOICES,
 
                                     validators=[MaxValueValidator(7)],
                                     default='monday')  # Чекбоксы для выбора дней недели
+    technologies = MultiSelectField('Применяемы языки',choices=TECHNOLOGY_CHOICES,
+
+                                    validators=[MaxValueValidator(5)],
+                                    default='Python')  # Чекбоксы для выбора дней недели
     lessons_count = models.IntegerField(default=1)  # Кол-во уроков в курсе
+    img = WEBPField( # изображение курса
+        verbose_name=('Изображение курса'),
+        upload_to=image_folder_Course,
+        default='mainpage/static/dist/img/Models/no_image_big.png',
+    )
+    tech_img = WEBPField( # изображение языка
+        verbose_name=('Изображение языка'),
+        upload_to=image_folder_Technology,
+        default='mainpage/static/dist/img/Models/no_image_big.png',
+    )
 
     # image = models.ImageField()  # Обложка курса
 
