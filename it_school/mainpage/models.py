@@ -105,7 +105,7 @@ class Course(models.Model):
                     next_date += datetime.timedelta(days=1)
                 Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
-                                      day_of_week=self.days_of_week[day], start_date=next_date,
+                                      day_of_week=self.days_of_week[day], start_date=self.start_date,
                                       start_time=self.start_time)
 
         elif lesson_count > self.lessons_count:
