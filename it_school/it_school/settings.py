@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import datetime, timedelta
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     'mainpage',
     'rest_framework',
     'registration',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -129,14 +132,24 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
 
-SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('Bearer',),
+# Добавьте следующие настройки JWT в конец файла settings.py
+from datetime import timedelta
+
+SIMPLIFIED_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
+
 
 AUTH_USER_MODEL = 'registration.CustomUser'
