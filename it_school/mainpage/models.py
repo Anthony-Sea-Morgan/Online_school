@@ -1,16 +1,16 @@
 import datetime
-
+import uuid
+import logging
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from multiselectfield import MultiSelectField
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
 from .fields import WEBPField
-import uuid
-
 from django.db import models
 from registration.models import CustomUser
 from django.contrib.auth.models import Group
+from django.contrib import admin
 
 DAYS_OF_WEEK_CHOICES = [
     ('monday', 'понедельник'),
@@ -21,12 +21,13 @@ DAYS_OF_WEEK_CHOICES = [
     ('saturday', 'суббота'),
     ('sunday', 'воскресенье'),
 ]
-TECHNOLOGIES = ['Python', 'C++', 'Java', 'C#', 'Pascal']
+TECHNOLOGIES = ['Python', 'C++', 'Java', 'C#', 'Pascal', 'Frontend']
 TECHNOLOGY_CHOICES = [(tech, tech) for tech in TECHNOLOGIES]
 DIFFICULTY_CHOICES = [
     ('Начинающий', 'Beginner'),
     ('Продвинутый', 'Advanced'),
 ]
+logger = logging.getLogger(__name__)
 
 
 def image_folder_Course(instance, filename):
@@ -39,19 +40,35 @@ def image_folder_Technology(instance, filename):
 
 @receiver(m2m_changed, sender=CustomUser.courses.through)
 def handle_m2m_changed(sender, instance, action, reverse, model, pk_set, **kwargs):
+    """
+    Функция выполняется когда пользователю добавляется курс
+    :param sender: источник сигнала
+    :param instance: конкретный пользователь
+    :param action: действие  - добавление связей
+    :param reverse: обратная связь
+    :param model: модель с которой связывают
+    :param pk_set: множество ключей с колторыми связывают
+    :param kwargs: прочие параметры
+    :return: нет
+    """
     if action == 'post_add':
         # Обработка добавления курса
         for pk in pk_set:
             course = model.objects.get(pk=pk)
-            # Выполнить нужные действия после добавления курса
-            print(f"Пользователь {instance.username} записался на курс {course.title}")
+            try:
+                group = CustomGroup.objects.get(course_owner=pk)
+                # Добавить в группу пользователя
+                group.users.add(instance)
+                print(f'Пользователь {instance.username} записался на курс {course.title} в группу {group.name}')
+            except Exception as e:
+                print(f'Не найдена группа для курса {str(e)}')
     elif action == 'post_remove':
         # Обработка удаления курса
         for pk in pk_set:
             course = model.objects.get(pk=pk)
             # Выполнить нужные действия после удаления курса
             if course is not None:
-                print(f"Пользователь {instance.username} отписался с курса {course.title}")
+                print(f'Пользователь {instance.username} отписался с курса {course.title}')
 
 
 class Course(models.Model):
@@ -101,7 +118,7 @@ class Course(models.Model):
         lesson_count = Lesson.objects.filter(course_owner_id=self.pk).count()
 
         if is_created:
-
+            CustomGroup.objects.create(course_owner=self, name=f'{self.title}.{self.difficulty}.Группа.')
             next_date = self.start_date
             for i in range(self.lessons_count):
                 count = len(self.days_of_week)
@@ -180,10 +197,28 @@ class CustomGroup(Group):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='group_course',
                                      null=True)  # Курс, к которому принадлежит группа
     description = models.TextField(blank=True)
+    users = models.ManyToManyField('registration.CustomUser', related_name='custom_groups')
 
     class Meta:
         verbose_name = 'Группа'
         verbose_name_plural = 'Группы'
+
+
+class CustomGroupAdmin(admin.ModelAdmin):
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.prefetch_related('users')  # Включаем связанных пользователей (это оптимизация запроса)
+        return queryset
+
+    def get_users_list(self, obj):
+        return ", ".join(user.username for user in obj.users.all())
+
+    get_users_list.short_description = 'Пользователи'
+
+    def users_list(self, obj):
+        return self.get_users_list(obj)
+
+    list_display = ['name', 'users_list']
 
 
 class Review(models.Model):

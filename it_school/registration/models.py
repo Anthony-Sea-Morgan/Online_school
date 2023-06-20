@@ -11,7 +11,7 @@ class CustomUser(AbstractUser):
     is_mentor = models.BooleanField(default=not is_student)  # чекбокс является ли ментором
     courses = models.ManyToManyField('mainpage.Course', blank=True,
                                      default=[])  # список курсов к которому у порльзователя имеется доступ
-    groups = models.ManyToManyField('auth.Group', blank=True, related_name='customuser_set')
+    groups = models.ManyToManyField('mainpage.CustomGroup', blank=True, related_name='customuser_set')
     user_permissions = models.ManyToManyField('auth.Permission', blank=True, related_name='customuser_set')
     phone_number = PhoneNumberField(null=False, blank=False, unique=True)  # телефонный номер с проверкой
     username = models.CharField(max_length=150, unique=True)
