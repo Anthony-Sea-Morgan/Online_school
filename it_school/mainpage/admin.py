@@ -14,7 +14,7 @@ class PostAdmin(SummernoteModelAdmin):
 admin.site.register(Course, PostAdmin)
 admin.site.register(Lesson)
 admin.site.register(CustomUser)
-admin.site.register(CustomGroup)
+#admin.site.register(CustomGroup)
+admin.site.register(CustomGroup, CustomGroupAdmin)
 admin.site.unregister(Group)
-
 admin.site.register(Review)
