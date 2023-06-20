@@ -2,6 +2,7 @@
 @import url("header.css");
 @import url("fonts.css");
 @import url("courses.css");
+@import url("course-detail.css");
 
 [type="selectable"] {
   background-color: cyan;

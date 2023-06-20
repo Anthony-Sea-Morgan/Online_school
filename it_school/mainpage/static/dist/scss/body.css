@@ -22,6 +22,8 @@ body {
   background-size: cover;
 }
 .ib{display: inline-block;}
+.db{display: block;}
+.df{display: flex;}
 .jc-c{justify-content: center;}
 .va{vertical-align: top; position: relative;}
 .ws-nw{white-space:nowrap;}
@@ -34,4 +36,13 @@ position: relative;
 a {
 text-decoration: none;
 color: black;
+}
+.icn{
+width:20px;height:15px;
+}
+b{
+text-decoration: underline;
+text-decoration-color: #b9a12d;
+ text-decoration-offset: 0.2em;
+font-weight: bold;
 }
