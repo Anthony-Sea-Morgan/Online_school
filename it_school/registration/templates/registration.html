@@ -1,14 +1,109 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Регистрация</title>
+  <title>User Registration</title>
+  <style>
+    body {
+      background-color: #f9f3e9;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #dddddd;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #333333;
+      color: #ffffff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #555555;
+    }
+
+    .error-message {
+      color: #ff0000;
+      margin-top: 5px;
+    }
+
+    .phone-label {
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .phone-input {
+      display: inline-block;
+      width: 80%;
+    }
+  </style>
 </head>
 <body>
-    <h1>Регистрация</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Зарегистрироваться">
+  <div class="container">
+    <h1>User Registration</h1>
+    <form method="POST" action="{% url 'register' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="first_name">First Name</label>
+        <input type="text" id="first_name" name="first_name" required>
+      </div>
+      <div class="form-group">
+        <label for="last_name">Last Name</label>
+        <input type="text" id="last_name" name="last_name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label class="phone-label" for="phone_number">Phone Number</label>
+        <input class="phone-input" type="tel" id="phone_number" name="phone_number" required>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn">Register</button>
+      </div>
     </form>
+  </div>
 </body>
 </html>

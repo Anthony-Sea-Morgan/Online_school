@@ -23,13 +23,13 @@ from django.urls import include
 from mainpage.views import *
 
 from django.urls import path
-from registration.views import UserRegistrationView, RegistrationView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
-    path('register/', UserRegistrationView.as_view(), name='user-registration'),
-    path('registration/', RegistrationView.as_view(), name='registration'),
+    path('api/', include('mainpage.urls')),
+    #path('register/', UserRegistrationView.as_view(), name='user-registration'),
+    #path('registration/', RegistrationView.as_view(), name='registration'),
     path('', include('mainpage.urls')),
     path('summernote/', include('django_summernote.urls')),
 ]
