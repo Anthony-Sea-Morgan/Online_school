@@ -11,6 +11,10 @@ class CustomUser(AbstractUser):
     groups = models.ManyToManyField('auth.Group', blank=True, related_name='customuser_set')
     user_permissions = models.ManyToManyField('auth.Permission', blank=True, related_name='customuser_set')
     phone_number = PhoneNumberField(null=False, blank=False, unique=True)  # телефонный номер с проверкой
+    username = models.CharField(max_length=150, unique=True)
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
 
     def __str__(self):
         return self.username
