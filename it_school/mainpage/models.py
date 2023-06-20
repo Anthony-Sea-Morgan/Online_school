@@ -1,5 +1,7 @@
 import datetime
 
+from django.db.models.signals import m2m_changed
+from django.dispatch import receiver
 from multiselectfield import MultiSelectField
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
@@ -8,6 +10,7 @@ import uuid
 
 from django.db import models
 from registration.models import CustomUser
+from django.contrib.auth.models import Group
 
 DAYS_OF_WEEK_CHOICES = [
     ('monday', 'понедельник'),
@@ -32,6 +35,23 @@ def image_folder_Course(instance, filename):
 
 def image_folder_Technology(instance, filename):
     return 'mainpage/static/dist/img/Models/Course/TechIcons/{}.webp'.format(uuid.uuid4().hex)
+
+
+@receiver(m2m_changed, sender=CustomUser.courses.through)
+def handle_m2m_changed(sender, instance, action, reverse, model, pk_set, **kwargs):
+    if action == 'post_add':
+        # Обработка добавления курса
+        for pk in pk_set:
+            course = model.objects.get(pk=pk)
+            # Выполнить нужные действия после добавления курса
+            print(f"Пользователь {instance.username} записался на курс {course.title}")
+    elif action == 'post_remove':
+        # Обработка удаления курса
+        for pk in pk_set:
+            course = model.objects.get(pk=pk)
+            # Выполнить нужные действия после удаления курса
+            if course is not None:
+                print(f"Пользователь {instance.username} отписался с курса {course.title}")
 
 
 class Course(models.Model):
@@ -81,6 +101,7 @@ class Course(models.Model):
         lesson_count = Lesson.objects.filter(course_owner_id=self.pk).count()
 
         if is_created:
+
             next_date = self.start_date
             for i in range(self.lessons_count):
                 count = len(self.days_of_week)
@@ -129,7 +150,7 @@ class Course(models.Model):
 
 class Lesson(models.Model):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lesson_course',
-                                     null=False)  # Курс, к которому принадлежит занятие
+                                     null=False, editable=False)  # Курс, к которому принадлежит занятие
     mentor_owner = models.ForeignKey('registration.CustomUser', on_delete=models.CASCADE, related_name='lesson_mentor',
                                      null=False,
 
@@ -144,11 +165,25 @@ class Lesson(models.Model):
         super().__init__(*args, **kwargs)
 
     def __str__(self):
-        return str(self.title)
+        return str(f'{self.title}')
+
+    def save(self, *args, **kwargs):
+        # if self.start_date.weekday() == Course.get_weekday_index(self.day_of_week):
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Занятие'
         verbose_name_plural = 'Занятия'
+
+
+class CustomGroup(Group):
+    course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='group_course',
+                                     null=True)  # Курс, к которому принадлежит группа
+    description = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = 'Группа'
+        verbose_name_plural = 'Группы'
 
 
 class Review(models.Model):
