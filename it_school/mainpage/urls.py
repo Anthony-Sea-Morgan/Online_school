@@ -11,5 +11,5 @@ urlpatterns = [
     path('register/', registration.views.register_user, name='register'),
     path('login/', registration.views.login_view, name='login'),
     path('logout/', registration.views.LogoutView.as_view(), name='logout'),
-
+    path('api/', include('restapi.urls')),
 ]

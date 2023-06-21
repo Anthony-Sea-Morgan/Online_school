@@ -143,7 +143,7 @@ class Course(models.Model):
                     next_date += datetime.timedelta(days=1)
                 Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
-                                      day_of_week=self.days_of_week[day], start_date=self.start_date,
+                                      day_of_week=self.days_of_week[day], start_date=next_date,
                                       start_time=self.start_time)
 
         elif lesson_count > self.lessons_count:
@@ -170,10 +170,10 @@ class Lesson(models.Model):
                                      null=False, editable=False)  # Курс, к которому принадлежит занятие
     mentor_owner = models.ForeignKey('registration.CustomUser', on_delete=models.CASCADE, related_name='lesson_mentor',
                                      null=False,
-
                                      default=1)  # Ментор, который проводит занятие
 
     title = models.CharField(max_length=255, default='Lesson 1', blank=True)  # Название занятия
+    material = models.TextField('Полное описание',default='Полное описание')
     day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')  # день недели
     start_date = models.DateField(default=timezone.now)  # Поле даты начала занятия
     start_time = models.TimeField(default=datetime.time(19, 0))  # Поле времени начала занятия
