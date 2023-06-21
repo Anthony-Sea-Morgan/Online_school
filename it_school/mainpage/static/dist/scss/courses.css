@@ -5,7 +5,9 @@ display: block;
 position: relative;
 color: black;
 background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');
-
+}
+.wr{
+height: 100vh;
 }
 .courses-filter-wrapper{
 background-color: #ddddd7;

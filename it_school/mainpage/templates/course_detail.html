@@ -21,7 +21,6 @@
         <div class="course-detail-shortdes">{{ course.short_des }}</div>
         <div class="course-detail-mentor"></div>
         <div class="course-detail-material-quantity"></div>
-        <div class="course-detail-price">{{ course.price }}$</div>
         <div class="course-detail-dos">Старт занятий с: {{ course.start_date }}</div>
             <div></div>
         </div>
@@ -30,17 +29,17 @@
 
 </div>
 <div class="btn-reg-wrapper">
-    <button class="btn-reg">Записаться</button>
+    <button class="btn-reg" onclick="scrollToAnchor('g-list');">Записаться</button>
 </div>
 <div class="white-space hcd"></div>
 <div class="t-list-wrapper">
     <div class="courses-list-align">
-    <div class="t-list-unit ib va"><h2>Учиться просто</h2><hr><p>Мы не продаем курсы в записи, только live-общение и практика с ментором</p></div>
-    <div class="t-list-unit ib va"><h2>От 2 до 6 проектов</h2>
+    <div class="t-list-unit ib va transparent-box"><h2>Учиться просто</h2><hr><p>Мы не продаем курсы в записи, только live-общение и практика с ментором</p></div>
+    <div class="t-list-unit ib va transparent-box"><h2>От 2 до 6 проектов</h2>
         <hr><p>В портфолио по окончании курса + диплом на английском языке</p></div>
-    <div class="t-list-unit ib va"><h2>Высокий рейтинг</h2>
+    <div class="t-list-unit ib va transparent-box"><h2>Высокий рейтинг</h2>
         <hr><p>4,9 / 5 средний рейтинг от наших выпускников, довольных обучением</p></div>
-    <div class="t-list-unit ib va"><h2>Поиск работы</h2>
+    <div class="t-list-unit ib va transparent-box"><h2>Поиск работы</h2>
         <hr><p>Активная помощь в поиске первой работы как в СНГ, так и в ЕС</p></div>
         </div>
 </div>
@@ -53,7 +52,7 @@
 <div class="white-space hcd"></div>
     <div class="t-list-wrapper">
     <div class="courses-list-align">
-    <div class="t-container ib va">
+    <div class="t-container ib va transparent-box">
     <h1>Поможем получить твою первую работу в IT</h1>
     <p>Наш <b>карьерный центр</b> помогает с <b>профориетацией в IT</b>,<br> а также оказывает поддержку студентам, способствует их
         <br> трудоустройству в международные IT-компании и <br> занимается сопровождением в поиске работы за рубежом.</p>
@@ -61,23 +60,50 @@
 <div class="white-space hcd"></div>
 <div class="t-list-wrapper">
     <div class="courses-list-align">
-        <div class="t-list-skills">
+        <div class="t-list-skills transparent-box">
             <div class="t-list-skills-label ib va"><h2>Идеальное резюме</h2><p>Мы подскажем, как создать конкурентоспособное резюме и релевантное сопроводительное письмо, чтобы выделиться среди других кандидатов</p></div>
             <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/photo.svg');"></div>
         </div>
-        <div class="t-list-skills">
+        <div class="t-list-skills transparent-box">
             <div class="t-list-skills-label ib va"><h2>Профиль в LinkedIn</h2><p>Расскажем, как заполнить профессиональный профиль в LinkedIn, чтобы его начали замечать рекрутеры</p></div>
             <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/LinkedIn.svg');"></div>
         </div>
-        <div class="t-list-skills">
+        <div class="t-list-skills transparent-box">
             <div class="t-list-skills-label ib va"><h2>Подготовка к собеседованию</h2><p>Расскажем, из каких этапов состоит собеседование, а также научим презентовать себя и свои сильные стороны для его успешного прохождения</p></div>
             <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/SoftSkills.svg');"></div>
         </div>
-        <div class="t-list-skills">
+        <div class="t-list-skills transparent-box">
             <div class="t-list-skills-label ib va"><h2>Твоя работа в IT</h2><p>Отправим подготовленное резюме нашим партнёрам международным IT-компаниям и дождемся вместе с тобой твой первый оффер на работу мечты</p></div>
             <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/__IT.svg');"></div>
     </div> </div>
 </div>
+    <div class="white-space hcd"></div>
+    <div class="t-list-wrapper">
+    <div class="courses-list-align">
+    <div class="t-container ib va transparent-box">
+        <h1>Оптимальные требования по мощности для вашего ПК:</h1>
+        <ul>
+            <li><b>ОС:</b> Windows 10+ / MacOS Sierra+ / Linux (Ubuntu)*</li>
+            <li><b>Оперативная память:</b> от 4-8 Гб</li>
+            <li><b>Видеокарта:</b> от 1 Гб</li>
+            <p>*приоритетная операционная система для обучения</p>
+        </ul>
+        </div></div></div>
+    <div class="white-space hcd"></div>
+    <div class="g-list-wrapper" id="g-list">
+        <div class="courses-list-align">
+            <div class="g-list-unit ib va">
+                <h2>Стоимость курса</h2>
+                <h1>$ в месяц</h1>
+                <h4>Или сразу, но дешевле - {{ course.price }} за весь курс.</h4>
+                <p>Стоимость в месяц указана при рассрочке на 12 месяцев. Подробную информацию по программам рассрочки и кредитования можно узнать у менеджеров.</p>
+            </div>
+    <div class="g-list-form ib va"></div>
+    <div class="g-list-form ib va"></div>
+        </div>
+    </div>
+
+    </div>
 
 {% endblock %}
 {% block script %}
