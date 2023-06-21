@@ -5,4 +5,5 @@ from mainpage.models import Course
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['title', 'mentor', 'start_date', 'lessons_count']
+        fields = '__all__'
+
