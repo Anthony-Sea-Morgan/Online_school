@@ -1,0 +1,40 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'DINN-Light';
+  color: aliceblue;
+  overflow: hidden;
+  background: linear-gradient(to top, #3c3c3c, #2c2c2c#1e5058)
+
+
+}
+body {
+  font-size: 20px;
+  /*background-color: #3c3c3c;*/
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  border-color: aliceblue;
+ /* -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;*/
+  overflow-y: scroll;
+  overflow-x: hidden;
+  /*background-image: url('/static/dist/img/body_bck/.png');*/
+  background: linear-gradient(to top, #F8F4EE, #F8F4EE);/*#2c2c2c#1e5058);*/
+  background-size: cover;
+  /*background-opacity: 0.6;*/
+}
+.main-container{
+width: 1000%;
+height: 1000%;
+z-index: -10;
+display: flex;
+bottom:0%;
+position: sticky;
+backdrop-filter:url(filters.svg#filter) blur(0px) saturate(130%) brightness(70%);
+}
+

@@ -22,6 +22,8 @@ body {
   background-size: cover;
 }
 .ib{display: inline-block;}
+.db{display: block;}
+.df{display: flex;}
 .jc-c{justify-content: center;}
 .va{vertical-align: top; position: relative;}
 .ws-nw{white-space:nowrap;}
@@ -34,4 +36,19 @@ position: relative;
 a {
 text-decoration: none;
 color: black;
+}
+.icn{
+width:20px;height:15px;
+}
+b{
+text-decoration: underline;
+text-decoration-color: #b9a12d;
+text-decoration-offset: 0.2em;
+font-weight: bold;
+}
+.transparent-box{
+backdrop-filter: url(filters.svg#filter) blur(2px) saturate(100%) brightness(110%);
+border-radius: 10px;
+color: black;
+box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;
 }
