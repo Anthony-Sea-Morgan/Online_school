@@ -1,7 +1,7 @@
 import datetime
 import uuid
 import logging
-from django.db.models.signals import m2m_changed
+from django.db.models.signals import m2m_changed, pre_save
 from django.dispatch import receiver
 from multiselectfield import MultiSelectField
 from django.core.validators import MaxValueValidator
@@ -36,39 +36,6 @@ def image_folder_Course(instance, filename):
 
 def image_folder_Technology(instance, filename):
     return 'mainpage/static/dist/img/Models/Course/TechIcons/{}.webp'.format(uuid.uuid4().hex)
-
-
-@receiver(m2m_changed, sender=CustomUser.courses.through)
-def handle_m2m_changed(sender, instance, action, reverse, model, pk_set, **kwargs):
-    """
-    Функция выполняется когда пользователю добавляется курс
-    :param sender: источник сигнала
-    :param instance: конкретный пользователь
-    :param action: действие  - добавление связей
-    :param reverse: обратная связь
-    :param model: модель с которой связывают
-    :param pk_set: множество ключей с колторыми связывают
-    :param kwargs: прочие параметры
-    :return: нет
-    """
-    if action == 'post_add':
-        # Обработка добавления курса
-        for pk in pk_set:
-            course = model.objects.get(pk=pk)
-            try:
-                group = CustomGroup.objects.get(course_owner=pk)
-                # Добавить в группу пользователя
-                group.users.add(instance)
-                print(f'Пользователь {instance.username} записался на курс {course.title} в группу {group.name}')
-            except Exception as e:
-                print(f'Не найдена группа для курса {str(e)}')
-    elif action == 'post_remove':
-        # Обработка удаления курса
-        for pk in pk_set:
-            course = model.objects.get(pk=pk)
-            # Выполнить нужные действия после удаления курса
-            if course is not None:
-                print(f'Пользователь {instance.username} отписался с курса {course.title}')
 
 
 class Course(models.Model):
@@ -109,6 +76,9 @@ class Course(models.Model):
         В функции происходит создание Занятий, согласно их количеству.
         При редактировании количества занятий, либо добавляются новые, либо удаляются последние.
         """
+        if self.mentor.is_mentor != True:
+            print("Пользователь не является ментором")
+            return 1
         if not self.days_of_week:
             self.days_of_week = ['wednesday', 'saturday']
 
@@ -173,7 +143,7 @@ class Lesson(models.Model):
                                      default=1)  # Ментор, который проводит занятие
 
     title = models.CharField(max_length=255, default='Lesson 1', blank=True)  # Название занятия
-    material = models.TextField('Полное описание',default='Полное описание')
+    material = models.TextField('Полное описание', default='Полное описание')
     day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')  # день недели
     start_date = models.DateField(default=timezone.now)  # Поле даты начала занятия
     start_time = models.TimeField(default=datetime.time(19, 0))  # Поле времени начала занятия
@@ -185,8 +155,10 @@ class Lesson(models.Model):
         return str(f'{self.title}')
 
     def save(self, *args, **kwargs):
-        # if self.start_date.weekday() == Course.get_weekday_index(self.day_of_week):
-        super().save(*args, **kwargs)
+        if self.mentor_owner.is_mentor:
+            super().save(*args, **kwargs)
+        else:
+            print("Пользователь не является ментором!")
 
     class Meta:
         verbose_name = 'Занятие'
@@ -232,3 +204,46 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
+
+
+# Сигналы Django
+@receiver(m2m_changed, sender=CustomUser.courses.through)
+def handle_m2m_changed(sender, instance, action, reverse, model, pk_set, **kwargs):
+    """
+    Функция выполняется когда пользователю добавляется курс
+    :param sender: источник сигнала
+    :param instance: конкретный пользователь
+    :param action: действие  - добавление связей
+    :param reverse: обратная связь
+    :param model: модель с которой связывают
+    :param pk_set: множество ключей с колторыми связывают
+    :param kwargs: прочие параметры
+    :return: нет
+    """
+    if action == 'post_add':
+        # Обработка добавления курса
+        for pk in pk_set:
+            course = model.objects.get(pk=pk)
+            try:
+                group = CustomGroup.objects.get(course_owner=pk)
+                # Добавить в группу пользователя
+                group.users.add(instance)
+                print(f'Пользователь {instance.username} записался на курс {course.title} в группу {group.name}')
+            except Exception as e:
+                print(f'Не найдена группа для курса {str(e)}')
+    elif action == 'post_remove':
+        # Обработка удаления курса
+        for pk in pk_set:
+            course = model.objects.get(pk=pk)
+            # Выполнить нужные действия после удаления курса
+            if course is not None:
+                print(f'Пользователь {instance.username} отписался с курса {course.title}')
+
+
+@receiver(pre_save, sender=Course)
+def update_lessons_mentor(sender, instance, **kwargs):
+    if instance.pk:  # Проверяем, что модель уже существует (не новая)
+        previous_mentor = Course.objects.get(pk=instance.pk).mentor  # Получаем предыдущего ментора
+        if previous_mentor != instance.mentor:  # Если ментор изменился
+            Lesson.objects.filter(course_owner=instance).update(
+                mentor_owner=instance.mentor)  # Обновляем ментора у всех занятий данного курса
