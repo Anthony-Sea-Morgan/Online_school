@@ -43,6 +43,13 @@ def index(request):
     template = 'mainpage.html'
     return render(request, template, data)
 
+class CourseDetailView(DetailView):
+    error = ''
+
+    model = Course
+    template_name = 'course_detail.html'
+    context_object_name = 'course'
+
 # @csrf_protect
 # def login_view(request):
 #     if request.method == 'POST':
