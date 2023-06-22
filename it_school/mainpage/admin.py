@@ -12,7 +12,7 @@ class PostAdmin(SummernoteModelAdmin):
 
 # Register your models here.
 admin.site.register(Course, PostAdmin)
-admin.site.register(Lesson)
+admin.site.register(Lesson,PostAdmin)
 admin.site.register(CustomUser)
 admin.site.register(CustomGroup, CustomGroupAdmin)
 admin.site.unregister(Group)
