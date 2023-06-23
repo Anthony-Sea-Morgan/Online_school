@@ -17,6 +17,9 @@ def register_user(request):
         if serializer.is_valid():
             serializer.save()
             return Response({'message': 'User registered successfully'})
+        else:
+            error_message = 'Некорректные введеные данные'
+            return render(request, 'registration.html', {'error_message': error_message})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return render(request, 'registration.html')
@@ -32,13 +35,13 @@ def login_view(request):
             messages.success(request, 'Вы успешно авторизованы.')
             return redirect('index')
         else:
-            error_message = 'Invalid credentials'
-            return render(request, 'loginn.html', {'error_message': error_message})
+            error_message = 'Некорректные введеные данные'
+            return render(request, 'mainpage.html', {'error_message': error_message, 'style': 'display :flex;'})
     else:
-        return render(request, 'loginn.html')
+        return render(request, 'mainpage.html')
 
 
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return redirect('logged_out')
+        return redirect('index')
