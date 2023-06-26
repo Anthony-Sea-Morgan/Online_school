@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect
 from .serializers import UserSerializer, LoginSerializer
 from django.contrib import messages
@@ -8,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate, login
 from django.views import View
+from django.shortcuts import render
+from django.http import JsonResponse
 
 
 @api_view(['GET', 'POST'])
@@ -16,11 +17,10 @@ def register_user(request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'User registered successfully'})
+            return redirect('index')
         else:
-            error_message = 'Некорректные введеные данные'
+            error_message = serializer.errors.get('password')[0] if serializer.errors.get('password') else 'Некорректные введенные данные'
             return render(request, 'registration.html', {'error_message': error_message})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return render(request, 'registration.html')
 
