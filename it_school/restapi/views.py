@@ -1,4 +1,9 @@
 from django.shortcuts import render
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+
+from .models import ChatMessage
+from .serializers import ChatMessageSerializer
 
 # Create your views here.
 
@@ -24,3 +29,12 @@ class CourseViewSet(viewsets.ModelViewSet):
 
         serializer = CourseSerializer(course)
         return Response(serializer.data)
+
+
+class ChatMessageListCreateView(generics.ListCreateAPIView):
+    queryset = ChatMessage.objects.all()
+    serializer_class = ChatMessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
