@@ -10,8 +10,12 @@ class CourseSerializer(serializers.ModelSerializer):
 
 
 class ChatMessageSerializer(serializers.ModelSerializer):
+    author = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
+
     class Meta:
         model = ChatMessage
         fields = ['id', 'text', 'author', 'created_at']
-
-
+        read_only_fields = ['author']
+        extra_kwargs = {
+            'text': {'required': False}
+        }
