@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'mainpage',
     'rest_framework',
     'registration',
+    'restapi',
     'rest_framework_simplejwt',
 ]
 
