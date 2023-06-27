@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth.admin import GroupAdmin
+from django.contrib.auth.admin import GroupAdmin, UserAdmin
 
 from registration.models import *
 from mainpage.models import *
@@ -9,10 +9,9 @@ from django_summernote.admin import SummernoteModelAdmin
 class PostAdmin(SummernoteModelAdmin):
     summernote_fields = ('description', 'material')
 
-
 # Register your models here.
 admin.site.register(Course, PostAdmin)
-admin.site.register(Lesson,PostAdmin)
+admin.site.register(Lesson, PostAdmin)
 admin.site.register(CustomUser)
 admin.site.register(CustomGroup, CustomGroupAdmin)
 admin.site.unregister(Group)
