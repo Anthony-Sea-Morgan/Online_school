@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, generics
 from .models import CustomUser
 
 
@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'password', 'password2', 'phone_number']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password', 'password2', 'phone_number']
         extra_kwargs = {
             'password': {'write_only': True},
             'password2': {'write_only': True},
@@ -36,6 +36,11 @@ class UserSerializer(serializers.ModelSerializer):
         )
         return user
 
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
+
+
+class UserRegistrationView(generics.CreateAPIView):
+    serializer_class = UserSerializer

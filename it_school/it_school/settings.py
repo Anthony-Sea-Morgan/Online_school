@@ -154,3 +154,4 @@ SIMPLIFIED_JWT = {
 
 
 AUTH_USER_MODEL = 'registration.CustomUser'
+#SESSION_COOKIE_SECURE = True

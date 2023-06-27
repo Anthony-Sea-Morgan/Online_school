@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login
 from django.views import View
 from django.shortcuts import render
 from django.http import JsonResponse
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 @api_view(['GET', 'POST'])
@@ -19,7 +20,8 @@ def register_user(request):
             serializer.save()
             return redirect('index')
         else:
-            error_message = serializer.errors.get('password')[0] if serializer.errors.get('password') else 'Некорректные введенные данные'
+            error_message = serializer.errors.get('password')[0] if serializer.errors.get(
+                'password') else 'Некорректные введенные данные'
             return render(request, 'registration.html', {'error_message': error_message})
     else:
         return render(request, 'registration.html')
@@ -45,3 +47,19 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('index')
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.user
+        if user:
+            login(request, user)
+        response = super().post(request, *args, **kwargs)
+        response.data['username'] = user.username
+        return response
+
+
+class CustomTokenRefreshView(TokenRefreshView):
+    pass
