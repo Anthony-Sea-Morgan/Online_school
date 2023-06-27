@@ -9,6 +9,7 @@ from django_summernote.admin import SummernoteModelAdmin
 class PostAdmin(SummernoteModelAdmin):
     summernote_fields = ('description', 'material')
 
+
 # Register your models here.
 admin.site.register(Course, PostAdmin)
 admin.site.register(Lesson, PostAdmin)
