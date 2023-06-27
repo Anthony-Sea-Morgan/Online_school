@@ -20,8 +20,8 @@ def register_user(request):
             serializer.save()
             return redirect('index')
         else:
-            error_message = serializer.errors.get('password')[0] if serializer.errors.get(
-                'password') else 'Некорректные введенные данные'
+            error_message = serializer.errors.get('password')[0]  if serializer.errors.get(
+                'password') else 'Некорректно введенные данные'
             return render(request, 'registration.html', {'error_message': error_message})
     else:
         return render(request, 'registration.html')
