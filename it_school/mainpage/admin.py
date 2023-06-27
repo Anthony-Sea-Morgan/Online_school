@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin, UserAdmin
-from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
 
 from registration.models import *
 from mainpage.models import *
