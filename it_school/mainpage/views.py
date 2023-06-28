@@ -23,25 +23,16 @@ def index(request):
     for i in course_object:
         i.img = str(i.img)[5:]
         i.imgTech = str(i.tech_img)[5:]
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('index')
-    else:
-        form = AuthenticationForm()
-
     data = {
         'title': 'Online school',
         'page_label': 'Главная страница',
         'courses': course_object,
         'technology': ['Все технологии'] + TECHNOLOGIES,
         'difficulty': ['Любая сложность', 'Начинающий', 'Продвинутый'],
-        'form': form,
     }
     template = 'mainpage.html'
     return render(request, template, data)
+
 
 class CourseDetailView(DetailView):
     error = ''
@@ -50,31 +41,3 @@ class CourseDetailView(DetailView):
     template_name = 'course_detail.html'
     context_object_name = 'course'
 
-# @csrf_protect
-# def login_view(request):
-#     if request.method == 'POST':
-#         form = LoginUserForm(data=request.POST)
-#         if form.is_valid():
-#             user = form.cleaned_data.get('user')
-#             login(request, user)
-#             return redirect('index')
-#     else:
-#         form = LoginUserForm()
-#     return render(request, 'index/login.html', {'form': form})
-#
-# @csrf_protect
-# def logout_view(request):
-#     logout(request)
-#     return redirect('index')
-#
-# @csrf_protect
-# def register_view(request):
-#     if request.method == 'POST':
-#         form = RegisterUserForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             login(request, user)
-#             return redirect('index')
-#     else:
-#         form = RegisterUserForm()
-#     return render(request, 'index/register.html', {'form': form})
