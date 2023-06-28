@@ -84,7 +84,10 @@ class Course(models.Model):
 
         is_created = not bool(self.pk)
 
-        super().save(*args, **kwargs)
+        try:
+            super().save(*args, **kwargs)
+        except Exception as e:
+            pass
         lesson_count = Lesson.objects.filter(course_owner_id=self.pk).count()
 
         if is_created:
