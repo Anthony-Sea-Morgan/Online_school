@@ -19,8 +19,8 @@
         <div class="course-detail-difficulty">{{ course.difficulty }}</div>
         <div class="course-detail-technologies">{{ course.technologies }}</div>
         <div class="course-detail-shortdes">{{ course.short_des }}</div>
-        <div class="course-detail-mentor"></div>
-        <div class="course-detail-material-quantity"></div>
+        <div class="course-detail-mentor">{{ course.mentor }}</div>
+        <div class="course-detail-material-quantity">{{ course.lessons_count }}</div>
         <div class="course-detail-dos">Старт занятий с: {{ course.start_date }}</div>
             <div></div>
         </div>
@@ -37,8 +37,6 @@
     <div class="t-list-unit ib va transparent-box"><h2>Учиться просто</h2><hr><p>Мы не продаем курсы в записи, только live-общение и практика с ментором</p></div>
     <div class="t-list-unit ib va transparent-box"><h2>От 2 до 6 проектов</h2>
         <hr><p>В портфолио по окончании курса + диплом на английском языке</p></div>
-    <div class="t-list-unit ib va transparent-box"><h2>Высокий рейтинг</h2>
-        <hr><p>4,9 / 5 средний рейтинг от наших выпускников, довольных обучением</p></div>
     <div class="t-list-unit ib va transparent-box"><h2>Поиск работы</h2>
         <hr><p>Активная помощь в поиске первой работы как в СНГ, так и в ЕС</p></div>
         </div>
@@ -94,17 +92,27 @@
         <div class="courses-list-align">
             <div class="g-list-unit ib va">
                 <h2>Стоимость курса</h2>
-                <h1>$ в месяц</h1>
-                <h4>Или сразу, но дешевле - {{ course.price }} за весь курс.</h4>
-                <p>Стоимость в месяц указана при рассрочке на 12 месяцев. Подробную информацию по программам рассрочки и кредитования можно узнать у менеджеров.</p>
+                <h1>{{ course.price }} за весь курс</h1>
+<!--                <h4>Или сразу, но дешевле -  за весь курс.</h4>
+                <p>Стоимость в месяц указана при рассрочке на 12 месяцев. Подробную информацию по программам рассрочки и кредитования можно узнать у менеджеров.</p>-->
             </div>
-    <div class="g-list-form ib va"></div>
-    <div class="g-list-form ib va"></div>
+    <div class="g-list-form ib va">
+        <h2>Записаться на курс:</h2>
+        <h3>Старт группы</h3>
+        <p>{{ course.start_date }}</p>
+        <h3>Дни занятий</h3>
+        <p>{{ course.days_of_week }}</p>
+        <h3>Кол-во занятий</h3>
+        <p>{{ course.lessons_count }}</p>
+        <button class="g-list-form-btn" {% if user.is_authenticated %} id="confirm_payment" {% else %} id="LOGIN-redirect" {% endif %}>Приобрести запись</button>
+
+
+    </div>
         </div>
     </div>
 
     </div>
-
+{% include "confirm_payment.html" %}
 {% endblock %}
 {% block script %}
 <script src="/static/dist/js/courseDescAct.js"></script>

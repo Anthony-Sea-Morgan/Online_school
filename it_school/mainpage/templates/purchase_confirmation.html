@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Успешн</title>
+    <link rel="shortcut icon" type="image/png" sizes="96x96" rel="icon" href="/static/dist/img/PNG/icon/online_school.png">
+    <link rel="stylesheet" href="{% static 'dist/scss/style.css'%}">
+</head>
+<body>
+<div class="blank-global-container" id="reg-blank-payconf" style="display: flex; backdrop-filter: url(filters.svg#filter) blur(4px) saturate(150%) brightness(60%);color:black;">
+<div class="wrapper-blank" style="border-radius: 0px;padding: 50px;">
+ <h1>Поздравляем!</h1>
+  <p>Вы успешно приобрели запись на курс "{{ course.title }}".</p>
+  <p>Детали курса:</p>
+  <ul>
+    <li>Название: {{ course.title }}</li>
+    <li>Сложность: {{ course.difficulty }}</li>
+    <li>Рейтинг: {{ course.rating }}</li>
+    <li>Стоимость: {{ course.price }}</li>
+    <li>Ментор: {{ course.mentor.username }}</li>
+    <li>Дата начала: {{ course.start_date }}</li>
+    <li>Время начала: {{ course.start_time }}</li>
+    <li>Дни недели занятий: {{ course.get_days_of_week_display }}</li>
+    <li>Применяемые языки: {{ course.get_technologies_display }}</li>
+    <li>Количество уроков: {{ course.lessons_count }}</li>
+  </ul>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -20,12 +20,11 @@
         {% if user.is_authenticated %}
         <div><p>Личный кабинет</p></div>
         <div><p>Форум</p></div>
-        {% endif %}
         <div><p>Контакты</p></div>
-        {% if user.is_authenticated %}
-         <div data-action="logout" onclick="location.href='{% url 'logout_view' %}?next={{ request.path }}';"><p>Выйти из аккаунта</p></div>
+        <div data-action="logout" onclick="location.href='{% url 'logout_view' %}?next={{ request.path }}';"><p>Выйти из аккаунта</p></div>
         {% else %}
-    <div id="LOGIN" data-action="login"><p>Авторизация</p></div>
+        <div id="LOGIN" data-action="login"><p>Авторизация</p></div>
+        <div><p>Контакты</p></div>
         {% endif %}
 
 

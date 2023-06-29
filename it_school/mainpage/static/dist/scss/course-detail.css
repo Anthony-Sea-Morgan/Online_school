@@ -30,7 +30,7 @@ padding-left: 15%;
 width: 60%;
 }
 .course-detail-title h2{
-font-size: 60px;
+font-size: 90px;
 margin-bottom: 5px;
 margin-top: 15px;
 margin: 20px 20px;
@@ -71,20 +71,20 @@ font-size: 15px;
 }
 .course-detail-folder-img{
 position: absolute;
-width: 350px;
-height: 350px;
+width: 400px;
+height: 400px;
 /*left: 1117px;*/
 right: 20px;
-bottom: -2px;
+bottom: 50px;
 background-image: url('/static/dist/img/PNG/folder-back.png');
 background-size: cover;
 transform: rotate(30deg);
 }
 .course-detail-folder-img img{
-margin-top: 90px;
-margin-left: 90px;
-width:180px;
-height:180px;
+margin-top: 110px;
+margin-left: 110px;
+width:200px;
+height:200px;
 }
 .btn-reg-wrapper{
 width: 100%;
@@ -203,7 +203,7 @@ position: relative;
 .g-list-unit h1{
 margin-top: 15px;
 margin-bottom: 0px;
-font-size: 60px;
+font-size: 50px;
 font-family: 'Jost-Medium';
 }
 .g-list-unit h4{
@@ -216,6 +216,31 @@ font-size: 15px;
 margin: 20px;
 width: 360px;
 height: 500px;
-background-color: black;
+background-color: #191919;
 position: relative;
+text-align: center;
+padding: 25px;
+}
+.g-list-form h3{
+font-size: 15px;
+margin-top: 40px;
+}
+.g-list-form p{
+font-size: 15px;
+margin-top: -12px;
+}
+.g-list-form-btn{
+    margin-top: 100px;
+    background-color: #ff8c00;
+    border: none;
+    border-radius: 3px;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px;
+    width: 75%;
+    height: 50px;
+}
+.g-list-form-btn:hover {
+    background-color: #ffad5a;
 }

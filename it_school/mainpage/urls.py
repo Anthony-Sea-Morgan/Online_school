@@ -9,4 +9,5 @@ urlpatterns = [
     path('', views.index, name='index'),# В случае кэшировании класса -> path('', cache_page(60)(UnitsView.as_view()), name='index'),
     path('api/', include('restapi.urls')),
     path('<int:pk>', views.CourseDetailView.as_view(), name='course-detail'),
+    path('purchase_confirmation/<int:pk>/', views.purchase_confirmation, name='purchase_confirmation'),
 ]

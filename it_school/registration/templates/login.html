@@ -1,8 +1,8 @@
 <div class="blank-global-container" id="reg-blank-login"  data-action="login" style="display: none; backdrop-filter: url(filters.svg#filter) blur(4px) saturate(150%) brightness(60%); {{ style }}">
-<div class="login-blank">
-    <div class="close-btn" id="login-blank-close-btn">⨯</div>
+<div class="wrapper-blank">
+    <div class="close-btn" id="wrapper-blank-close-btn">⨯</div>
     <h1>Авторизация</h1>
-    <form class="login-blank-form" method="post" action="{% url 'login_view' %}">
+    <form class="wrapper-blank-form" method="post" action="{% url 'login_view' %}">
         {% csrf_token %}
         <div>
             <label for="username">Логин:</label>
