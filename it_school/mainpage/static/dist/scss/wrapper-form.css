@@ -59,7 +59,8 @@ border-radius: 15px;
     font-weight: bold;
     padding: 10px;
     width: 100%;
+    transition: 0.3s;
 }
 .btn:hover {
-    background-color: #ffad5a;
+    background-color: #e8b266;
 }

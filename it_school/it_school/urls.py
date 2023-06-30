@@ -28,9 +28,9 @@ from restapi.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('mainpage.urls')),
     path('', include('restapi.urls')),
     path('', include('registration.urls')),
-    path('', include('mainpage.urls')),
     path('summernote/', include('django_summernote.urls')),
     # path('api/v1/auth/token/login/', djoser_views.TokenCreateView.as_view(), name='token_create'),
 

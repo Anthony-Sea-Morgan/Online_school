@@ -12,6 +12,7 @@ from django.http import JsonResponse
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.views.decorators.csrf import csrf_protect
 from django.http import HttpResponseRedirect
+from urllib.parse import urlencode
 
 @csrf_protect
 def register_view(request):
@@ -19,7 +20,7 @@ def register_view(request):
         serializer = UserSerializer(data=request.POST)
         if serializer.is_valid():
             serializer.save()
-            redirect_url = request.GET.get('next', 'index')
+            redirect_url = request.GET.get('next', '/')
             return redirect(redirect_url)
         else:
             error_message = serializer.errors.get('password')[0]  if serializer.errors.get(
@@ -38,12 +39,12 @@ def login_view(request):
             login(request, user)
             messages.success(request, 'Вы успешно авторизованы.')
             redirect_url = request.GET.get('next', '/')
-            return redirect(redirect_url)
         else:
             error_message = 'Некорректные введеные данные'
-            return render(request, 'mainpage.html', {'error_message': error_message, 'style': 'display :flex;'})
-    else:
-        redirect_url = request.GET.get('next', '/')
+            params = {'error_message': 'Некорректные введеные данные', 'style': 'display :flex;'}
+            redirect_url = request.GET.get('next', '/')
+            return HttpResponseRedirect(f'{redirect_url}?error_message={error_message}&style=display:flex;')
+
         return redirect(redirect_url)
 
 

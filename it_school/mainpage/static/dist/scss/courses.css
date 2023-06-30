@@ -28,7 +28,7 @@ height: 100%;
   color: black;
   border: 0.3rem solid transparent;
   transition: all 0.3s;
-  background-color: #bfa26b;
+  background-color: #e8b266;/*#bfa26b;*/
 }
 .courses-list-wrapper{
 display: flex;
@@ -36,8 +36,9 @@ width: 80%;
 height: 100%;
 align-items: center;
 justify-content: center;
-
-
+}
+.form__input:hover{
+background-color: #e8b266;
 }
 .courses-list-align{
 width: 95%;
@@ -71,7 +72,7 @@ width: auto;
 font-size: 30px;
 margin-bottom: 5px;
 margin-top: 15px;
-background-color: #544e2f;
+background-color: #e8b266;
 border-radius: 30px 30px 30px 30px;
 text-align: center;
 margin-left: auto;

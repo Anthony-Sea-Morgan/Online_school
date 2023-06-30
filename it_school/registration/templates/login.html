@@ -1,8 +1,8 @@
-<div class="blank-global-container" id="reg-blank-login"  data-action="login" style="display: none; backdrop-filter: url(filters.svg#filter) blur(4px) saturate(150%) brightness(60%); {{ style }}">
+<div class="blank-global-container" id="reg-blank-login"  data-action="login" style="display: none; backdrop-filter: url(filters.svg#filter) blur(4px) saturate(150%) brightness(60%); {{ request.GET.style }}">
 <div class="wrapper-blank">
     <div class="close-btn" id="wrapper-blank-close-btn">⨯</div>
     <h1>Авторизация</h1>
-    <form class="wrapper-blank-form" method="post" action="{% url 'login_view' %}">
+    <form class="wrapper-blank-form" method="post" action="{% url 'login_view' %}?next={{ request.path }}">
         {% csrf_token %}
         <div>
             <label for="username">Логин:</label>
@@ -16,7 +16,7 @@
             <p> Еще нет аккаунта? вы можете пройти <strong><a href="{% url 'register_view'%}"> регистрацию</a></strong> тут</p>
         </div>
         <div>
-        <p>{{ error_message }}</p>
+        <p>{{ request.GET.error_message }}</p>
       </div>
         <div>
             <input type="submit"  value="Логин" class="btn">
