@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, status, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .models import ChatMessage
@@ -23,14 +23,14 @@ class ChatMessageListCreateView(generics.ListCreateAPIView):
         serializer.save(author=self.request.user)
 
 
-class CourseListView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+class CourseListView(viewsets.ModelViewSet):
+    #permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = PageNumberPagination
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
-    def post(self, request, *args, **kwargs):
-        pass
+    def perform_create(self, serializer):
+        serializer.save()
 
 
 class CourseDetailView(generics.RetrieveAPIView):

@@ -85,6 +85,7 @@ class Course(models.Model):
         is_created = not bool(self.pk)
 
         super().save(*args, **kwargs)
+
         lesson_count = Lesson.objects.filter(course_owner_id=self.pk).count()
 
         if is_created:
@@ -93,7 +94,10 @@ class Course(models.Model):
             for i in range(self.lessons_count):
                 count = len(self.days_of_week)
                 day = i % count
-
+                print(f'next_date.weekday():  {next_date.weekday()}')
+                if isinstance(self.days_of_week, set):
+                    self.days_of_week = list(self.days_of_week)
+                print(f'self.days_of_week[day]):  {self.get_weekday_index(self.days_of_week[day])}')
                 while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
                     next_date += datetime.timedelta(days=1)
 
@@ -109,8 +113,11 @@ class Course(models.Model):
             for i in range(lesson_count, self.lessons_count):
                 count = len(self.days_of_week)
                 day = i % count
-                while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
+                # while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
+                #     next_date += datetime.timedelta(days=1)
+                while next_date.weekday() not in self.get_weekday_index(self.days_of_week):
                     next_date += datetime.timedelta(days=1)
+
                 Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
                                       day_of_week=self.days_of_week[day], start_date=next_date,
