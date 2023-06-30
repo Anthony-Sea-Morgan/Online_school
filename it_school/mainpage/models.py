@@ -11,6 +11,16 @@ from django.db import models
 from registration.models import CustomUser
 from django.contrib.auth.models import Group
 from django.contrib import admin
+from django.db import models
+from django.utils import timezone
+from datetime import datetime
+from registration.models import CustomUser
+from datetime import time as dt_time
+from django.db import models
+from django.utils import timezone
+import datetime
+
+
 
 DAYS_OF_WEEK_CHOICES = [
     ('monday', 'понедельник'),
@@ -146,7 +156,11 @@ class Lesson(models.Model):
     material = models.TextField('Полное описание', default='Полное описание')
     day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')  # день недели
     start_date = models.DateField(default=timezone.now)  # Поле даты начала занятия
-    start_time = models.TimeField(default=datetime.time(19, 0))  # Поле времени начала занятия
+    start_time = models.TimeField('Время начала курса', default=datetime.datetime.strptime('19:00', '%H:%M').time())  # Поле времени начала занятия
+    is_past = models.BooleanField(default=False, editable=False)  # Поле, определяющее, прошло ли занятие
+
+    def is_past_lesson(self):
+        return self.start_date < timezone.now().date()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -163,7 +177,6 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'Занятие'
         verbose_name_plural = 'Занятия'
-
 
 class CustomGroup(Group):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='group_course',

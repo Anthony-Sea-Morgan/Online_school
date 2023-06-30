@@ -16,6 +16,12 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import get_user_model
 
+from django.shortcuts import render
+from .models import Lesson
+from datetime import date
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
 
 @csrf_protect
 def index(request):
@@ -43,6 +49,7 @@ def index(request):
     template = 'mainpage.html'
     return render(request, template, data)
 
+
 class CourseDetailView(DetailView):
     error = ''
 
@@ -50,6 +57,18 @@ class CourseDetailView(DetailView):
     template_name = 'course_detail.html'
     context_object_name = 'course'
 
+
+def lesson_list(request):
+    lessons = Lesson.objects.all()
+    context = {'lessons': lessons}
+    return render(request, 'lesson_list.html', context)
+
+
+@login_required
+def personal_cabinet(request):
+    user = request.user
+    courses = user.courses.all().order_by('start_date')  # Получаем список курсов пользователя, отсортированных по дате начала
+    return render(request, 'personal_cabinet.html', {'user': user, 'courses': courses})
 # @csrf_protect
 # def login_view(request):
 #     if request.method == 'POST':
