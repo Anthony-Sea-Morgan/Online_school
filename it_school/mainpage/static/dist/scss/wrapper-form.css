@@ -8,7 +8,7 @@ justify-content: center; /*Центрирование по горизонтал�
 align-items: center;
 z-index: 1;
 }
-.login-blank{
+.wrapper-blank{
 margin: auto;
 width: 450px;
 height: auto;
@@ -17,32 +17,32 @@ background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.
 background-size: cover;
 border-radius: 15px;
 }
-.login-blank h1 {
+.wrapper-blank h1 {
     color: #555555;
     text-align: center;
     margin-bottom: 5px;
 }
-.login-blank-form p {
+.wrapper-blank p {
     color: #838383;
     text-align: center;
     margin-bottom: 5px;
 }
-.login-blank-form a:hover {
+.wrapper-blank a:hover {
     text-decoration: underline;
 
 }
-.login-blank-form {
+.wrapper-blank {
     margin: 0 auto;
     max-width: 300px;
     padding: 20px;
 }
-.login-blank-form label {
+.wrapper-blank label {
     color: #555555;
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
 }
-.login-blank-form input {
+.wrapper-blank input {
     border: 1px solid #cccccc;
     border-radius: 3px;
     padding: 8px;
@@ -59,7 +59,8 @@ border-radius: 15px;
     font-weight: bold;
     padding: 10px;
     width: 100%;
+    transition: 0.3s;
 }
 .btn:hover {
-    background-color: #ffad5a;
+    background-color: #e8b266;
 }

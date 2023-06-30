@@ -10,7 +10,7 @@ document.getElementById('LOGIN').onclick = function() {
   }
 };
 
-document.getElementById('login-blank-close-btn').onclick = function hide() {
+document.getElementById('wrapper-blank-close-btn').onclick = function hide() {
   var loginBlank = document.getElementById('reg-blank-login');
   loginBlank.style.display = 'none';
   loginBlank.style.zIndex = -999;

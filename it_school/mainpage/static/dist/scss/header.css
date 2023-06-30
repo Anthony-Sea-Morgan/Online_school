@@ -23,6 +23,7 @@ top: 0%;
 .logo-container {
 left: 0;
 width: 150px;
+cursor: pointer;
 }
 .logo-icon {
 display: inline-block;
@@ -64,7 +65,7 @@ text-align:center;
 .nav-dropdown{
 margin-left: auto;
 width: auto;
-background-color: #CD9E64;
+background-color: #ffad5a;/*#CD9E64;*/
 display: inline-flex;
 text-align:center;
 vertical-align: middle;

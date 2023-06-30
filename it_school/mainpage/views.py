@@ -2,9 +2,11 @@ from .models import Course, Lesson, TECHNOLOGIES
 from registration.models import CustomUser
 from django.forms import model_to_dict
 from django.shortcuts import render, redirect
+from django.urls import reverse
 import os
 from django.views.generic import DetailView, UpdateView, DeleteView
 from django.shortcuts import render
+from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
 from django.contrib.auth import logout
@@ -23,58 +25,46 @@ def index(request):
     for i in course_object:
         i.img = str(i.img)[5:]
         i.imgTech = str(i.tech_img)[5:]
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('index')
-    else:
-        form = AuthenticationForm()
-
     data = {
         'title': 'Online school',
         'page_label': 'Главная страница',
         'courses': course_object,
         'technology': ['Все технологии'] + TECHNOLOGIES,
         'difficulty': ['Любая сложность', 'Начинающий', 'Продвинутый'],
-        'form': form,
     }
     template = 'mainpage.html'
     return render(request, template, data)
 
+
 class CourseDetailView(DetailView):
     error = ''
-
     model = Course
     template_name = 'course_detail.html'
     context_object_name = 'course'
 
-# @csrf_protect
-# def login_view(request):
-#     if request.method == 'POST':
-#         form = LoginUserForm(data=request.POST)
-#         if form.is_valid():
-#             user = form.cleaned_data.get('user')
-#             login(request, user)
-#             return redirect('index')
-#     else:
-#         form = LoginUserForm()
-#     return render(request, 'index/login.html', {'form': form})
-#
-# @csrf_protect
-# def logout_view(request):
-#     logout(request)
-#     return redirect('index')
-#
-# @csrf_protect
-# def register_view(request):
-#     if request.method == 'POST':
-#         form = RegisterUserForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             login(request, user)
-#             return redirect('index')
-#     else:
-#         form = RegisterUserForm()
-#     return render(request, 'index/register.html', {'form': form})
+    def post(self, request, *args, **kwargs):
+        if 'confirm_payment' in request.POST:
+            course = self.get_object()
+            user = request.user
+            course_price = course.price
+
+            if user.wallet >= course_price:
+                user.wallet -= course_price
+                user.save()
+                messages.success(request, 'Оплата прошла успешно.')
+                return redirect('purchase_confirmation', pk=course.pk)
+            else:
+                self.error = 'Недостаточно средств на счете.'
+
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['error_message'] = self.error
+        if self.error:
+            context['styleconfp'] = 'display: flex;'
+        return context
+
+def purchase_confirmation(request, pk):
+    course = Course.objects.get(id=pk)
+    return render(request, 'purchase_confirmation.html', {'course': course})

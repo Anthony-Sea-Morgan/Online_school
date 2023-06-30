@@ -21,17 +21,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include
 from mainpage.views import *
+from registration.views import *
+from restapi.views import *
 
-from django.urls import path
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('mainpage.urls')),
-    #path('register/', UserRegistrationView.as_view(), name='user-registration'),
-    #path('registration/', RegistrationView.as_view(), name='registration'),
     path('', include('mainpage.urls')),
+    path('', include('restapi.urls')),
+    path('', include('registration.urls')),
     path('summernote/', include('django_summernote.urls')),
+    # path('api/v1/auth/token/login/', djoser_views.TokenCreateView.as_view(), name='token_create'),
+
 ]
 
 if settings.DEBUG:
