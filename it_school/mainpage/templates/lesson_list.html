@@ -28,11 +28,11 @@
         <tbody>
             {% for lesson in lessons %}
             <tr {% if lesson.is_past %}style="background-color: gray;"{% endif %}>
-                <td>{{ lesson.title }}</td>
-                <td>{{ lesson.material }}</td>
-                <td>{{ lesson.day_of_week }}</td>
-                <td>{{ lesson.start_date }}</td>
-                <td>{{ lesson.start_time }}</td>
+                <td style="color: black;">{{ lesson.title }}</td>
+                <td style="color: black;">{{ lesson.material }}</td>
+                <td style="color: black;">{{ lesson.day_of_week }}</td>
+                <td style="color: black;">{{ lesson.start_date }}</td>
+                <td style="color: black;">{{ lesson.start_time }}</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -147,17 +147,16 @@ class Course(models.Model):
 
 class Lesson(models.Model):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lesson_course',
-                                     null=False, editable=False)  # Курс, к которому принадлежит занятие
+                                     null=False, editable=False)
     mentor_owner = models.ForeignKey('registration.CustomUser', on_delete=models.CASCADE, related_name='lesson_mentor',
-                                     null=False,
-                                     default=1)  # Ментор, который проводит занятие
+                                     null=False, default=1)
 
-    title = models.CharField(max_length=255, default='Lesson 1', blank=True)  # Название занятия
+    title = models.CharField(max_length=255, default='Lesson 1', blank=True)
     material = models.TextField('Полное описание', default='Полное описание')
-    day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')  # день недели
-    start_date = models.DateField(default=timezone.now)  # Поле даты начала занятия
-    start_time = models.TimeField('Время начала курса', default=datetime.datetime.strptime('19:00', '%H:%M').time())  # Поле времени начала занятия
-    is_past = models.BooleanField(default=False, editable=False)  # Поле, определяющее, прошло ли занятие
+    day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')
+    start_date = models.DateField(default=timezone.now)
+    start_time = models.TimeField('Время начала курса', default='19:00')
+    is_past = models.BooleanField(default=False, editable=False)
 
     def is_past_lesson(self):
         return self.start_date < timezone.now().date()
