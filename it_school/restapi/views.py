@@ -8,7 +8,7 @@ from mainpage.models import Course
 from .serializers import CourseSerializer
 
 
-class ChatMessageListCreateView(generics.ListCreateAPIView):
+class ChatMessageListCreateViewAPI(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = ChatMessage.objects.all()
     serializer_class = ChatMessageSerializer
@@ -23,7 +23,7 @@ class ChatMessageListCreateView(generics.ListCreateAPIView):
         serializer.save(author=self.request.user)
 
 
-class CourseListView(viewsets.ModelViewSet):
+class CourseListViewAPI(viewsets.ModelViewSet):
     #permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = PageNumberPagination
     queryset = Course.objects.all()
@@ -33,7 +33,7 @@ class CourseListView(viewsets.ModelViewSet):
         serializer.save()
 
 
-class CourseDetailView(generics.RetrieveAPIView):
+class CourseDetailViewAPI(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Course.objects.all()
     serializer_class = CourseSerializer

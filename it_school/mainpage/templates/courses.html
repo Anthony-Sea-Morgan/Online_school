@@ -20,7 +20,7 @@
         <div class="courses-unit-texture">
         <div class="courses-unit-rating ws-nw va">{{ x.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="/static/dist/img/PNG/icon/rating.png" class="icn"></div>
             <div class="courses-unit-title"><h2><strong>{{ x.title }}</strong></h2></div>
-        <div class="courses-unit-a"><a href="{% url 'course-detail' x.id %}">Подробнее→ </a></div>
+        <div class="courses-unit-a"><a href="{% url 'course_detail' x.id %}">Подробнее→ </a></div>
         <div class="courses-unit-difficulty">{{ x.difficulty }}</div>
         <div class="courses-unit-shortdes">{{ x.short_des }}</div>
         <div class="courses-unit-price">{{ x.price }}$</div>
