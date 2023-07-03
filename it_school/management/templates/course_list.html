@@ -1,0 +1,60 @@
+<div class="courses-base wr" style="display:flex;">
+    <div class="courses-filter-wrapper">
+           <select class="form__input" id="technology-filter">
+
+   {% for tech in technology %}
+    <option value="{{ tech }}">{{ tech }}</option>
+  {% endfor %}
+                 </select>
+        <select class="form__input" id="difficulty-filter">
+   {% for diffic in difficulty %}
+    <option value="{{ diffic }}">{{ diffic }}</option>
+  {% endfor %}
+              </select>
+    </div>
+      <div class="courses-list-manage-wrapper">
+        <ul class="courses-list-manage">
+            <div class="courses-list-header-width">
+            <li class="courses-list-manage-outer">
+                 <div class="courses-list-manage-unit">
+            <!--<div class="courses-list-manage-checkbox border-right-li" style="width: 5%;"></div>-->
+            <div class="courses-list-manage-title border-right-li">Название:</div>
+            <div class="courses-list-manage-tech border-right-li">Языки:</div>
+            <div class="courses-list-manage-diff border-right-li">Сложность:</div>
+            <div class="courses-list-manage-price border-right-li">Стоимость:</div>
+            <div class="courses-list-manage-lessons border-right-li">Кол-во уроков:</div>
+            <div class="courses-list-manage-mentor border-right-li">Ментор:</div>
+            <div class="courses-list-manage-start-date">Начало занятий:</div>
+                 </div>
+          </li>
+            </div>
+        {% for x in courses %}
+          <li class="courses-list-manage-outer">
+              <div class="courses-list-manage-unit courses-list-unit-li">
+            <!--<div class="courses-list-manage-checkbox" style="width: 5%;">
+                <form id="course-form" method="post">
+            <input type="checkbox" name="selected_courses" value="{{ x.id }}" class="course-checkbox">
+                </form>
+            </div>-->
+            <div class="courses-list-manage-title border-right-li">{{ x.title }}</div>
+            <div class="courses-list-manage-tech border-right-li">{{ x.technologies }}</div>
+            <div class="courses-list-manage-diff border-right-li">{{ x.difficulty }}</div>
+            <div class="courses-list-manage-price border-right-li">{{ x.price }}</div>
+            <div class="courses-list-manage-lessons border-right-li">{{ x.lessons_count }}</div>
+            <div class="courses-list-manage-mentor border-right-li">{{ x.mentor }}</div>
+            <div class="courses-list-manage-start-date">{{ x.start_date }}</div>
+                  </div>
+                  <form method="POST" action="{% url 'management:course_delete' x.pk %}" class="courses-list-manage-control" id="control-courses-btns">
+                    {% csrf_token %}
+                    <button class="form__input courses-control-btn">Редактировать курс</button>
+                    <button type="submit"  class="form__input courses-control-btn">Удалить курс</button>
+                  </form>
+          </li>
+
+                 {% empty %}
+                 <p>Нет доступных курсов</p>
+                {% endfor %}
+
+        </ul>
+      </div>
+</div>

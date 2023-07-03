@@ -19,3 +19,4 @@ var difficultyFilter = document.getElementById('difficulty-filter');
     }
     technologyFilter.addEventListener('change', handleFilterChange);
     difficultyFilter.addEventListener('change', handleFilterChange);
+
