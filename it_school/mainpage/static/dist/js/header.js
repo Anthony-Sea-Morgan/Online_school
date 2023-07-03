@@ -1,4 +1,4 @@
-if (document.getElementById('LOGIN'){})document.getElementById('LOGIN').onclick = function() {
+if (document.getElementById('LOGIN')){document.getElementById('LOGIN').onclick = function() {
   var loginBlank = document.getElementById('reg-blank-login');
 
   if (loginBlank.style.display == 'none') {

@@ -1,10 +1,88 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация в онлайн школе</title>
+    <link rel="shortcut icon" type="image/png" sizes="96x96" rel="icon" href="/static/dist/img/PNG/icon/online_school.png">
+    <link rel="stylesheet" href="{% static 'dist/scss/wrapper-form.css'%}">
+    <link rel="stylesheet" href="{% static 'dist/scss/body.css'%}">
+</head>
+<body>
+<div class="blank-global-container" style="position: inherit; height: auto;background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');">
+  <div class="wrapper-blank" style="max-width: 800px;width: 720px;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
+    <div class="close-btn" id="wrapper-blank-close-btn" onclick="window.location.href = '{% url 'management:course_list'%}'">⨯</div>
+<h1>Редактировать курс</h1>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
 
-{% block content %}
-  <h1>{% if course.pk %}Редактировать{% else %}Создать{% endif %} курс</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
-  </form>
-{% endblock %}
+      <div class="form-group">
+        <label for="id_title">Название:</label>
+        <input type="text" id="id_title" name="title" value="{{ course.title }}" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label for="id_description">Полное описание:</label>
+        {{ form.description }}
+      </div>
+      <div class="form-group">
+        <label for="id_description">краткое описание:</label>
+        <textarea id="id_description" name="description" class="form-control">{{ course.short_des }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="id_difficulty">Сложность курса:</label>
+        <select id="id_difficulty" name="difficulty" class="form-control">
+          {% for choice in difficulty_choices  %}
+            <option value="{{ choice.0 }}" {% if choice.0 == course.difficulty %}selected{% endif %}>{{ choice.1 }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="id_rating">Рейтинг курса:</label>
+        <input type="number" id="id_rating" name="rating" value="{{ course.rating }}" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label for="id_price">Стоимость курса:</label>
+        <input type="number" id="id_price" name="price" value="{{ course.price }}" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label for="id_mentor">Ментор:</label>
+        <select id="id_mentor" name="mentor" class="form-control">
+          {% for mentor in mentors %}
+            <option value="{{ mentor.pk }}" {% if mentor.pk == course.mentor.pk %}selected{% endif %}>{{ mentor }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="id_start_date">Дата начала курса:</label>
+        <input type="date" id="id_start_date" name="start_date" value="{{ course.start_date }}" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label for="id_start_time">Время начала курса:</label>
+        <input type="time" id="id_start_time" name="start_time" value="{{ course.start_time }}" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Дни недели занятий:</label>
+        {% for choice in days_of_week_choices %}
+          <div class="form-check" style="height: 20px; display: flex; margin-bottom: 10px;">
+            <input style="width: 25%;height: 100%;" type="checkbox" id="id_days_{{ forloop.counter0 }}" name="days_of_week" value="{{ choice.0 }}" {% if choice.0 in course.days_of_week %}checked{% endif %} class="form-check-input">
+            <label style="width: 50%;" for="id_days_{{ forloop.counter0 }}" class="form-check-label">{{ choice.1 }}</label>
+          </div>
+        {% endfor %}
+  </div>
+
+       <div class="form-group">
+        <button type="submit" class="btn ">Сохранить</button>
+        <a href="{% url 'management:course_delete' pk=course.pk %}" class="btn">Удалить</a>
+      </div>
+    </form>
+</div>

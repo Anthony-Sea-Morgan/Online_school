@@ -40,7 +40,7 @@ def image_folder_Technology(instance, filename):
 
 class Course(models.Model):
     title = models.CharField(max_length=100)  # Тема курса
-    description = models.TextField('Полное описание')  # Описание
+    description = models.TextField('Полное описание', blank=True)  # Описание
     short_des = models.TextField('Краткое описание', default='')
 
     difficulty = models.CharField('Сложность курса', max_length=15, choices=DIFFICULTY_CHOICES)  # Сложность

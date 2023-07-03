@@ -4,7 +4,11 @@ var difficultyFilter = document.getElementById('difficulty-filter');
  function handleFilterChange() {
         var selectedTechnology = technologyFilter.value;
         var selectedDifficulty = difficultyFilter.value;
+        if (document.querySelectorAll('.courses-unit-wrapper')){
         var results = document.querySelectorAll('.courses-unit-wrapper');
+        } if (document.querySelectorAll('.courses-list-manage-outer')){
+        var results = document.querySelectorAll('.courses-list-manage-outer');
+        }
         results.forEach(function(result) {
             var technology = result.getAttribute('data-technology');
             var difficulty = result.getAttribute('data-difficulty');

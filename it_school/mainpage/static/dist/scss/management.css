@@ -22,6 +22,18 @@ width: 100%;
 height: 60px;
 align-items: center;
 }
+.courses-list-manage-outer-header{
+width: 95%;
+display: block;
+margin: 0 0 40px 20px
+}
+.courses-control-form{
+width: 5%;
+align-items: center;
+border-radius: 30px;
+vertical_align: middle;
+cursor: pointer;
+}
 .border-right-li{
 border-right: 1px solid #dddddd;
 }
@@ -32,17 +44,14 @@ margin: 0 0 40px 20px
 }
 .courses-list-manage-control{
 display: flex;
-width: 100%;
 height: 20px;
-margin: 5px 0 0 -40px;
-justify-content: flex-end;
+width: 10%;
 }
 .courses-list-unit-li{
 border-radius: 20px;
 border: solid 1px #bdbdbd;
 box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;
 background-color: white;
-cursor: pointer;
 }
 .courses-list-manage-unit div {
 display: inline-block;

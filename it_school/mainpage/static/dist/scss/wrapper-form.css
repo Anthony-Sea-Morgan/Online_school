@@ -3,7 +3,7 @@ width:100%;
 height: 100%;
 top: 0;
 left: 0;
-position: fixed !important;
+position: fixed;
 justify-content: center; /*Центрирование по горизонтали*/
 align-items: center;
 z-index: 1;
