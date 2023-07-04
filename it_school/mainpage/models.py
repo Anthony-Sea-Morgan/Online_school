@@ -174,7 +174,7 @@ class Lesson(models.Model):
 
 class CustomGroup(Group):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='group_course',
-                                     null=False)  # Курс, к которому принадлежит группа
+                                     default=1)  # Курс, к которому принадлежит группа
     description = models.TextField(blank=True)
     users = models.ManyToManyField(CustomUser, related_name='custom_groups')
 
@@ -243,11 +243,18 @@ def handle_m2m_changed(sender, instance, action, reverse, model, pk_set, **kwarg
             course = model.objects.get(pk=pk)
             try:
                 group = CustomGroup.objects.get(course_owner=pk)
+                lessons = Lesson.objects.filter(course_owner=course.pk)
                 # Добавить в группу пользователя
                 group.users.add(instance)
                 print(f'Пользователь {instance.username} записался на курс {course.title} в группу {group.name}')
+                for lesson in lessons:
+                    if lesson is not None and group is not None and instance is not None:
+                        Attendance.objects.get_or_create(lesson=lesson, group=group, student=instance)
+                        print(f'Записано!')
+
             except Exception as e:
                 print(f'Не найдена группа для курса {str(e)}')
+
     elif action == 'post_remove':
         # Обработка удаления курса
         for pk in pk_set:
@@ -266,26 +273,4 @@ def update_lessons_mentor(sender, instance, **kwargs):
             for lesson in lessons:
                 lesson.mentor_owner = instance.mentor
                 lesson.save()
-            # Lesson.objects.filter(course_owner=instance).update(
-            #     mentor_owner=instance.mentor)  # Обновляем ментора у всех занятий данного курса
 
-
-@receiver(m2m_changed, sender=CustomUser.courses.through)
-def update_attendance(sender, instance, action, reverse, model, pk_set, **kwargs):
-    if action == 'post_add':
-        for group_pk in pk_set:
-            try:
-                print(f'group_pk {group_pk}')
-                print(f'pk_set {pk_set}')
-                group = CustomGroup.objects.get(pk=group_pk)
-                lessons = Lesson.objects.filter(course_owner=group.course_owner)
-                students = CustomUser.objects.filter(groups=group)
-
-                for lesson in lessons:
-                    for student in students:
-                        print(f'group {group}')
-                        print(f'lesson {lesson}')
-                        print(f'student {student}')
-                        Attendance.objects.get_or_create(lesson=lesson, group=group, student=student)
-            except CustomGroup.DoesNotExist:
-                print(f"CustomGroup with pk={group_pk} does not exist.")
