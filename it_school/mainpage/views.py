@@ -68,6 +68,8 @@ def attendance_table(request):
         students = CustomUser.objects.filter(groups=group)
         attendance = Attendance.objects.filter(group=group)
 
+        print(f'{students}')
+
         table = []
         table_headers = ['Слушатель'] + [str(lesson.start_date) for lesson in lessons]
 
@@ -83,4 +85,4 @@ def attendance_table(request):
             'table': tabulate(table, headers=table_headers, tablefmt='grid')
         })
 
-        return render(request, 'attendance.html', {'attendance_tables': attendance_tables})
+    return render(request, 'attendance.html', {'attendance_tables': attendance_tables})
