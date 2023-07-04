@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Управление уроками</title>
+</head>
+<body>
+    <h1>Управление уроками</h1>
+    <ul>
+        {% for lesson in lessons %}
+            <li>{{ lesson.title }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

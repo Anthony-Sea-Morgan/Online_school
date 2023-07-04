@@ -23,14 +23,18 @@ from django.urls import include
 from mainpage.views import *
 from registration.views import *
 from restapi.views import *
+from management.views import *
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('mainpage.urls')),
-    path('', include('restapi.urls')),
+    path('api/', include('restapi.urls')),
     path('', include('registration.urls')),
+    path('management/', include('management.urls')),
+    path('', include('mainpage.urls')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
     path('summernote/', include('django_summernote.urls')),
     # path('api/v1/auth/token/login/', djoser_views.TokenCreateView.as_view(), name='token_create'),
 

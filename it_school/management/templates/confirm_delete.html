@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="POST" action="{% url 'management:course_delete' x.pk %}" class="courses-control-form" id="control-courses-btns">
+                    {% csrf_token %}
+                    <button type="submit"  class="courses-control-form">🗑️</button>
+                  </form>
+</body>
+</html>

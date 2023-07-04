@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block page_label %}
+{{ title }}
+{% endblock %}
+{% block header %}
+{% include "header.html" %}
+{% endblock %}
+
+{% block content %}
+{% include "course_list.html" %}
+{% endblock %}
+
+{% block script %}
+<script src="/static/dist/js/coursesFilter.js"></script>
+<script>$(document).ready(function() {
+  $('#id_description').summernote();
+});</script>
+{% endblock %}

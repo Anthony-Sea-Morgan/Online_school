@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_summernote',
     'djoser',
     'mainpage',
+    'management',
     'rest_framework',
     'rest_framework.authtoken',
     'registration',
@@ -146,11 +147,14 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
-EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = "norepy.onlinecourses@gmail.com"
-EMAIL_HOST_PASSWORD = 'bjginxlzdcsrdrma'
 EMAIL_PORT = 587
+EMAIL_HOST_USER = "norepy.onlinecourses@gmail.com"
+EMAIL_HOST_PASSWORD = 'phaysmgicsudrfwj'
+EMAIL_USE_TLS = True
+
+DEFAULT_FROM_EMAIL = 'noreply.onlinecourses@gmail.com'
 # Добавьте следующие настройки JWT в конец файла settings.py
 from datetime import timedelta
 DJOSER = {
@@ -159,7 +163,9 @@ DJOSER = {
     'ACTIVATION_URL': 'auth/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
     'SEND_CONFIRMATION_EMAIL': True,
+    'SEND_PASSWORD_RESET_CONFIRMATION_EMAIL': True,
     'SERIALIZERS': {},
+    'ACTIVATION_URL': 'auth/verify/{uid}/{token}/',
 }
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
@@ -177,7 +183,7 @@ SIMPLE_JWT = {
     "JWK_URL": None,
     "LEEWAY": 0,
 
-    "AUTH_HEADER_TYPES": ("JWT",),
+    "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "user_id",
@@ -196,3 +202,16 @@ SIMPLE_JWT = {
 
 
 AUTH_USER_MODEL = 'registration.CustomUser'
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    }
+}
