@@ -1,0 +1,28 @@
+<!-- room.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Room - Group {{ group.id }}</title>
+</head>
+<body>
+    <h1>Chat Room - Group {{ group.id }}</h1>
+
+    <div id="messages">
+        {% for message in messages %}
+            <p>{{ message.text }}</p>
+            <small>By {{ message.sender.username }} at {{ message.timestamp }}</small>
+        {% endfor %}
+    </div>
+
+    <form id="message-form" method="POST" action="{% url 'send_message' group.id %}">
+        {% csrf_token %}
+        <input type="text" name="message_text">
+        <button type="submit">Send</button>
+    </form>
+
+    <script>
+        // JavaScript для отправки сообщений и обновления списка сообщений через WebSocket
+    </script>
+</body>
+</html>

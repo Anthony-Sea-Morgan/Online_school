@@ -89,7 +89,8 @@ class Course(models.Model):
         lesson_count = Lesson.objects.filter(course_owner_id=self.pk).count()
 
         if is_created:
-            CustomGroup.objects.create(course_owner=self, name=f'{self.title}.{self.difficulty}.Группа.')
+            group=CustomGroup.objects.create(course_owner=self, name=f'{self.title}.{self.difficulty}.Группа.')
+            print(f'ГРУППА: {group.pk}')
             next_date = self.start_date
             for i in range(self.lessons_count):
                 count = len(self.days_of_week)
@@ -224,3 +225,9 @@ class Attendance(models.Model):
         unique_together = ('lesson', 'group', 'student')
 
 
+class ChatMessage(models.Model):
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='sent_messages')  # Отправитель сообщения
+    group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE)  # Группа, к которой относится сообщение
+    text = models.TextField()  # Текст сообщения
+    timestamp = models.DateTimeField(auto_now_add=True)  # Дата и время отправки сообщения
+    is_mentor = models.BooleanField(default=False)
