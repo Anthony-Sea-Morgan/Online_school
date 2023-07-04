@@ -1,10 +1,11 @@
 from tabulate import tabulate
-from .models import Course, Lesson, CustomGroup, CustomUser, Attendance, TECHNOLOGIES
+from .models import Course, Lesson, CustomGroup, CustomUser, Attendance, ChatMessage, TECHNOLOGIES
 from django.views.generic import DetailView, UpdateView, DeleteView
 from django.shortcuts import render
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
+from django.shortcuts import render, get_object_or_404
 
 
 @csrf_protect
@@ -86,3 +87,19 @@ def attendance_table(request):
         })
 
     return render(request, 'attendance.html', {'attendance_tables': attendance_tables})
+
+
+def chat_room(request, group_id):
+    group = get_object_or_404(CustomGroup, id=group_id)
+    messages = ChatMessage.objects.filter(group=group).order_by('timestamp')
+    return render(request, 'room.html', {'group': group, 'messages': messages})
+
+
+def send_message(request, group_id):
+    if request.method == 'POST':
+        group = get_object_or_404(CustomGroup, id=group_id)
+        sender = request.user
+        message_text = request.POST.get('message_text')
+        if message_text:
+            ChatMessage.objects.create(sender=sender, group=group, text=message_text)
+    return redirect('chat_room', group_id=group_id)
