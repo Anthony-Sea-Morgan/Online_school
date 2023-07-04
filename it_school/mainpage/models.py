@@ -94,10 +94,10 @@ class Course(models.Model):
             for i in range(self.lessons_count):
                 count = len(self.days_of_week)
                 day = i % count
-                print(f'next_date.weekday():  {next_date.weekday()}')
+
                 if isinstance(self.days_of_week, set):
                     self.days_of_week = list(self.days_of_week)
-                print(f'self.days_of_week[day]):  {self.get_weekday_index(self.days_of_week[day])}')
+
                 while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
                     next_date += datetime.timedelta(days=1)
 
@@ -113,9 +113,10 @@ class Course(models.Model):
             for i in range(lesson_count, self.lessons_count):
                 count = len(self.days_of_week)
                 day = i % count
-                # while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
-                #     next_date += datetime.timedelta(days=1)
-                while next_date.weekday() not in self.get_weekday_index(self.days_of_week):
+
+                if isinstance(self.days_of_week, set):
+                    self.days_of_week = list(self.days_of_week)
+                while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
                     next_date += datetime.timedelta(days=1)
 
                 Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
@@ -222,55 +223,4 @@ class Attendance(models.Model):
     class Meta:
         unique_together = ('lesson', 'group', 'student')
 
-
-# Сигналы Django
-@receiver(m2m_changed, sender=CustomUser.courses.through)
-def handle_m2m_changed(sender, instance, action, reverse, model, pk_set, **kwargs):
-    """
-    Функция выполняется когда пользователю добавляется курс
-    :param sender: источник сигнала
-    :param instance: конкретный пользователь
-    :param action: действие  - добавление связей
-    :param reverse: обратная связь
-    :param model: модель с которой связывают
-    :param pk_set: множество ключей с колторыми связывают
-    :param kwargs: прочие параметры
-    :return: нет
-    """
-    if action == 'post_add':
-        # Обработка добавления курса
-        for pk in pk_set:
-            course = model.objects.get(pk=pk)
-            try:
-                group = CustomGroup.objects.get(course_owner=pk)
-                lessons = Lesson.objects.filter(course_owner=course.pk)
-                # Добавить в группу пользователя
-                group.users.add(instance)
-                print(f'Пользователь {instance.username} записался на курс {course.title} в группу {group.name}')
-                for lesson in lessons:
-                    if lesson is not None and group is not None and instance is not None:
-                        Attendance.objects.get_or_create(lesson=lesson, group=group, student=instance)
-                        print(f'Записано!')
-
-            except Exception as e:
-                print(f'Не найдена группа для курса {str(e)}')
-
-    elif action == 'post_remove':
-        # Обработка удаления курса
-        for pk in pk_set:
-            course = model.objects.get(pk=pk)
-            # Выполнить нужные действия после удаления курса
-            if course is not None:
-                print(f'Пользователь {instance.username} отписался с курса {course.title}')
-
-
-@receiver(pre_save, sender=Course)
-def update_lessons_mentor(sender, instance, **kwargs):
-    if instance.pk:  # Проверяем, что модель уже существует (не новая)
-        previous_mentor = Course.objects.get(pk=instance.pk).mentor  # Получаем предыдущего ментора
-        if previous_mentor != instance.mentor:  # Если ментор изменился
-            lessons = Lesson.objects.filter(course_owner=instance)
-            for lesson in lessons:
-                lesson.mentor_owner = instance.mentor
-                lesson.save()
 
