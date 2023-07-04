@@ -1,0 +1,8 @@
+{% for attendance_table in attendance_tables %}
+    <h2>{{ attendance_table.group.name }} Attendance</h2>
+    <pre>{{ attendance_table.table }}</pre>
+
+    {% if not forloop.last %}
+        <hr>
+    {% endif %}
+{% endfor %}

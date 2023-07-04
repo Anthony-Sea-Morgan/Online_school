@@ -1,6 +1,7 @@
 import datetime
 import uuid
 import logging
+from django.contrib.auth.models import Group
 from django.db.models.signals import m2m_changed, pre_save
 from django.dispatch import receiver
 from multiselectfield import MultiSelectField
@@ -9,7 +10,6 @@ from django.utils import timezone
 from .fields import WEBPField
 from django.db import models
 from registration.models import CustomUser
-from django.contrib.auth.models import Group
 from django.contrib import admin
 
 DAYS_OF_WEEK_CHOICES = [
@@ -46,7 +46,7 @@ class Course(models.Model):
     difficulty = models.CharField('Сложность курса', max_length=15, choices=DIFFICULTY_CHOICES)  # Сложность
     rating = models.DecimalField('Рейтинг курса', max_digits=3, decimal_places=1)  # Рейтинг(оценка) курса
     price = models.DecimalField('Стоимость курса', max_digits=6, decimal_places=2)  # Стоимость курса
-    mentor = models.ForeignKey('registration.CustomUser', on_delete=models.CASCADE)
+    mentor = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     start_date = models.DateField('Дата начала курса', default=timezone.now)  # Поле даты начала курса
     start_time = models.TimeField('Время начала курса', default=datetime.time(19, 0))  # Поле времени начала курса
@@ -145,7 +145,7 @@ class Course(models.Model):
 class Lesson(models.Model):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lesson_course',
                                      null=False, editable=False)  # Курс, к которому принадлежит занятие
-    mentor_owner = models.ForeignKey('registration.CustomUser', on_delete=models.CASCADE, related_name='lesson_mentor',
+    mentor_owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='lesson_mentor',
                                      null=False,
                                      default=1)  # Ментор, который проводит занятие
 
@@ -174,9 +174,9 @@ class Lesson(models.Model):
 
 class CustomGroup(Group):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='group_course',
-                                     null=True)  # Курс, к которому принадлежит группа
+                                     default=1)  # Курс, к которому принадлежит группа
     description = models.TextField(blank=True)
-    users = models.ManyToManyField('registration.CustomUser', related_name='custom_groups')
+    users = models.ManyToManyField(CustomUser, related_name='custom_groups')
 
     class Meta:
         verbose_name = 'Группа'
@@ -201,7 +201,7 @@ class CustomGroupAdmin(admin.ModelAdmin):
 
 
 class Review(models.Model):
-    owner = models.ForeignKey('registration.CustomUser', on_delete=models.CASCADE, related_name='reviews', null=False)
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reviews', null=False)
     title = models.CharField(max_length=1000, blank=False)
     objective = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='objective', null=False)
 
@@ -211,6 +211,16 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
+
+
+class Attendance(models.Model):
+    lesson = models.ForeignKey('Lesson', on_delete=models.CASCADE)
+    group = models.ForeignKey('CustomGroup', on_delete=models.CASCADE)
+    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    attended = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('lesson', 'group', 'student')
 
 
 # Сигналы Django
@@ -233,11 +243,18 @@ def handle_m2m_changed(sender, instance, action, reverse, model, pk_set, **kwarg
             course = model.objects.get(pk=pk)
             try:
                 group = CustomGroup.objects.get(course_owner=pk)
+                lessons = Lesson.objects.filter(course_owner=course.pk)
                 # Добавить в группу пользователя
                 group.users.add(instance)
                 print(f'Пользователь {instance.username} записался на курс {course.title} в группу {group.name}')
+                for lesson in lessons:
+                    if lesson is not None and group is not None and instance is not None:
+                        Attendance.objects.get_or_create(lesson=lesson, group=group, student=instance)
+                        print(f'Записано!')
+
             except Exception as e:
                 print(f'Не найдена группа для курса {str(e)}')
+
     elif action == 'post_remove':
         # Обработка удаления курса
         for pk in pk_set:
@@ -252,5 +269,8 @@ def update_lessons_mentor(sender, instance, **kwargs):
     if instance.pk:  # Проверяем, что модель уже существует (не новая)
         previous_mentor = Course.objects.get(pk=instance.pk).mentor  # Получаем предыдущего ментора
         if previous_mentor != instance.mentor:  # Если ментор изменился
-            Lesson.objects.filter(course_owner=instance).update(
-                mentor_owner=instance.mentor)  # Обновляем ментора у всех занятий данного курса
+            lessons = Lesson.objects.filter(course_owner=instance)
+            for lesson in lessons:
+                lesson.mentor_owner = instance.mentor
+                lesson.save()
+
