@@ -5,7 +5,12 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync, sync_to_async
+from django.http import HttpResponse
+import json
 
 
 @csrf_protect
@@ -89,9 +94,14 @@ def attendance_table(request):
     return render(request, 'attendance.html', {'attendance_tables': attendance_tables})
 
 
+
 def chat_room(request, group_id):
     group = get_object_or_404(CustomGroup, id=group_id)
     messages = ChatMessage.objects.filter(group=group).order_by('timestamp')
+
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_add)(f'chat_group_{group_id}', 'websocket_group')
+
     return render(request, 'room.html', {'group': group, 'messages': messages})
 
 

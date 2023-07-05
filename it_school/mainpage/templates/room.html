@@ -1,11 +1,17 @@
-<!-- room.html -->
+{% extends 'index.html' %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Chat Room - Group {{ group.id }}</title>
-</head>
-<body>
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block page_label %}
+{{ title }}
+{% endblock %}
+
+{% block header %}
+{% include "header.html" %}
+{% endblock %}
+{% block content %}
     <h1>Chat Room - Group {{ group.id }}</h1>
 
     <div id="messages">
@@ -20,9 +26,7 @@
         <input type="text" name="message_text">
         <button type="submit">Send</button>
     </form>
-
-    <script>
-        // JavaScript для отправки сообщений и обновления списка сообщений через WebSocket
-    </script>
-</body>
-</html>
+{% endblock %}
+{% block script %}
+<script src="/static/dist/js/wsChat.js"></script>
+{% endblock %}
