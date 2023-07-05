@@ -7,6 +7,12 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render, get_object_or_404
 
+from django.shortcuts import render
+from .models import Lesson
+from datetime import date
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
 
 @csrf_protect
 def index(request):
@@ -23,6 +29,19 @@ def index(request):
     }
     template = 'mainpage.html'
     return render(request, template, data)
+  
+  
+def lesson_list(request):
+    lessons = Lesson.objects.all()
+    context = {'lessons': lessons}
+    return render(request, 'lesson_list.html', context)
+
+
+@login_required
+def personal_cabinet(request):
+    user = request.user
+    courses = user.courses.all().order_by('start_date')  # Получаем список курсов пользователя, отсортированных по дате начала
+    return render(request, 'personal_cabinet.html', {'user': user, 'courses': courses})
 
 
 class CourseDetailView(DetailView):
@@ -30,7 +49,8 @@ class CourseDetailView(DetailView):
     model = Course
     template_name = 'course_detail.html'
     context_object_name = 'course'
-
+    
+    
     def post(self, request, *args, **kwargs):
         if 'confirm_payment' in request.POST:
             course = self.get_object()
@@ -53,7 +73,6 @@ class CourseDetailView(DetailView):
         if self.error:
             context['styleconfp'] = 'display: flex;'
         return context
-
 
 def purchase_confirmation(request, pk):
     course = Course.objects.get(id=pk)
@@ -103,3 +122,4 @@ def send_message(request, group_id):
         if message_text:
             ChatMessage.objects.create(sender=sender, group=group, text=message_text)
     return redirect('chat_room', group_id=group_id)
+
