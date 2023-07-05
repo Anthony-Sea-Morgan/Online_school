@@ -10,15 +10,28 @@ from django.views import View
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.views.decorators.csrf import csrf_protect
+from django.http import HttpResponseRedirect
+from urllib.parse import urlencode
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
-
-@api_view(['GET', 'POST'])
-def register_user(request):
+@csrf_protect
+def register_view(request):
     if request.method == 'POST':
-        serializer = UserSerializer(data=request.data)
+        serializer = UserSerializer(data=request.POST)
         if serializer.is_valid():
             serializer.save()
-            return redirect('index')
+            user = serializer.instance
+            redirect_url = request.GET.get('next', '/')
+            subject = 'Регистрация успешна'
+            html_message = render_to_string('email_templates/registration_confirmation.html')
+            plain_message = strip_tags(html_message)
+            from_email = 'norepy.onlinecourses@gmail.com'
+            to_email = user.email
+            send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
+            return redirect(redirect_url)
         else:
             error_message = serializer.errors.get('password')[0]  if serializer.errors.get(
                 'password') else 'Некорректно введенные данные'
@@ -26,7 +39,7 @@ def register_user(request):
     else:
         return render(request, 'registration.html')
 
-
+@csrf_protect
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -35,23 +48,25 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'Вы успешно авторизованы.')
-            return redirect('index')
+            redirect_url = request.GET.get('next', '/')
         else:
             error_message = 'Некорректные введеные данные'
-            return render(request, 'mainpage.html', {'error_message': error_message, 'style': 'display :flex;'})
-    else:
-        return render(request, 'mainpage.html')
+            params = {'error_message': 'Некорректные введеные данные', 'style': 'display :flex;'}
+            redirect_url = request.GET.get('next', '/')
+            return HttpResponseRedirect(f'{redirect_url}?error_message={error_message}&style=display:flex;')
+
+        return redirect(redirect_url)
 
 
-class LogoutView(View):
-    def get(self, request):
-        logout(request)
-        return redirect('index')
+def logout_view(request):
+    logout(request)
+    redirect_url = request.GET.get('next', 'index')
+    return redirect(redirect_url)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.POST)
         serializer.is_valid(raise_exception=True)
         user = serializer.user
         if user:

@@ -3,6 +3,8 @@
 @import url("fonts.css");
 @import url("courses.css");
 @import url("course-detail.css");
+@import url("wrapper-form.css");
+@import url("management.css");
 
 [type="selectable"] {
   background-color: cyan;

@@ -1,6 +1,7 @@
 import datetime
 import uuid
 import logging
+from django.contrib.auth.models import Group
 from django.db.models.signals import m2m_changed, pre_save
 from django.dispatch import receiver
 from multiselectfield import MultiSelectField
@@ -9,7 +10,6 @@ from django.utils import timezone
 from .fields import WEBPField
 from django.db import models
 from registration.models import CustomUser
-from django.contrib.auth.models import Group
 from django.contrib import admin
 from django.db import models
 from django.utils import timezone
@@ -50,13 +50,13 @@ def image_folder_Technology(instance, filename):
 
 class Course(models.Model):
     title = models.CharField(max_length=100)  # Тема курса
-    description = models.TextField('Полное описание')  # Описание
+    description = models.TextField('Полное описание', blank=True)  # Описание
     short_des = models.TextField('Краткое описание', default='')
 
     difficulty = models.CharField('Сложность курса', max_length=15, choices=DIFFICULTY_CHOICES)  # Сложность
     rating = models.DecimalField('Рейтинг курса', max_digits=3, decimal_places=1)  # Рейтинг(оценка) курса
     price = models.DecimalField('Стоимость курса', max_digits=6, decimal_places=2)  # Стоимость курса
-    mentor = models.ForeignKey('registration.CustomUser', on_delete=models.CASCADE)
+    mentor = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     start_date = models.DateField('Дата начала курса', default=timezone.now)  # Поле даты начала курса
     start_time = models.TimeField('Время начала курса', default=datetime.time(19, 0))  # Поле времени начала курса
@@ -95,14 +95,19 @@ class Course(models.Model):
         is_created = not bool(self.pk)
 
         super().save(*args, **kwargs)
+
         lesson_count = Lesson.objects.filter(course_owner_id=self.pk).count()
 
         if is_created:
-            CustomGroup.objects.create(course_owner=self, name=f'{self.title}.{self.difficulty}.Группа.')
+            group=CustomGroup.objects.create(course_owner=self, name=f'{self.title}.{self.difficulty}.Группа.')
+            print(f'ГРУППА: {group.pk}')
             next_date = self.start_date
             for i in range(self.lessons_count):
                 count = len(self.days_of_week)
                 day = i % count
+
+                if isinstance(self.days_of_week, set):
+                    self.days_of_week = list(self.days_of_week)
 
                 while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
                     next_date += datetime.timedelta(days=1)
@@ -119,8 +124,12 @@ class Course(models.Model):
             for i in range(lesson_count, self.lessons_count):
                 count = len(self.days_of_week)
                 day = i % count
+
+                if isinstance(self.days_of_week, set):
+                    self.days_of_week = list(self.days_of_week)
                 while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
                     next_date += datetime.timedelta(days=1)
+
                 Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
                                       day_of_week=self.days_of_week[day], start_date=next_date,
@@ -147,9 +156,12 @@ class Course(models.Model):
 
 class Lesson(models.Model):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lesson_course',
-                                     null=False, editable=False)
-    mentor_owner = models.ForeignKey('registration.CustomUser', on_delete=models.CASCADE, related_name='lesson_mentor',
-                                     null=False, default=1)
+
+                                     null=False, editable=False)  # Курс, к которому принадлежит занятие
+    mentor_owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='lesson_mentor',
+                                     null=False,
+                                     default=1)  # Ментор, который проводит занятие
+
 
     title = models.CharField(max_length=255, default='Lesson 1', blank=True)
     material = models.TextField('Полное описание', default='Полное описание')
@@ -179,9 +191,9 @@ class Lesson(models.Model):
 
 class CustomGroup(Group):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='group_course',
-                                     null=True)  # Курс, к которому принадлежит группа
+                                     default=1)  # Курс, к которому принадлежит группа
     description = models.TextField(blank=True)
-    users = models.ManyToManyField('registration.CustomUser', related_name='custom_groups')
+    users = models.ManyToManyField(CustomUser, related_name='custom_groups')
 
     class Meta:
         verbose_name = 'Группа'
@@ -206,7 +218,7 @@ class CustomGroupAdmin(admin.ModelAdmin):
 
 
 class Review(models.Model):
-    owner = models.ForeignKey('registration.CustomUser', on_delete=models.CASCADE, related_name='reviews', null=False)
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reviews', null=False)
     title = models.CharField(max_length=1000, blank=False)
     objective = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='objective', null=False)
 
@@ -218,44 +230,19 @@ class Review(models.Model):
         verbose_name_plural = 'Отзывы'
 
 
-# Сигналы Django
-@receiver(m2m_changed, sender=CustomUser.courses.through)
-def handle_m2m_changed(sender, instance, action, reverse, model, pk_set, **kwargs):
-    """
-    Функция выполняется когда пользователю добавляется курс
-    :param sender: источник сигнала
-    :param instance: конкретный пользователь
-    :param action: действие  - добавление связей
-    :param reverse: обратная связь
-    :param model: модель с которой связывают
-    :param pk_set: множество ключей с колторыми связывают
-    :param kwargs: прочие параметры
-    :return: нет
-    """
-    if action == 'post_add':
-        # Обработка добавления курса
-        for pk in pk_set:
-            course = model.objects.get(pk=pk)
-            try:
-                group = CustomGroup.objects.get(course_owner=pk)
-                # Добавить в группу пользователя
-                group.users.add(instance)
-                print(f'Пользователь {instance.username} записался на курс {course.title} в группу {group.name}')
-            except Exception as e:
-                print(f'Не найдена группа для курса {str(e)}')
-    elif action == 'post_remove':
-        # Обработка удаления курса
-        for pk in pk_set:
-            course = model.objects.get(pk=pk)
-            # Выполнить нужные действия после удаления курса
-            if course is not None:
-                print(f'Пользователь {instance.username} отписался с курса {course.title}')
+class Attendance(models.Model):
+    lesson = models.ForeignKey('Lesson', on_delete=models.CASCADE)
+    group = models.ForeignKey('CustomGroup', on_delete=models.CASCADE)
+    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    attended = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('lesson', 'group', 'student')
 
 
-@receiver(pre_save, sender=Course)
-def update_lessons_mentor(sender, instance, **kwargs):
-    if instance.pk:  # Проверяем, что модель уже существует (не новая)
-        previous_mentor = Course.objects.get(pk=instance.pk).mentor  # Получаем предыдущего ментора
-        if previous_mentor != instance.mentor:  # Если ментор изменился
-            Lesson.objects.filter(course_owner=instance).update(
-                mentor_owner=instance.mentor)  # Обновляем ментора у всех занятий данного курса
+class ChatMessage(models.Model):
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='sent_messages')  # Отправитель сообщения
+    group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE)  # Группа, к которой относится сообщение
+    text = models.TextField()  # Текст сообщения
+    timestamp = models.DateTimeField(auto_now_add=True)  # Дата и время отправки сообщения
+    is_mentor = models.BooleanField(default=False)

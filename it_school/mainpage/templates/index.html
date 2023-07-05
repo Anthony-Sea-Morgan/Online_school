@@ -11,10 +11,6 @@
     <title>{% block title %}{% endblock  %}</title>
     <link rel="shortcut icon" type="image/png" sizes="96x96" rel="icon" href="/static/dist/img/PNG/icon/online_school.png">
    <link rel="stylesheet" href="{% static 'dist/scss/style.css'%}">
-{% if user.is_authenticated %}
-{% else %}
-    <link rel="stylesheet" href="{% static 'dist/scss/login.css'%}">
-{% endif %}
     {% block style%}
     {% endblock%}
 
