@@ -24,4 +24,5 @@ urlpatterns = [
     path('room/<int:group_id>/send_message/', send_message, name='send_message'),
 
 
+
 ]

@@ -124,6 +124,7 @@ def attendance_table(request):
     return render(request, 'attendance.html', {'attendance_tables': attendance_tables})
 
 
+
 def chat_room(request, group_id):
     group = get_object_or_404(CustomGroup, id=group_id)
     messages = ChatMessage.objects.filter(group=group).order_by('timestamp')
