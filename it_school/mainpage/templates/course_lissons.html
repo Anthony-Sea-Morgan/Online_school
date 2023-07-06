@@ -1,0 +1,26 @@
+{% extends 'index.html' %}
+
+{% block title %}
+Уроки по курсу
+{% endblock %}
+
+{% block page_label %}
+Уроки по курсу {{ course.title }}
+{% endblock %}
+
+{% block header %}
+{% include "header.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="course-lessons-wrapper">
+    <h1 style="color: black;">Уроки по курсу {{ course.title }}</h1>
+
+    <ul style="color: black;">
+        {% for lesson in lessons %}
+        <li><a href="{% url 'chat_room' lesson.id %}">{{ lesson.title }}</a></li>
+        {% endfor %}
+    </ul>
+
+</div>
+{% endblock %}
