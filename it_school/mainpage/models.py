@@ -49,6 +49,7 @@ def image_folder_Technology(instance, filename):
 
 
 
+
 class Course(models.Model):
     title = models.CharField(max_length=100)  # Тема курса
     description = models.TextField('Полное описание', blank=True)  # Описание

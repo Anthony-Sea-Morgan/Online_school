@@ -131,6 +131,7 @@ def chat_room(request, group_id):
     return render(request, 'room.html', {'group': group, 'messages': messages})
 
 
+
 def send_message(request, group_id):
     if request.method == 'POST':
         group = get_object_or_404(CustomGroup, id=group_id)
