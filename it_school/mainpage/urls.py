@@ -20,8 +20,8 @@ urlpatterns = [
     path('<int:pk>', CourseDetailView.as_view(), name='course_detail'),
     path('attendance/', attendance_table, name='attendance_table'),
     path('purchase_confirmation/<int:pk>/', purchase_confirmation, name='purchase_confirmation'),
-    path('room/<int:group_id>/', chat_room, name='chat_room'),
-    path('room/<int:group_id>/send_message/', send_message, name='send_message'),
+    #path('room/<int:group_id>/', chat_room, name='chat_room'),
+    #path('room/<int:group_id>/send_message/', send_message, name='send_message'),
 
 
 

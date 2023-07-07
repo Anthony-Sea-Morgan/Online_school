@@ -3,11 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <title>Chat</title>
+    <style>
+        /* CSS для разделения страницы на две части */
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .info {
+            width: 75%;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .chat {
+            width: 25%;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+
+        #chat-log {
+            height: calc(100% - 60px); /* Высота чата с учетом поля ввода текста и кнопки отправки */
+            overflow-y: scroll;
+        }
+
+        #chat-input {
+            width: 100%;
+        }
+
+        #chat-input-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    </style>
 </head>
 <body>
-<div id="chat-log"></div>
-<input id="chat-message-input" type="text">
-<button id="chat-message-submit">Send</button>
+<div class="container">
+    {% if lesson %}
+        <div class="info">
+            <h1 style="color: black;">Курсу {{ lesson.course_owner.title }}</h1>
+
+            <ul style="color: black;">
+                <li>{{ lesson.title }}</li>
+                <li>{{ lesson.start_date }}</li>
+                <li>{{ lesson.start_time }}</li>
+                <div class="summernote-content" style="color: black;">{{ lesson.material|safe }}</div>
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="chat">
+        <div id="chat-log"></div>
+        <div id="chat-input-container">
+            <input id="chat-input" type="text">
+            <button id="chat-message-submit">Send</button>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     const roomName = '{{ room_name }}';  // Здесь укажите значение комнаты чата
@@ -22,7 +75,7 @@
     };
 
     document.querySelector('#chat-message-submit').onclick = function(e) {
-        const messageInputDom = document.querySelector('#chat-message-input');
+        const messageInputDom = document.querySelector('#chat-input');
         const message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
             'message': message
