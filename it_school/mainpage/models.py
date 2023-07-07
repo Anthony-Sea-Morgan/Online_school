@@ -11,6 +11,16 @@ from .fields import WEBPField
 from django.db import models
 from registration.models import CustomUser
 from django.contrib import admin
+from django.db import models
+from django.utils import timezone
+from datetime import datetime
+from registration.models import CustomUser
+from datetime import time as dt_time
+from django.db import models
+from django.utils import timezone
+import datetime
+
+
 
 DAYS_OF_WEEK_CHOICES = [
     ('monday', 'понедельник'),
@@ -36,6 +46,8 @@ def image_folder_Course(instance, filename):
 
 def image_folder_Technology(instance, filename):
     return 'mainpage/static/dist/img/Models/Course/TechIcons/{}.webp'.format(uuid.uuid4().hex)
+
+
 
 
 class Course(models.Model):
@@ -146,16 +158,22 @@ class Course(models.Model):
 
 class Lesson(models.Model):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lesson_course',
+
                                      null=False, editable=False)  # Курс, к которому принадлежит занятие
     mentor_owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='lesson_mentor',
                                      null=False,
                                      default=1)  # Ментор, который проводит занятие
 
-    title = models.CharField(max_length=255, default='Lesson 1', blank=True)  # Название занятия
+
+    title = models.CharField(max_length=255, default='Lesson 1', blank=True)
     material = models.TextField('Полное описание', default='Полное описание')
-    day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')  # день недели
-    start_date = models.DateField(default=timezone.now)  # Поле даты начала занятия
-    start_time = models.TimeField(default=datetime.time(19, 0))  # Поле времени начала занятия
+    day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')
+    start_date = models.DateField(default=timezone.now)
+    start_time = models.TimeField('Время начала курса', default='19:00')
+    is_past = models.BooleanField(default=False, editable=False)
+
+    def is_past_lesson(self):
+        return self.start_date < timezone.now().date()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -172,7 +190,6 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'Занятие'
         verbose_name_plural = 'Занятия'
-
 
 class CustomGroup(Group):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='group_course',

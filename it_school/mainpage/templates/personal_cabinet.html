@@ -1,0 +1,64 @@
+{% extends 'index.html' %}
+
+{% block title %}
+Личный кабинет
+{% endblock %}
+
+{% block page_label %}
+Личный кабинет
+{% endblock %}
+
+{% block header %}
+{% include "header.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="personal-cabinet-wrapper">
+    <h1 style="color: black;">Личный кабинет</h1>
+
+    <h2 style="color: black;">Информация о пользователе:</h2>
+    <p style="color: black;">Имя пользователя: {{ user.username }}</p>
+    <p style="color: black;">Имя: {{ user.first_name }}</p>
+    <p style="color: black;">Фамилия: {{ user.last_name }}</p>
+    <p style="color: black;">Email: {{ user.email }}</p>
+    <p style="color: black;">Номер телефона: {{ user.phone_number }}</p>
+    <h2 style="color: black;">Мои курсы:</h2>
+        <ul style="color: black;">
+            {% for course in courses %}
+            <li><a href="{% url 'course_lessons' course.id %}">{{ course.title }}</a></li>
+            {% endfor %}
+        </ul>
+</div>
+{% endblock %}
+
+
+
+{% block script %}
+<script src="/static/dist/js/coursesFilter.js"></script>
+{% endblock %}
+
+<style>
+.personal-cabinet-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 800px;
+}
+
+.personal-cabinet-wrapper h1,
+.personal-cabinet-wrapper h2,
+.personal-cabinet-wrapper p,
+.personal-cabinet-wrapper li {
+    color: black;
+    margin: 0;
+}
+
+.personal-cabinet-wrapper ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 10px;
+}
+</style>
+
+

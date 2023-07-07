@@ -12,6 +12,12 @@ from asgiref.sync import async_to_sync, sync_to_async
 from django.http import HttpResponse
 import json
 
+from django.shortcuts import render
+from .models import Lesson
+from datetime import date
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
 
 @csrf_protect
 def index(request):
@@ -28,6 +34,35 @@ def index(request):
     }
     template = 'mainpage.html'
     return render(request, template, data)
+
+
+def lesson_list(request):
+    lessons = Lesson.objects.all()
+    context = {'lessons': lessons}
+    return render(request, 'lesson_list.html', context)
+
+
+def course_lessons(request, course_id):
+    course = Course.objects.get(id=course_id)
+    lessons = Lesson.objects.filter(course_owner=course)
+    return render(request, 'course_lissons.html', {'course': course, 'lessons': lessons})
+
+
+
+
+def personal_cabinet(request):
+    user = request.user
+    courses = user.courses.all().order_by('start_date')  # Получаем список курсов пользователя, отсортированных по дате начала
+
+    # Создаем пустой словарь для хранения уроков по курсам
+    lessons_by_course = {}
+
+    # Получаем список уроков для каждого курса
+    for course in courses:
+        lessons = Lesson.objects.filter(course_owner=course)
+        lessons_by_course[course] = lessons
+
+    return render(request, 'personal_cabinet.html', {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course})
 
 
 class CourseDetailView(DetailView):
@@ -103,6 +138,7 @@ def chat_room(request, group_id):
     async_to_sync(channel_layer.group_add)(f'chat_group_{group_id}', 'websocket_group')
 
     return render(request, 'room.html', {'group': group, 'messages': messages})
+
 
 
 def send_message(request, group_id):

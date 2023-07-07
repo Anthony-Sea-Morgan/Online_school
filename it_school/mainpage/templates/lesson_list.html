@@ -1,0 +1,80 @@
+{% extends 'index.html' %}
+
+{% block title %}
+Список занятий
+{% endblock %}
+
+{% block page_label %}
+Список занятий
+{% endblock %}
+
+{% block header %}
+{% include "header.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="course-list-wrapper">
+    <h1 style="color: black;">Список занятий</h1>
+    <table>
+        <thead>
+            <tr>
+                <th style="color: black;">Название</th>
+                <th style="color: black;">Материал</th>
+                <th style="color: black;">День недели</th>
+                <th style="color: black;">Дата начала</th>
+                <th style="color: black;">Время начала</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lesson in lessons %}
+            <tr {% if lesson.is_past %}style="background-color: gray;"{% endif %}>
+                <td style="color: black;">{{ lesson.title }}</td>
+                <td style="color: black;">{{ lesson.material }}</td>
+                <td style="color: black;">{{ lesson.day_of_week }}</td>
+                <td style="color: black;">{{ lesson.start_date }}</td>
+                <td style="color: black;">{{ lesson.start_time }}</td>
+            </tr>
+            {% endfor %}
+
+
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="/static/dist/js/coursesFilter.js"></script>
+{% endblock %}
+
+<style>
+.course-list-wrapper {
+    width: 100%;
+    height: 800px;
+}
+
+.course-list-wrapper h1 {
+    margin-bottom: 20px;
+}
+
+.course-list-wrapper table {
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.course-list-wrapper table th,
+.course-list-wrapper table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid black;
+}
+
+.course-list-wrapper table th {
+    background-color: #555;
+    color: white;
+}
+
+</style>
+
+
+
+
