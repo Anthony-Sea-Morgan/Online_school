@@ -1,15 +1,16 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Успешн</title>
-    <link rel="shortcut icon" type="image/png" sizes="96x96" rel="icon" href="/static/dist/img/PNG/icon/online_school.png">
+{% extends 'index.html' %}
+
+{% block title %}
+Успешная запись на курс
+{% endblock %}
+
+
+{% block style %}
     <link rel="stylesheet" href="{% static 'dist/scss/style.css'%}">
-</head>
-<body>
+{% endblock %}
+
+
+{% block content %}
 <div class="blank-global-container" id="reg-blank-payconf" style="display: flex; backdrop-filter: url(filters.svg#filter) blur(4px) saturate(150%) brightness(60%);color:black;">
 <div class="wrapper-blank" style="border-radius: 0px;padding: 50px;">
  <h1>Поздравляем!</h1>
@@ -30,6 +31,8 @@
 
 </div>
 </div>
+{% endblock %}
 
-</body>
-</html>
+
+
+
