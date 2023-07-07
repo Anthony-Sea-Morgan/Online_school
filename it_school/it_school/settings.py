@@ -36,7 +36,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
     'channels',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,7 +52,17 @@ INSTALLED_APPS = [
     'registration',
     'restapi',
     'rest_framework_simplejwt',
+    'chat',
 ]
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # или используйте RedisChannelLayer для работы с Redis
+    },
+}
+
+
+ASGI_APPLICATION = 'it_school.asgi.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
