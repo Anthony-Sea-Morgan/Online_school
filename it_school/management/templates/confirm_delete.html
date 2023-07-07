@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<form method="POST" action="{% url 'management:course_delete' x.pk %}" class="courses-control-form" id="control-courses-btns">
-                    {% csrf_token %}
-                    <button type="submit"  class="courses-control-form">🗑️</button>
-                  </form>
-</body>
-</html>
+<div class="blank-global-container" id="blank-delete"  data-action="login" style="display: none; backdrop-filter: url(filters.svg#filter) blur(4px) saturate(150%) brightness(60%); {{ styleconfp }}">
+<div class="wrapper-blank">
+    <div class="close-btn" id="wrapper-blank-close-btn-delete">⨯</div>
+    <h1>Уверены, что хотите удалить курс?</h1>
+                <div style="left: auto;display: flex;justify-content: space-around;">
+                    <button type="submit" id="blank-delete-yes" name="delete_course" value="yes" class="btn" style="width: 35%">Да</button>
+                    <button type="submit" id="blank-delete-no" class="btn" style="width: 35%">Нет</button>
+                </div>
+</div>
+</div>

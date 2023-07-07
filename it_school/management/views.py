@@ -23,13 +23,23 @@ def CourseListView(request):
 
 class CourseCreateView(CreateView):
     model = Course
-    template_name = 'management/course_form.html'
+    template_name = 'course_form.html'
     fields = '__all__'
+    success_url = reverse_lazy('management:course_list')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['mentors'] = CustomUser.objects.all()
+        context['technologies'] = TECHNOLOGY_CHOICES
+        context['difficulty_choices'] = DIFFICULTY_CHOICES
+        context['days_of_week_choices'] = DAYS_OF_WEEK_CHOICES
+        return context
+
 
 class CourseDetailView(DetailView):
     model = Course
     template_name = 'management/course_detail.html'
     context_object_name = 'course'
+
 
 class CourseUpdateView(UpdateView):
     model = Course
@@ -40,15 +50,20 @@ class CourseUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['mentors'] = CustomUser.objects.all()
-        context['technology_choices'] = TECHNOLOGY_CHOICES
+        context['technologies'] = TECHNOLOGY_CHOICES
         context['difficulty_choices'] = DIFFICULTY_CHOICES
         context['days_of_week_choices'] = DAYS_OF_WEEK_CHOICES
         return context
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)  # Сохранение формы без коммита
-        self.object.save()  # Сохранение изменений в модели
-        return HttpResponseRedirect(self.get_success_url())
+        if self.request.POST.get('delete_course') == 'yes':
+            self.object = self.get_object()  # Получение текущего объекта
+            self.object.delete()  # Удаление объекта
+            return HttpResponseRedirect(self.success_url)
+        else:
+            self.object = form.save(commit=False)
+            self.object.save()
+            return HttpResponseRedirect(self.get_success_url())
 
 class CourseDeleteView(DeleteView):
     model = Course
