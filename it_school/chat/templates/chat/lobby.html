@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+</head>
+<body>
+<div id="chat-log"></div>
+<input id="chat-message-input" type="text">
+<button id="chat-message-submit">Send</button>
+
+<script type="text/javascript">
+    const roomName = '{{ room_name }}';  // Здесь укажите значение комнаты чата
+
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const message = JSON.parse(e.data).message;
+        document.querySelector('#chat-log').innerHTML += '<p>' + message + '</p>';
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+        messageInputDom.value = '';
+    };
+</script>
+</body>
+</html>

@@ -19,13 +19,11 @@ from django.urls import path
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import include
 from mainpage.views import *
 from registration.views import *
 from restapi.views import *
 from management.views import *
-
-
+from chat.views import chat_room
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,9 +35,10 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
     path('summernote/', include('django_summernote.urls')),
     # path('api/v1/auth/token/login/', djoser_views.TokenCreateView.as_view(), name='token_create'),
+    path('chat/', include('chat.urls')),
+    re_path(r'^chat/(?P<room_name>\w+)/$', chat_room, name='chat_room'),
 
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
