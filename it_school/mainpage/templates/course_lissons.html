@@ -19,7 +19,10 @@
 
     <ul style="color: black;">
         {% for lesson in lessons %}
-        <li><a href="{% url 'chat_room' lesson.id %}">{{ lesson.title }}</a></li>
+        <li>
+            <a href="{% url 'chat_room' lesson.id %}">{{ lesson.title }}</a>
+            <span style="color: black; {% if lesson.is_past %}background-color: gray;{% endif %}">{{ lesson.start_date|date:'d.m.Y' }} {{ lesson.start_time|time:'H:i' }}</span>  <!-- Отображение даты и времени, применение стиля для прошедших занятий -->
+        </li>
         {% endfor %}
     </ul>
 

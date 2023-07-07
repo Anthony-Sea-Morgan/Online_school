@@ -18,7 +18,7 @@
     <div class="m-a">☰</div>
     <div class="nav-dropdown-content" id="NAV">
         {% if user.is_authenticated %}
-        <div><p>Личный кабинет</p></div>
+        <div ><p><a href="{% url 'personal_cabinet' %}">Личный кабинет</a></p></div>
         <div><p>Форум</p></div>
         <div><p>Контакты</p></div>
         <div data-action="logout" onclick="location.href='{% url 'logout_view' %}?next={{ request.path }}';"><p>Выйти из аккаунта</p></div>

@@ -172,6 +172,7 @@ class Lesson(models.Model):
     start_time = models.TimeField('Время начала курса', default='19:00')
     is_past = models.BooleanField(default=False, editable=False)
 
+
     def is_past_lesson(self):
         return self.start_date < timezone.now().date()
 
