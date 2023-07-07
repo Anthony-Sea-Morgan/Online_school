@@ -5,7 +5,12 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync, sync_to_async
+from django.http import HttpResponse
+import json
 
 from django.shortcuts import render
 from .models import Lesson
@@ -29,19 +34,35 @@ def index(request):
     }
     template = 'mainpage.html'
     return render(request, template, data)
-  
-  
+
+
 def lesson_list(request):
     lessons = Lesson.objects.all()
     context = {'lessons': lessons}
     return render(request, 'lesson_list.html', context)
 
 
-@login_required
+def course_lessons(request, course_id):
+    course = Course.objects.get(id=course_id)
+    lessons = Lesson.objects.filter(course_owner=course)
+    return render(request, 'course_lissons.html', {'course': course, 'lessons': lessons})
+
+
+
+
 def personal_cabinet(request):
     user = request.user
     courses = user.courses.all().order_by('start_date')  # Получаем список курсов пользователя, отсортированных по дате начала
-    return render(request, 'personal_cabinet.html', {'user': user, 'courses': courses})
+
+    # Создаем пустой словарь для хранения уроков по курсам
+    lessons_by_course = {}
+
+    # Получаем список уроков для каждого курса
+    for course in courses:
+        lessons = Lesson.objects.filter(course_owner=course)
+        lessons_by_course[course] = lessons
+
+    return render(request, 'personal_cabinet.html', {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course})
 
 
 class CourseDetailView(DetailView):
@@ -49,8 +70,7 @@ class CourseDetailView(DetailView):
     model = Course
     template_name = 'course_detail.html'
     context_object_name = 'course'
-    
-    
+
     def post(self, request, *args, **kwargs):
         if 'confirm_payment' in request.POST:
             course = self.get_object()
@@ -73,6 +93,7 @@ class CourseDetailView(DetailView):
         if self.error:
             context['styleconfp'] = 'display: flex;'
         return context
+
 
 def purchase_confirmation(request, pk):
     course = Course.objects.get(id=pk)
@@ -108,10 +129,16 @@ def attendance_table(request):
     return render(request, 'attendance.html', {'attendance_tables': attendance_tables})
 
 
+
 def chat_room(request, group_id):
     group = get_object_or_404(CustomGroup, id=group_id)
     messages = ChatMessage.objects.filter(group=group).order_by('timestamp')
+
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_add)(f'chat_group_{group_id}', 'websocket_group')
+
     return render(request, 'room.html', {'group': group, 'messages': messages})
+
 
 
 def send_message(request, group_id):
@@ -122,4 +149,3 @@ def send_message(request, group_id):
         if message_text:
             ChatMessage.objects.create(sender=sender, group=group, text=message_text)
     return redirect('chat_room', group_id=group_id)
-
