@@ -12,6 +12,7 @@ from .models import Lesson
 from datetime import date
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from .forms import ProfileForm
 
 
 @csrf_protect
@@ -43,11 +44,10 @@ def course_lessons(request, course_id):
     return render(request, 'course_lissons.html', {'course': course, 'lessons': lessons})
 
 
-
-
 def personal_cabinet(request):
     user = request.user
-    courses = user.courses.all().order_by('start_date')  # Получаем список курсов пользователя, отсортированных по дате начала
+    courses = user.courses.all().order_by(
+        'start_date')  # Получаем список курсов пользователя, отсортированных по дате начала
 
     # Создаем пустой словарь для хранения уроков по курсам
     lessons_by_course = {}
@@ -57,7 +57,20 @@ def personal_cabinet(request):
         lessons = Lesson.objects.filter(course_owner=course)
         lessons_by_course[course] = lessons
 
-    return render(request, 'personal_cabinet.html', {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course})
+    return render(request, 'personal_cabinet.html',
+                  {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course})
+
+
+def edit_profile(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('personal_cabinet')  # Перенаправление на личный кабинет после сохранения
+    else:
+        form = ProfileForm(instance=request.user)
+
+    return render(request, 'edit_profile.html', {'form': form})
 
 
 class CourseDetailView(DetailView):
@@ -124,12 +137,10 @@ def attendance_table(request):
     return render(request, 'attendance.html', {'attendance_tables': attendance_tables})
 
 
-
 def chat_room(request, group_id):
     group = get_object_or_404(CustomGroup, id=group_id)
     messages = ChatMessage.objects.filter(group=group).order_by('timestamp')
     return render(request, 'room.html', {'group': group, 'messages': messages})
-
 
 
 def send_message(request, group_id):
