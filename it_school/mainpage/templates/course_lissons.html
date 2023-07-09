@@ -12,38 +12,93 @@
 {% include "header.html" %}
 {% endblock %}
 
-
-
 {% block content %}
-    <div class="courses-base wr" style="display:flex;">
-        <div class="courses-list-wrapper jc-c">
-            <div class="courses-list-align">
-                <h2 style="color: black; text-align: center">Уроки по курсу {{ course.title }}</h2>
-                <table>
-                    <tr>
-                        <th>Номер занятия</th>
-                        <th>Дата</th>
-                        <th>Название занятия</th>
-                    </tr>
-                    {% for lesson in lessons|dictsort:'start_date' %}
-                    <tr>
+<style>
+    body {
+        background-color: #ddddd7;
+        color: black;
+    }
 
-                        <td>{{ forloop.counter }}</td>
-                        <td>
-                            <span style="color: black; {% if lesson.is_past_lesson %}background-color: gray;{% endif %}">
-                                {{ lesson.start_date|date:'d.m.Y' }}
-                            </span>
-                        </td>
+    .courses-base {
+        display: flex;
+        justify-content: center;
+    }
 
-                        <td>
-                            <a href="{% url 'chat_room' lesson.id %}">{{ lesson.title }}</a>
+    .courses-list-wrapper {
+        justify-content: center;
+        align-items: center;
+    }
 
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
+    h2 {
+        color: black;
+        text-align: center;
+        font-weight: bold;
+        font-size: 24px;
+    }
+
+    table {
+        margin-top: 20px;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        font-weight: bold;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    a {
+        color: black;
+        text-decoration: none;
+    }
+
+    .past-lesson {
+        color: #555;
+        font-weight: bold;
+    }
+
+    .current-lesson {
+        color: orange;
+        font-weight: bold;
+    }
+
+    .future-lesson {
+        color: black;
+        font-weight: bold;
+    }
+</style>
+
+<div class="courses-base wr">
+    <div class="courses-list-wrapper jc-c">
+        <h2>Уроки по курсу {{ course.title }}</h2>
+        <table>
+            <tr>
+                <th>Номер занятия</th>
+                <th>Дата</th>
+                <th>Название занятия</th>
+            </tr>
+            {% for lesson in lessons|dictsort:'start_date' %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>
+                    <span class="{% if lesson.start_date|date:'Y-m-d' == now|date:'Y-m-d' %}current-lesson{% elif lesson.is_past_lesson %}past-lesson{% else %}future-lesson{% endif %}">
+                        {{ lesson.start_date|date:'d.m.Y' }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{% url 'chat_room' lesson.id %}" class="{% if lesson.start_date|date:'Y-m-d' == now|date:'Y-m-d' %}current-lesson{% elif lesson.is_past_lesson %}past-lesson{% else %}future-lesson{% endif %}">
+                        {{ lesson.title }}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
+</div>
 {% endblock %}
-
