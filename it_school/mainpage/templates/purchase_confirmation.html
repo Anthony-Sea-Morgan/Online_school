@@ -11,6 +11,7 @@
 </head>
 <body>
 <div class="blank-global-container" id="reg-blank-payconf" style="display: flex; backdrop-filter: url(filters.svg#filter) blur(4px) saturate(150%) brightness(60%);color:black;">
+<div class="wrapper-blank-check" style="border-radius: 0px;padding: 50px;">
 <div class="wrapper-blank" style="border-radius: 0px;padding: 50px;">
  <h1>Поздравляем!</h1>
   <p>Вы успешно приобрели запись на курс "{{ course.title }}".</p>
@@ -27,8 +28,11 @@
     <li>Применяемые языки: {{ course.get_technologies_display }}</li>
     <li>Количество уроков: {{ course.lessons_count }}</li>
   </ul>
-
 </div>
+    <button class="btn" onclick="print(document.getElementsByClassName('wrapper-blank')[0]);">Сохранить pdf</button>
+    <button class="btn" onclick="location.href='{% url 'personal_cabinet' %}'">Перейти в личный кабинет</button>
+</div>
+
 </div>
 
 </body>
