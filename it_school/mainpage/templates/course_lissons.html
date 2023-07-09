@@ -13,19 +13,37 @@
 {% endblock %}
 
 
+
 {% block content %}
-<div class="course-lessons-wrapper">
-    <h1 style="color: black;">Уроки по курсу {{ course.title }}</h1>
+    <div class="courses-base wr" style="display:flex;">
+        <div class="courses-list-wrapper jc-c">
+            <div class="courses-list-align">
+                <h2 style="color: black; text-align: center">Уроки по курсу {{ course.title }}</h2>
+                <table>
+                    <tr>
+                        <th>Номер занятия</th>
+                        <th>Дата</th>
+                        <th>Название занятия</th>
+                    </tr>
+                    {% for lesson in lessons|dictsort:'start_date' %}
+                    <tr>
 
-    <ul style="color: black;">
-        {% for lesson in lessons %}
-        <li>
-            <a href="{% url 'chat_room' lesson.id %}">{{ lesson.title }}</a>
-            <span style="color: black; {% if lesson.is_past %}background-color: gray;{% endif %}">{{ lesson.start_date|date:'d.m.Y' }} {{ lesson.start_time|time:'H:i' }}</span>  <!-- Отображение даты и времени, применение стиля для прошедших занятий -->
-        </li>
-        {% endfor %}
-    </ul>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <span style="color: black; {% if lesson.is_past_lesson %}background-color: gray;{% endif %}">
+                                {{ lesson.start_date|date:'d.m.Y' }}
+                            </span>
+                        </td>
 
+                        <td>
+                            <a href="{% url 'chat_room' lesson.id %}">{{ lesson.title }}</a>
 
-</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}
+

@@ -12,37 +12,89 @@
 {% include "header.html" %}
 {% endblock %}
 
+
 {% block content %}
-<div style="background-color: #f1f1f1; margin-bottom=0">
-    <h1 style="color: black; text-align: center">Личный кабинет</h1>
-    <h2 style="color: black;">Информация о пользователе:</h2>
-    <p style="color: black;">Имя пользователя: {{ user.username }}</p>
-    <p style="color: black;">Имя: {{ user.first_name }}</p>
-    <p style="color: black;">Фамилия: {{ user.last_name }}</p>
-    <p style="color: black;">Email: {{ user.email }}</p>
-    <p style="color: black;">Номер телефона: {{ user.phone_number }}</p>
-</div>
+
+<div class="courses-base wr" style="display:flex;">
+    <div class="courses-filter-wrapper">
+
+           <select class="form__input" id="technology-filter">
+
+
+    <option value="Все технологии">Все технологии</option>
+
+    <option value="Python">Python</option>
+
+    <option value="C++">C++</option>
+
+    <option value="Java">Java</option>
+
+    <option value="C#">C#</option>
+
+    <option value="Pascal">Pascal</option>
+
+    <option value="Frontend">Frontend</option>
+
+                 </select>
+        <select class="form__input" id="difficulty-filter">
+
+    <option value="Любая сложность">Любая сложность</option>
+
+    <option value="Начинающий">Начинающий</option>
+
+    <option value="Продвинутый">Продвинутый</option>
+
+              </select>
+
+    </div>
     <div class="courses-base wr" style="display:flex;">
-    <h2 style="color: black;">Мои курсы:</h2>
-    <div class="courses-list-wrapper jc-c">
-        <div class="courses-list-align">
-            {% for course in courses %}
-            <div class="courses-unit-wrapper ib va" data-technology="{{ course.technologies }}" data-difficulty="{{ course.difficulty }}">
-                <div class="courses-unit-texture">
-                    <div class="courses-unit-rating ws-nw va">{{ course.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="/static/dist/img/PNG/icon/rating.png" class="icn"></div>
-                    <div class="courses-unit-title"><h2><strong>{{ course.title }}</strong></h2></div>
-                    <div class="courses-unit-a"><a href="{% url 'course_lessons' course.id %}">Перейти к занятиям →</a></div>
-                    <div class="courses-unit-difficulty">{{ course.difficulty }}</div>
+        <div class="courses-list-wrapper jc-c">
+            <div class="courses-list-align">
+                <h2 style="color: black; text-align: center">Доступные курсы:</h2>
+                {% for course in courses %}
+                <div class="courses-unit-wrapper ib va" data-technology="{{ course.technologies }}" data-difficulty="{{ course.difficulty }}">
+                    <div class="courses-unit-texture">
+                        <div class="courses-unit-rating ws-nw va">{{ course.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="/static/dist/img/PNG/icon/rating.png" class="icn"></div>
+                        <div class="courses-unit-title"><h2><strong>{{ course.title }}</strong></h2></div>
+                        <div class="courses-unit-a"><a href="{% url 'course_lessons' course.id %}">Перейти к занятиям →</a></div>
+                        <div class="courses-unit-difficulty">{{ course.difficulty }}</div>
+                    </div>
                 </div>
+                {% empty %}
+                <p>Нет доступных курсов</p>
+                {% endfor %}
             </div>
-            {% empty %}
-            <p>Нет доступных курсов</p>
-            {% endfor %}
         </div>
     </div>
-</div>
-{% endblock %}
+<div style="background-color: #ddddd7; margin-bottom: 0; padding: 20px;">
 
+        <h3 style="color: black;">Информация о пользователе:</h3>
+        <p style="color: black;">Имя пользователя: {{ user.username }}</p>
+        <p style="color: black;">Имя: {{ user.first_name }}</p>
+        <p style="color: black;">Фамилия: {{ user.last_name }}</p>
+        <p style="color: black;">Email: {{ user.email }}</p>
+        <p style="color: black;">Номер телефона: {{ user.phone_number }}</p>
+        <a href="{% url 'edit_profile' %}" class="edit-profile-button">Редактировать профиль</a>
+        <h4 style="color: black;">Кошелек:</h4>
+        <p style="color: black;">Баланс: {{ user.wallet }}</p>
+</div>
+</div>
+<style>
+.edit-profile-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: rgba(255, 165, 0, 0.5);
+  color: black;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.edit-profile-button:hover {
+  background-color: #ddd;
+}
+</style>
+{% endblock %}
 
 
 
