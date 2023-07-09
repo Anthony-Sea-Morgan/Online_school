@@ -1,26 +1,17 @@
-var technologyFilter = document.getElementById('technology-filter');
-var difficultyFilter = document.getElementById('difficulty-filter');
+document.getElementById('delete-btn').onclick = function() {
+  var deleteConfBlank = document.getElementById('blank-delete');
 
- function handleFilterChange() {
-        var selectedTechnology = technologyFilter.value;
-        var selectedDifficulty = difficultyFilter.value;
-        if (document.querySelectorAll('.courses-unit-wrapper')){
-        var results = document.querySelectorAll('.courses-unit-wrapper');
-        } else if (document.querySelectorAll('.courses-list-manage-outer')){
-        var results = document.querySelectorAll('.courses-list-manage-outer');
-        }
-        results.forEach(function(result) {
-            var technology = result.getAttribute('data-technology');
-            var difficulty = result.getAttribute('data-difficulty');
-            var technologyMatch = selectedTechnology === 'Все технологии' || technology.split(', ').includes(selectedTechnology);
-            var difficultyMatch = selectedDifficulty === 'Любая сложность' || difficulty === selectedDifficulty;
-            if (technologyMatch && difficultyMatch) {
-                result.style.display = 'inline-block';
-            } else {
-                result.style.display = 'none';
-            }
-        });
-    }
-    technologyFilter.addEventListener('change', handleFilterChange);
-    difficultyFilter.addEventListener('change', handleFilterChange);
-
+  if (deleteConfBlank.style.display == 'none') {
+    deleteConfBlank.style.display = 'flex';
+    deleteConfBlank.style.zIndex = 1;
+  } else {
+    deleteConfBlank.style.display = 'none';
+    deleteConfBlank.style.zIndex = -999
+  }
+}
+document.getElementById('wrapper-blank-close-btn-delete').onclick = function hide() {
+  var loginBlank = document.getElementById('blank-delete');
+  loginBlank.style.display = 'none';
+  loginBlank.style.zIndex = -999;
+}
+document.getElementById('blank-delete-no').onclick = document.getElementById('wrapper-blank-close-btn-delete').onclick

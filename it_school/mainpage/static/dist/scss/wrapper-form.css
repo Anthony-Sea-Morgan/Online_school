@@ -76,7 +76,7 @@ border-radius: 15px;
   border-radius: 15px;
   transition: 0.2s;
   file-drop-area.is-active {
-    background-color: rgba(255, 255, 255, 1);
+        background-color: rgb(163 163 163 / 47%);
   }
 
 }

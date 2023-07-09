@@ -13,6 +13,18 @@ from datetime import date
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .forms import ProfileForm
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+
+
+
+def check_mentor_permission(view_func):
+    @login_required
+    def wrapped_view(request, *args, **kwargs):
+        if not request.user.is_mentor:
+            return redirect('index')
+        return view_func(request, *args, **kwargs)
+    return wrapped_view
 
 
 @csrf_protect
@@ -31,19 +43,19 @@ def index(request):
     template = 'mainpage.html'
     return render(request, template, data)
 
-
+@login_required
 def lesson_list(request):
     lessons = Lesson.objects.all()
     context = {'lessons': lessons}
     return render(request, 'lesson_list.html', context)
 
-
+@login_required
 def course_lessons(request, course_id):
     course = Course.objects.get(id=course_id)
     lessons = Lesson.objects.filter(course_owner=course)
     return render(request, 'course_lissons.html', {'course': course, 'lessons': lessons})
 
-
+@login_required
 def personal_cabinet(request):
     user = request.user
     courses = user.courses.all().order_by(
@@ -60,7 +72,7 @@ def personal_cabinet(request):
     return render(request, 'personal_cabinet.html',
                   {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course})
 
-
+@login_required
 def edit_profile(request):
     if request.method == 'POST':
         form = ProfileForm(request.POST, instance=request.user)
@@ -107,7 +119,7 @@ def purchase_confirmation(request, pk):
     course = Course.objects.get(id=pk)
     return render(request, 'purchase_confirmation.html', {'course': course})
 
-
+@login_required
 def attendance_table(request):
     groups = CustomGroup.objects.all()
     attendance_tables = []
@@ -136,13 +148,13 @@ def attendance_table(request):
 
     return render(request, 'attendance.html', {'attendance_tables': attendance_tables})
 
-
+@login_required
 def chat_room(request, group_id):
     group = get_object_or_404(CustomGroup, id=group_id)
     messages = ChatMessage.objects.filter(group=group).order_by('timestamp')
     return render(request, 'room.html', {'group': group, 'messages': messages})
 
-
+@login_required
 def send_message(request, group_id):
     if request.method == 'POST':
         group = get_object_or_404(CustomGroup, id=group_id)

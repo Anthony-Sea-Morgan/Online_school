@@ -2,10 +2,16 @@ from django.shortcuts import render
 from django.views import View
 from mainpage.models import Course, Lesson, CustomGroup
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from mainpage.views import *
 from django.urls import reverse_lazy
 from mainpage.models import Course, Lesson, TECHNOLOGIES, CustomUser, TECHNOLOGY_CHOICES,DIFFICULTY_CHOICES, DAYS_OF_WEEK_CHOICES
 from .forms import CourseForm
 from django.http import HttpResponseRedirect
+from django.utils.decorators import method_decorator
+
+
+
+@check_mentor_permission
 def CourseListView(request):
     course_object = Course.objects.all()
     for i in course_object:
@@ -21,10 +27,11 @@ def CourseListView(request):
     template = 'manage_page.html'
     return render(request, template, data)
 
+@method_decorator(check_mentor_permission, name='dispatch')
 class CourseCreateView(CreateView):
     model = Course
     template_name = 'course_form.html'
-    fields = '__all__'
+    form_class = CourseForm
     success_url = reverse_lazy('management:course_list')
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -35,12 +42,7 @@ class CourseCreateView(CreateView):
         return context
 
 
-class CourseDetailView(DetailView):
-    model = Course
-    template_name = 'management/course_detail.html'
-    context_object_name = 'course'
-
-
+@method_decorator(check_mentor_permission, name='dispatch')
 class CourseUpdateView(UpdateView):
     model = Course
     template_name = 'course_form.html'
@@ -64,18 +66,14 @@ class CourseUpdateView(UpdateView):
             self.object = form.save(commit=False)
             self.object.save()
             return HttpResponseRedirect(self.get_success_url())
-
+@method_decorator(check_mentor_permission, name='dispatch')
 class CourseDeleteView(DeleteView):
     model = Course
     template_name = 'course_confirm_delete.html'
     success_url = reverse_lazy('management:course_list')
-
+@method_decorator(check_mentor_permission, name='dispatch')
 class LessonView(View):
     def get(self, request):
         lessons = Lesson.objects.all()
         return render(request, 'management/lesson.html', {'lessons': lessons})
 
-class CustomGroupView(View):
-    def get(self, request):
-        custom_groups = CustomGroup.objects.all()
-        return render(request, 'management/custom_group.html', {'custom_groups': custom_groups})

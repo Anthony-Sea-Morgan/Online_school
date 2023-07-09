@@ -30,9 +30,11 @@ margin: 0 0 40px 20px
 }
 .courses-control-form{
 width: 5%;
+height: 100%;
 align-items: center;
-border-radius: 30px;
-vertical_align: middle;
+border-radius: 20px;
+vertical-align: middle;
+background-color: #ffad5a;
 cursor: pointer;
 }
 .border-right-li{
