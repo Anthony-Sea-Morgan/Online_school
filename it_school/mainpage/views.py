@@ -1,38 +1,21 @@
 from tabulate import tabulate
-from .models import Course, Lesson, CustomGroup, CustomUser, Attendance, ChatMessage, TECHNOLOGIES
-from django.views.generic import DetailView, UpdateView, DeleteView
-from django.shortcuts import render
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import render, get_object_or_404
-
-from django.shortcuts import render
-from .models import Lesson
 from datetime import date
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+
+from .models import Course, Lesson, CustomGroup, CustomUser, Attendance, ChatMessage, TECHNOLOGIES
 from .forms import ProfileForm
 
-from django.shortcuts import redirect
+from django.views.generic import DetailView
+from django.contrib import messages
+from django.shortcuts import redirect, render, get_object_or_404
+from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
-from datetime import date
-
-
-def check_mentor_permission(view_func):
-    @login_required
-    def wrapped_view(request, *args, **kwargs):
-        if not request.user.is_mentor:
-            return redirect('index')
-        return view_func(request, *args, **kwargs)
-    return wrapped_view
-
-
-
 
 
 @csrf_protect
 def index(request):
+    """
+    Отображает главную страницу и список курсов.
+    """
     course_object = Course.objects.all()
     for i in course_object:
         i.img = str(i.img)[5:]
@@ -47,23 +30,34 @@ def index(request):
     template = 'mainpage.html'
     return render(request, template, data)
 
+
 @login_required
 def lesson_list(request):
+    """
+    Отображает список всех уроков.
+    """
     now = date.today()
     lessons = Lesson.objects.all()
     context = {'lessons': lessons, 'now': now}
     return render(request, 'lesson_list.html', context)
 
+
 @login_required
 def course_lessons(request, course_id):
+    """
+    Отображает список уроков для определенного курса.
+    """
     now = date.today()
     course = Course.objects.get(id=course_id)
     lessons = Lesson.objects.filter(course_owner=course)
-    context = {'lessons': lessons, 'now': now}
     return render(request, 'course_lissons.html', {'course': course, 'lessons': lessons, 'now': now})
+
 
 @login_required
 def personal_cabinet(request):
+    """
+     Отображает личный кабинет пользователя.
+     """
     user = request.user
     courses = user.courses.all().order_by(
         'start_date')  # Получаем список курсов пользователя, отсортированных по дате начала
@@ -79,8 +73,12 @@ def personal_cabinet(request):
     return render(request, 'personal_cabinet.html',
                   {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course})
 
+
 @login_required
 def edit_profile(request):
+    """
+    Отображает форму редактирования профиля пользователя и обрабатывает ее сохранение.
+    """
     if request.method == 'POST':
         form = ProfileForm(request.POST, instance=request.user)
         if form.is_valid():
@@ -93,10 +91,16 @@ def edit_profile(request):
 
 
 def about_us_view(request):
+    """
+    Отображает страницу "О нас".
+    """
     return render(request, 'about.html')
 
 
 class CourseDetailView(DetailView):
+    """
+    Класс-представление для отображения детальной информации о курсе.
+    """
     error = ''
     model = Course
     template_name = 'course_detail.html'
@@ -109,10 +113,14 @@ class CourseDetailView(DetailView):
             course_price = course.price
 
             if user.wallet >= course_price:
-                user.wallet -= course_price
-                user.save()
-                messages.success(request, 'Оплата прошла успешно.')
-                return redirect('purchase_confirmation', pk=course.pk)
+                if add_users_in_group(user=user, course=course) == 0:
+                    user.wallet -= course_price
+                    user.save()
+                    messages.success(request, 'Оплата прошла успешно.')
+                    return redirect('purchase_confirmation', pk=course.pk)
+                else:
+                    messages.success(request, 'Вы разве не купили уже этот курс?')
+                    return redirect('purchase_confirmation', pk=course.pk)
             else:
                 self.error = 'Недостаточно средств на счете.'
 
@@ -126,12 +134,43 @@ class CourseDetailView(DetailView):
         return context
 
 
+def add_users_in_group(user, course):
+    try:
+        group = CustomGroup.objects.filter(course_owner=course.pk).first()
+        if group is not None:
+            if user.courses.filter(pk=course.pk).exists():
+                # Пользователь уже добавлен в курс
+                if user in group.users.all():
+                    return 1
+                else:
+                    group.users.add(user)
+                    return 1
+            else:
+                user.courses.add(course)
+                group.users.add(user)
+                print(f'{user} добавлен {course} с группой {group}')
+                return 0
+        else:
+            # Группа не найдена
+            return 1
+    except Exception as e:
+        print(f'Error: {str(e)}')
+        return 1
+
+
 def purchase_confirmation(request, pk):
+    """
+    Отображает страницу подтверждения покупки курса.
+    """
     course = Course.objects.get(id=pk)
     return render(request, 'purchase_confirmation.html', {'course': course})
 
+
 @login_required
 def attendance_table(request):
+    """
+    Отображает таблицу посещаемости для всех групп.
+    """
     groups = CustomGroup.objects.all()
     attendance_tables = []
 
@@ -159,14 +198,32 @@ def attendance_table(request):
 
     return render(request, 'attendance.html', {'attendance_tables': attendance_tables})
 
+
+def check_mentor_permission(view_func):
+    @login_required
+    def wrapped_view(request, *args, **kwargs):
+        if not request.user.is_mentor:
+            return redirect('index')
+        return view_func(request, *args, **kwargs)
+
+    return wrapped_view
+
+
 @login_required
 def chat_room(request, group_id):
+    """
+    Отображает комнату чата для определенной группы.
+    """
     group = get_object_or_404(CustomGroup, id=group_id)
     messages = ChatMessage.objects.filter(group=group).order_by('timestamp')
     return render(request, 'room.html', {'group': group, 'messages': messages})
 
+
 @login_required
 def send_message(request, group_id):
+    """
+    Отправляет сообщение в чат для определенной группы.
+    """
     if request.method == 'POST':
         group = get_object_or_404(CustomGroup, id=group_id)
         sender = request.user
