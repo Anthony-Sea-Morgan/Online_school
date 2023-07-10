@@ -131,3 +131,9 @@ border-radius: 30px;
 height: 25px;
 width: 20%;
 }
+.courses-list-create{
+border-radius: 20px;
+border: dashed 1px #bdbdbd;
+background-color: #ddddd75c;
+cursor: pointer;
+}

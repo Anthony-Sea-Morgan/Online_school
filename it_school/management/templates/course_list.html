@@ -25,7 +25,7 @@
             <div class="courses-list-manage-lessons border-right-li">Кол-во уроков:</div>
             <div class="courses-list-manage-mentor border-right-li">Ментор:</div>
             <div class="courses-list-manage-start-date">Начало занятий:</div>
-            <div style="width: 10%;"></div>
+            <div style="width: 5%;"></div>
                  </div>
           </li>
             </div>
@@ -52,7 +52,11 @@
                  {% empty %}
                  <p>Нет доступных курсов</p>
                 {% endfor %}
-
+                      <li class="courses-list-manage-outer">
+                      <div class="courses-list-manage-unit courses-list-create" onclick="location.href='{% url 'management:course_create' %}'">
+                          <h2>+</h2>
+                      </div>
+                      </li>
         </ul>
       </div>
 </div>

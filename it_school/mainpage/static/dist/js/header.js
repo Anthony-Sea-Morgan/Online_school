@@ -10,8 +10,8 @@ if (document.getElementById('LOGIN')){document.getElementById('LOGIN').onclick =
   }
 }
 }
-document.getElementById('wrapper-blank-close-btn').onclick = function hide() {
+if (document.getElementById('wrapper-blank-close-btn')){document.getElementById('wrapper-blank-close-btn').onclick = function hide() {
   var loginBlank = document.getElementById('reg-blank-login');
   loginBlank.style.display = 'none';
   loginBlank.style.zIndex = -999;
-}
+}}

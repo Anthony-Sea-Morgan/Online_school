@@ -6,7 +6,7 @@ var difficultyFilter = document.getElementById('difficulty-filter');
         var selectedDifficulty = difficultyFilter.value;
         if (document.querySelectorAll('.courses-unit-wrapper')){
         var results = document.querySelectorAll('.courses-unit-wrapper');
-        } if (document.querySelectorAll('.courses-list-manage-outer')){
+        } else if (document.querySelectorAll('.courses-list-manage-outer')){
         var results = document.querySelectorAll('.courses-list-manage-outer');
         }
         results.forEach(function(result) {

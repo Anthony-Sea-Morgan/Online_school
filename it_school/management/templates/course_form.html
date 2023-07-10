@@ -11,64 +11,73 @@
     <link rel="stylesheet" href="{% static 'dist/scss/body.css'%}">
 </head>
 <body>
+
 <div class="blank-global-container" style="position: inherit; height: auto;background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');">
   <div class="wrapper-blank" style="max-width: 800px;width: 720px;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
     <div class="close-btn" id="wrapper-blank-close-btn" onclick="window.location.href = '{% url 'management:course_list'%}'">⨯</div>
-<h1>Редактировать курс</h1>
-    <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
 
-      <div class="form-group">
-        <label for="id_title">Название:</label>
-        <input type="text" id="id_title" name="title" value="{{ course.title }}" class="form-control">
-      </div>
 
-      <div class="form-group">
-        <label for="id_description">Полное описание:</label>
-        {{ form.description }}
-      </div>
-      <div class="form-group">
-        <label for="id_description">краткое описание:</label>
-        <textarea id="id_description" name="description" class="form-control">{{ course.short_des }}</textarea>
-      </div>
 
-      <div class="form-group">
-        <label for="id_difficulty">Сложность курса:</label>
-        <select id="id_difficulty" name="difficulty" class="form-control">
-          {% for choice in difficulty_choices  %}
-            <option value="{{ choice.0 }}" {% if choice.0 == course.difficulty %}selected{% endif %}>{{ choice.1 }}</option>
-          {% endfor %}
-        </select>
-      </div>
+      <h1>Редактировать курс</h1>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
 
-      <div class="form-group">
-        <label for="id_rating">Рейтинг курса:</label>
-        <input type="number" id="id_rating" name="rating" value="{{ course.rating }}" class="form-control">
-      </div>
+        <div class="form-group">
+          <label for="{{ form.title.id_for_label }}">Название:</label>
+          {{ form.title }}
+        </div>
 
-      <div class="form-group">
-        <label for="id_price">Стоимость курса:</label>
-        <input type="number" id="id_price" name="price" value="{{ course.price }}" class="form-control">
-      </div>
+        <div class="form-group">
+          <label for="{{ form.description.id_for_label }}">Полное описание:</label>
+          {{ form.description }}
+        </div>
 
-      <div class="form-group">
-        <label for="id_mentor">Ментор:</label>
-        <select id="id_mentor" name="mentor" class="form-control">
-          {% for mentor in mentors %}
-            <option value="{{ mentor.pk }}" {% if mentor.pk == course.mentor.pk %}selected{% endif %}>{{ mentor }}</option>
-          {% endfor %}
-        </select>
-      </div>
+        <div class="form-group">
+          <label for="{{ form.short_des.id_for_label }}">Краткое описание:</label>
+          {{ form.short_des }}
+        </div>
 
-      <div class="form-group">
-        <label for="id_start_date">Дата начала курса:</label>
-        <input type="date" id="id_start_date" name="start_date" value="{{ course.start_date }}" class="form-control">
-      </div>
+        <div class="form-group">
+          <label for="{{ form.difficulty.id_for_label }}">Сложность курса:</label>
+          {{ form.difficulty }}
+        </div>
+<div class="form-group">
+  <label>Применяемые технологии:</label>
+  {% for choice in technologies %}
+    <div class="form-check" style="height: 20px; display: flex; margin-bottom: 10px;">
+      <input style="width: 25%;height: 100%;" type="checkbox" id="id_technologies_{{ forloop.counter0 }}" name="technologies" value="{{ choice.0 }}" {% if choice.0 in course.technologies %}checked{% endif %} class="form-check-input">
+      <label style="width: 50%;" for="id_technologies_{{ forloop.counter0 }}" class="form-check-label">{{ choice.1 }}</label>
+    </div>
+  {% endfor %}
+</div>
+        <div class="form-group">
+          <label for="{{ form.rating.id_for_label }}">Рейтинг курса:</label>
+          {{ form.rating }}
+        </div>
 
-      <div class="form-group">
-        <label for="id_start_time">Время начала курса:</label>
-        <input type="time" id="id_start_time" name="start_time" value="{{ course.start_time }}" class="form-control">
-      </div>
+        <div class="form-group">
+          <label for="{{ form.price.id_for_label }}">Стоимость курса:</label>
+          {{ form.price }}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.mentor.id_for_label }}">Ментор:</label>
+          {{ form.mentor }}
+        </div>
+                  <div class="form-group">
+          <label for="{{ form.lessons_count.id_for_label }}">Кол-во уроков:</label>
+          {{ form.lessons_count }}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.start_date.id_for_label }}">Дата начала курса:</label>
+          {{ form.start_date }}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.start_time.id_for_label }}">Время начала курса:</label>
+          {{ form.start_time }}
+        </div>
 
       <div class="form-group">
         <label>Дни недели занятий:</label>
@@ -78,11 +87,38 @@
             <label style="width: 50%;" for="id_days_{{ forloop.counter0 }}" class="form-check-label">{{ choice.1 }}</label>
           </div>
         {% endfor %}
-  </div>
+        </div>
+        <label>Иконка курса:</label>
+        <div class="file-drop-area" id="img_area">
+            <span class="fake-btn" > Иконка курса </span>
+            <span class="file-msg" id="file-msg-icon">{{ form.img }}</span>
 
-       <div class="form-group">
-        <button type="submit" class="btn ">Сохранить</button>
-        <a href="{% url 'management:course_delete' pk=course.pk %}" class="btn">Удалить</a>
+        </div>
+          <label>Иконка языка:</label>
+            <div class="file-drop-area" id="img_tech_area">
+            <span class="fake-btn" > Иконка языка </span>
+            <span class="file-msg" id="file-msg-icon-tech">{{ form.tech_img }}</span>
+        </div>
+      {% if form.errors %}
+      <div class="alert alert-danger" style="color: #e53500;">
+        <strong>Ошибка:</strong>
+        <ul>
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+        </ul>
       </div>
-    </form>
+      {% endif %}
+        <div class="form-group">
+{% include "confirm_delete.html" %}
+          <button type="submit" class="btn">Сохранить</button>
+        </div>
+      </form>
+              <button id="delete-btn" class="btn">Удалить</button>
 </div>
+</div>
+</body>
+<script src="/static/dist/js/inputImage.js"></script>
+<script src="/static/dist/js/delete.js"></script>
