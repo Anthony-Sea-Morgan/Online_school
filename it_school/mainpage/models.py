@@ -20,8 +20,6 @@ from django.db import models
 from django.utils import timezone
 import datetime
 
-
-
 DAYS_OF_WEEK_CHOICES = [
     ('monday', 'понедельник'),
     ('tuesday', 'вторник'),
@@ -46,8 +44,6 @@ def image_folder_Course(instance, filename):
 
 def image_folder_Technology(instance, filename):
     return 'mainpage/static/dist/img/Models/Course/TechIcons/{}.webp'.format(uuid.uuid4().hex)
-
-
 
 
 class Course(models.Model):
@@ -101,7 +97,7 @@ class Course(models.Model):
         lesson_count = Lesson.objects.filter(course_owner_id=self.pk).count()
 
         if is_created:
-            group=CustomGroup.objects.create(course_owner=self, name=f'{self.title}.{self.difficulty}.Группа.')
+            group = CustomGroup.objects.create(course_owner=self, name=f'{self.title}.{self.difficulty}.Группа.')
             print(f'ГРУППА: {group.pk}')
             next_date = self.start_date
             for i in range(self.lessons_count):
@@ -164,14 +160,12 @@ class Lesson(models.Model):
                                      null=False,
                                      default=1)  # Ментор, который проводит занятие
 
-
     title = models.CharField(max_length=255, default='Lesson 1', blank=True)
     material = models.TextField('Полное описание', default='Полное описание')
     day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')
     start_date = models.DateField(default=timezone.now)
     start_time = models.TimeField('Время начала курса', default='19:00')
     is_past = models.BooleanField(default=False, editable=False)
-
 
     def is_past_lesson(self):
         return self.start_date < timezone.now().date()
@@ -192,6 +186,7 @@ class Lesson(models.Model):
         verbose_name = 'Занятие'
         verbose_name_plural = 'Занятия'
 
+
 class CustomGroup(Group):
     course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='group_course',
                                      default=1)  # Курс, к которому принадлежит группа
@@ -201,6 +196,9 @@ class CustomGroup(Group):
     class Meta:
         verbose_name = 'Группа'
         verbose_name_plural = 'Группы'
+
+    def __str__(self):
+        return str(f'{self.name}')
 
 
 class CustomGroupAdmin(admin.ModelAdmin):
@@ -244,7 +242,8 @@ class Attendance(models.Model):
 
 
 class ChatMessage(models.Model):
-    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='sent_messages')  # Отправитель сообщения
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
+                               related_name='sent_messages')  # Отправитель сообщения
     group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE)  # Группа, к которой относится сообщение
     text = models.TextField()  # Текст сообщения
     timestamp = models.DateTimeField(auto_now_add=True)  # Дата и время отправки сообщения
