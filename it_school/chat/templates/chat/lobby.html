@@ -22,13 +22,16 @@
             background-color: #f2f2f2;
         }
 
+        .chat-header {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
         #chat-log {
             height: calc(100% - 60px); /* Высота чата с учетом поля ввода текста и кнопки отправки */
             overflow-y: scroll;
-        }
-
-        #chat-input {
-            width: 100%;
         }
 
         #chat-input-container {
@@ -36,52 +39,118 @@
             align-items: center;
             justify-content: space-between;
         }
+
+        #chat-input {
+            flex: 1; /* Занимает всю доступную ширину */
+            margin-right: 10px; /* Отступ справа */
+        }
+
+        #chat-message-submit {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            padding: 0;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-left: 16px solid #007bff; /* Синий цвет треугольника */
+            border-bottom: 10px solid transparent;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     {% if lesson %}
-        <div class="info">
-            <h1 style="color: black;">Курсу {{ lesson.course_owner.title }}</h1>
+    <div class="info">
+        <h1 style="color: black;">Курсу {{ lesson.course_owner.title }}</h1>
 
-            <ul style="color: black;">
-                <li>{{ lesson.title }}</li>
-                <li>{{ lesson.start_date }}</li>
-                <li>{{ lesson.start_time }}</li>
-                <div class="summernote-content" style="color: black;">{{ lesson.material|safe }}</div>
-            </ul>
-        </div>
+        <ul style="color: black;">
+            <li>{{ lesson.title }}</li>
+            <li>{{ lesson.start_date }}</li>
+            <li>{{ lesson.start_time }}</li>
+            <div class="summernote-content" style="color: black;">{{ lesson.material|safe }}</div>
+        </ul>
+    </div>
     {% endif %}
 
     <div class="chat">
+        <h2 class="chat-header">Комната сообщений</h2>
         <div id="chat-log"></div>
         <div id="chat-input-container">
             <input id="chat-input" type="text">
-            <button id="chat-message-submit">Send</button>
+            <button id="chat-message-submit"></button>
         </div>
     </div>
 </div>
 
+
 <script type="text/javascript">
-    const roomName = '{{ room_name }}';  // Здесь укажите значение комнаты чата
+    const roomName = '{{ room_name }}';
+    const user = '{{ user }}';
+
+    // Функция для генерации случайного тёмного цвета
+    function getRandomDarkColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    // Объект для хранения цветов пользователей
+    const userColors = {};
 
     const chatSocket = new WebSocket(
         'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
     );
 
     chatSocket.onmessage = function(e) {
-        const message = JSON.parse(e.data).message;
-        document.querySelector('#chat-log').innerHTML += '<p>' + message + '</p>';
+        const data = JSON.parse(e.data);
+        const message = data.message;
+        const author = data.author; // Получаем автора сообщения из данных
+
+        // Получаем цвет пользователя из объекта userColors или генерируем новый цвет
+        let userColor = userColors[author];
+        if (!userColor) {
+            userColor = getRandomDarkColor();
+            userColors[author] = userColor;
+        }
+
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const timestamp = hours + ':' + minutes;
+        const messageWithTimestamp = '<div style="border: 1px solid #ccc; background-color: ' + userColor + '; color: #fff; padding: 10px; border-radius: 10px; margin-bottom: 10px;">' +
+            '<p><strong>' + author + '</strong>: ' + message + '</p>' +
+            '<p style="font-size: 12px; color: #888;">' + timestamp + '</p>' +
+            '</div>';
+        const chatLog = document.querySelector('#chat-log');
+        chatLog.innerHTML += messageWithTimestamp;
+        chatLog.scrollTop = chatLog.scrollHeight; // Прокручиваем чат вниз
     };
 
-    document.querySelector('#chat-message-submit').onclick = function(e) {
+    document.querySelector('#chat-input').addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            const messageInputDom = document.querySelector('#chat-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'author': user  // Отправляем имя автора сообщения
+            }));
+            messageInputDom.value = '';
+        }
+    });
+
+    document.querySelector('#chat-message-submit').addEventListener('click', function(e) {
         const messageInputDom = document.querySelector('#chat-input');
         const message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
-            'message': message
+            'message': message,
+            'author': user  // Отправляем имя автора сообщения
         }));
         messageInputDom.value = '';
-    };
+    });
 </script>
 </body>
 </html>
