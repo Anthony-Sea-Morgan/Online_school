@@ -13,9 +13,10 @@ from datetime import date
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .forms import ProfileForm
+
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-
+from datetime import date
 
 
 def check_mentor_permission(view_func):
@@ -25,6 +26,9 @@ def check_mentor_permission(view_func):
             return redirect('index')
         return view_func(request, *args, **kwargs)
     return wrapped_view
+
+
+
 
 
 @csrf_protect
@@ -45,15 +49,18 @@ def index(request):
 
 @login_required
 def lesson_list(request):
+    now = date.today()
     lessons = Lesson.objects.all()
-    context = {'lessons': lessons}
+    context = {'lessons': lessons, 'now': now}
     return render(request, 'lesson_list.html', context)
 
 @login_required
 def course_lessons(request, course_id):
+    now = date.today()
     course = Course.objects.get(id=course_id)
     lessons = Lesson.objects.filter(course_owner=course)
-    return render(request, 'course_lissons.html', {'course': course, 'lessons': lessons})
+    context = {'lessons': lessons, 'now': now}
+    return render(request, 'course_lissons.html', {'course': course, 'lessons': lessons, 'now': now})
 
 @login_required
 def personal_cabinet(request):
@@ -83,6 +90,10 @@ def edit_profile(request):
         form = ProfileForm(instance=request.user)
 
     return render(request, 'edit_profile.html', {'form': form})
+
+
+def about_us_view(request):
+    return render(request, 'about.html')
 
 
 class CourseDetailView(DetailView):

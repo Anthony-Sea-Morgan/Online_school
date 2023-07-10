@@ -1,0 +1,151 @@
+{% extends 'index.html' %}
+
+{% block title %}
+О нас
+{% endblock %}
+
+{% block header %}
+{% include "header.html" %}
+{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #ddddd7;
+        color: black;
+    }
+
+    .container {
+        padding: 20px;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 18px;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+
+    .t-list-wrapper {
+        padding: 40px 0;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 20px;
+        justify-items: center;
+    }
+
+    .t-list-skills {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .t-list-skills-label {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .t-list-skills-label h2 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .t-list-skills-label p {
+        font-size: 18px;
+        line-height: 1.5;
+        margin-bottom: 0;
+    }
+
+    .t-list-skills-img {
+        width: 120px;
+        height: 120px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .contact-section {
+        background-color: white;
+        padding: 40px 0;
+    }
+
+    .contact-section ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+    }
+
+    .contact-section ul li {
+        font-size: 18px;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div>
+    <div class="container">
+        <h1>О нас</h1>
+        <p>Мы являемся ведущей IT-школой, специализирующейся на предоставлении качественного образования и профессиональных навыков в сфере информационных технологий.</p>
+        <p>Наша миссия - помочь студентам достичь успеха в сфере IT, предоставляя высококлассные образовательные программы, опытных преподавателей и современные технологии.</p>
+        <p>Мы предлагаем широкий выбор курсов, включая программирование, веб-разработку, базы данных, искусственный интеллект и многое другое.</p>
+        <p>Присоединяйтесь к нам и начните свой путь к успешной карьере в IT!</p>
+    </div>
+
+    <div class="white-space hcd"></div>
+
+    <div class="t-list-wrapper">
+        <div class="t-list-skills transparent-box">
+            <div class="t-list-skills-label ib va">
+                <h2>Идеальное резюме</h2>
+                <p>Мы подскажем, как создать конкурентоспособное резюме и релевантное сопроводительное письмо, чтобы выделиться среди других кандидатов</p>
+            </div>
+            <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/photo.svg');"></div>
+        </div>
+        <div class="t-list-skills transparent-box">
+            <div class="t-list-skills-label ib va">
+                <h2>Профиль в LinkedIn</h2>
+                <p>Расскажем, как заполнить профессиональный профиль в LinkedIn, чтобы его начали замечать рекрутеры</p>
+            </div>
+            <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/LinkedIn.svg');"></div>
+        </div>
+        <div class="t-list-skills transparent-box">
+            <div class="t-list-skills-label ib va">
+                <h2>Подготовка к собеседованию</h2>
+                <p>Расскажем, из каких этапов состоит собеседование, а также научим презентовать себя и свои сильные стороны для его успешного прохождения</p>
+            </div>
+            <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/SoftSkills.svg');"></div>
+        </div>
+        <div class="t-list-skills transparent-box">
+            <div class="t-list-skills-label ib va">
+                <h2>Твоя работа в IT</h2>
+                <p>Отправим подготовленное резюме нашим партнёрам международным IT-компаниям и дождемся вместе с тобой твой первый оффер на работу мечты</p>
+            </div>
+            <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/__IT.svg');"></div>
+        </div>
+    </div>
+
+    <div class="white-space hcd"></div>
+
+    <div class="contact-section">
+        <div class="container">
+            <h2>Контакты</h2>
+            <p>Если у вас есть вопросы или вы хотите узнать больше о наших курсах, свяжитесь с нами:</p>
+            <ul>
+                <li>Телефон: +375 (44) 741-56-89</li>
+                <li>Email: info@example.com</li>
+                <li>Адрес: г. Минск, ул. Примерная, д. 123</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
