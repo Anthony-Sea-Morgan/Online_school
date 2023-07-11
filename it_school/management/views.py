@@ -5,9 +5,12 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from mainpage.views import *
 from django.urls import reverse_lazy
 from mainpage.models import Course, Lesson, TECHNOLOGIES, CustomUser, TECHNOLOGY_CHOICES,DIFFICULTY_CHOICES, DAYS_OF_WEEK_CHOICES
-from .forms import CourseForm
+from management.forms import CourseForm, LessonForm, CustomGroupForm
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
+
 
 
 
@@ -39,6 +42,9 @@ class CourseCreateView(CreateView):
         context['technologies'] = TECHNOLOGY_CHOICES
         context['difficulty_choices'] = DIFFICULTY_CHOICES
         context['days_of_week_choices'] = DAYS_OF_WEEK_CHOICES
+        context['lesson_form'] = LessonForm()
+        context['group_form'] = CustomGroupForm()
+        context['lessons'] = Lesson.objects.filter(course_owner=self.object)
         return context
 
 
@@ -55,6 +61,10 @@ class CourseUpdateView(UpdateView):
         context['technologies'] = TECHNOLOGY_CHOICES
         context['difficulty_choices'] = DIFFICULTY_CHOICES
         context['days_of_week_choices'] = DAYS_OF_WEEK_CHOICES
+        context['lesson_form'] = LessonForm()
+        group = CustomGroup.objects.get(course_owner_id=self.kwargs['pk'])
+        context['group'] = group
+        context['lessons'] = Lesson.objects.filter(course_owner=self.object)
         return context
 
     def form_valid(self, form):
@@ -66,7 +76,32 @@ class CourseUpdateView(UpdateView):
             self.object = form.save(commit=False)
             self.object.save()
             return HttpResponseRedirect(self.get_success_url())
-@method_decorator(check_mentor_permission, name='dispatch')
+
+
+def remove_participant(request, pk):
+    group = get_object_or_404(CustomGroup, course_owner_id=pk)
+    if request.method == 'POST':
+        participant_email = request.POST.get('participant_email')
+        participant = get_object_or_404(CustomUser, email=participant_email)
+        group.users.remove(participant)
+        return redirect('management:course_update', pk=pk)
+    else:
+        raise Http404('Invalid request method.')
+
+
+def add_participant(request, pk):
+    group = get_object_or_404(CustomGroup, course_owner_id=pk)
+    if request.method == 'POST':
+        participant_email = request.POST.get('participant_email')
+        participant = get_object_or_404(CustomUser, email=participant_email)
+        group.users.add(participant)
+        return redirect('management:course_update', pk=pk)
+    else:
+        raise Http404('Invalid request method.')
+
+# def lesson_update(request, pk):
+#     lesson = get_object_or_404(Lesson, pk=pk)
+#     return HttpResponse("Lesson update view")
 class CourseDeleteView(DeleteView):
     model = Course
     template_name = 'course_confirm_delete.html'

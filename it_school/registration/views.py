@@ -58,7 +58,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    redirect_url = request.GET.get('next', 'index')
+    redirect_url = 'index'; #request.GET.get('next', 'index') - возврат на страницу, с которой был выполнен логаут
     return redirect(redirect_url)
 
 

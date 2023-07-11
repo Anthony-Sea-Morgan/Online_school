@@ -49,7 +49,7 @@ def image_folder_Technology(instance, filename):
 class Course(models.Model):
     title = models.CharField(max_length=100)  # Тема курса
     description = models.TextField('Полное описание', blank=True)  # Описание
-    short_des = models.TextField('Краткое описание', default='')
+    short_des = models.TextField('Краткое описание', default='', max_length=100)
 
     difficulty = models.CharField('Сложность курса', max_length=15, choices=DIFFICULTY_CHOICES)  # Сложность
     rating = models.DecimalField('Рейтинг курса', max_digits=3, decimal_places=1)  # Рейтинг(оценка) курса
@@ -204,7 +204,7 @@ class CustomGroup(Group):
 class CustomGroupAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.prefetch_related('users')  # Включаем связанных пользователей (это оптимизация запроса)
+        queryset = queryset.prefetch_related('users')  #Включаем связанных пользователей (это оптимизация запроса)
         return queryset
 
     def get_users_list(self, obj):
