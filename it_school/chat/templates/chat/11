@@ -43,6 +43,8 @@
         #chat-input {
             flex: 1; /* Занимает всю доступную ширину */
             margin-right: 10px; /* Отступ справа */
+            height: 70px; /* Высота поля ввода сообщения */
+            resize: vertical; /* Разрешить вертикальное изменение размера */
         }
 
         #chat-message-submit {
@@ -55,8 +57,13 @@
             border-top: 10px solid transparent;
             border-left: 16px solid #007bff; /* Синий цвет треугольника */
             border-bottom: 10px solid transparent;
+            margin-left: 10px; /* Отступ слева */
+            transform: scale(0.8); /* Уменьшить размер треугольника */
+            transform-origin: left center; /* Изменить точку масштабирования */
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.css" />
+
 </head>
 <body>
 <div class="container">
@@ -68,7 +75,7 @@
             <li>{{ lesson.title }}</li>
             <li>{{ lesson.start_date }}</li>
             <li>{{ lesson.start_time }}</li>
-            <pre class="summernote-content" style="color: black;">{{ lesson.material|safe }}</pre>
+            <div class="summernote-content" style="color: black;">{{ lesson.material|safe }}</div>
         </ul>
     </div>
     {% endif %}
@@ -77,12 +84,14 @@
         <h2 class="chat-header">Комната сообщений</h2>
         <div id="chat-log"></div>
         <div id="chat-input-container">
-            <textarea id="chat-input" rows="3"></textarea>
+            <input id="chat-input" type="text">
             <button id="chat-message-submit"></button>
         </div>
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
 
 <script type="text/javascript">
     const roomName = '{{ room_name }}';
@@ -122,16 +131,16 @@
         const minutes = now.getMinutes();
         const timestamp = hours + ':' + minutes;
         const messageWithTimestamp = '<div style="border: 1px solid #ccc; background-color: ' + userColor + '; color: #fff; padding: 10px; border-radius: 10px; margin-bottom: 10px;">' +
-            '<pre><strong>' + author + '</strong>: ' + message + '</pre>' +
+            '<p><strong>' + author + '</strong>: ' + message + '</p>' +
             '<p style="font-size: 12px; color: #888;">' + timestamp + '</p>' +
-            '</div>';
+           '</div>';
         const chatLog = document.querySelector('#chat-log');
         chatLog.innerHTML += messageWithTimestamp;
         chatLog.scrollTop = chatLog.scrollHeight; // Прокручиваем чат вниз
     };
 
     document.querySelector('#chat-input').addEventListener('keyup', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
+        if (e.key === 'Enter') {
             const messageInputDom = document.querySelector('#chat-input');
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
@@ -151,6 +160,15 @@
         }));
         messageInputDom.value = '';
     });
+
+    $(document).ready(function() {
+    $("#chat-input").emojioneArea({
+        pickerPosition: "top",
+        tonesStyle: "radio"
+    });
+});
+
 </script>
+
 </body>
 </html>
