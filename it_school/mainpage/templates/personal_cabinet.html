@@ -50,7 +50,7 @@
     <div class="courses-base wr" style="display:flex;">
         <div class="courses-list-wrapper jc-c">
             <div class="courses-list-align">
-                <h2 style="color: black; text-align: center">Доступные курсы:</h2>
+                <h2 style="color: black; text-align: center">Имеющиеся курсы:</h2>
                 {% for course in user.courses.all %}
                 <div class="courses-unit-wrapper ib va" data-technology="{{ course.technologies }}" data-difficulty="{{ course.difficulty }}">
                     <div class="courses-unit-texture">
@@ -61,22 +61,23 @@
                     </div>
                 </div>
                 {% empty %}
-                <p>Нет доступных курсов</p>
+                <p>Нет имеющихся курсов</p>
                 {% endfor %}
             </div>
         </div>
     </div>
 <div style="background-color: #ddddd7; margin-bottom: 0; padding: 20px;">
 
-        <h3 style="color: black;">Информация о пользователе:</h3>
-        <p style="color: black;">Имя пользователя: {{ user.username }}</p>
-        <p style="color: black;">Имя: {{ user.first_name }}</p>
-        <p style="color: black;">Фамилия: {{ user.last_name }}</p>
-        <p style="color: black;">Email: {{ user.email }}</p>
-        <p style="color: black;">Номер телефона: {{ user.phone_number }}</p>
-        <a href="{% url 'edit_profile' %}" class="edit-profile-button">Редактировать профиль</a>
+        <h3>Информация о пользователе:</h3>
+        <p>Имя пользователя: {{ user.username }}</p>
+        <p>Имя: {{ user.first_name }}</p>
+        <p>Фамилия: {{ user.last_name }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>Номер телефона: {{ user.phone_number }}</p>
+        <a id="edit-profile" class="edit-profile-button">Редактировать профиль</a>
         <h4 style="color: black;">Кошелек:</h4>
         <p style="color: black;">Баланс: {{ user.wallet }}</p>
+        <a id="edit-wallet" class="edit-profile-button">Пополнить кошелек</a>
 
 </div>
 </div>
@@ -95,9 +96,12 @@
   background-color: #ddd;
 }
 </style>
+{% include "edit_profile.html" %}
+{% include "wallet_replenishment.html" %}
 {% endblock %}
 {% block script %}
 <script src="/static/dist/js/coursesFilter.js"></script>
+<script src="/static/dist/js/userEdit.js"></script>
 {% endblock %}
 
 

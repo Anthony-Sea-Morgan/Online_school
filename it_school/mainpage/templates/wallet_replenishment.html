@@ -1,0 +1,10 @@
+<div class="blank-global-container" id="blank-wallet" style="display: none; backdrop-filter: blur(4px) saturate(150%) brightness(60%); {{ styleconfp }}">
+<div class="wrapper-blank">
+        <div class="close-btn" id="wrapper-blank-close-btn-wallet">⨯</div>
+<form method="POST">
+        <h1>Пополнение кошелька</h1>
+  {% csrf_token %}
+{{ wallet_form.wallet }}
+      <button type="submit" class="btn">Пополнить</button>
+</div>
+</div>
