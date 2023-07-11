@@ -1,64 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Chat</title>
-    <style>
-        /* CSS для разделения страницы на две части */
-        .container {
-            display: flex;
-            height: 100vh;
-        }
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+{{ title }}
+{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'dist/scss/chat.css'%}">
+{% endblock %}
+{% block header %}
+{% include "header.html" %}
+{% endblock %}
 
-        .info {
-            width: 75%;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
 
-        .chat {
-            width: 25%;
-            padding: 20px;
-            background-color: #f2f2f2;
-        }
 
-        .chat-header {
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        #chat-log {
-            height: calc(100% - 60px); /* Высота чата с учетом поля ввода текста и кнопки отправки */
-            overflow-y: scroll;
-        }
-
-        #chat-input-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        #chat-input {
-            flex: 1; /* Занимает всю доступную ширину */
-            margin-right: 10px; /* Отступ справа */
-        }
-
-        #chat-message-submit {
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
-            padding: 0;
-            width: 0;
-            height: 0;
-            border-top: 10px solid transparent;
-            border-left: 16px solid #007bff; /* Синий цвет треугольника */
-            border-bottom: 10px solid transparent;
-        }
-    </style>
-</head>
-<body>
+{% block content %}
 <div class="container">
     {% if lesson %}
     <div class="info">
@@ -82,75 +36,8 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
-
-<script type="text/javascript">
-    const roomName = '{{ room_name }}';
-    const user = '{{ user }}';
-
-    // Функция для генерации случайного тёмного цвета
-    function getRandomDarkColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
-    // Объект для хранения цветов пользователей
-    const userColors = {};
-
-    const chatSocket = new WebSocket(
-        'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
-    );
-
-    chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        const message = data.message;
-        const author = data.author; // Получаем автора сообщения из данных
-
-        // Получаем цвет пользователя из объекта userColors или генерируем новый цвет
-        let userColor = userColors[author];
-        if (!userColor) {
-            userColor = getRandomDarkColor();
-            userColors[author] = userColor;
-        }
-
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const timestamp = hours + ':' + minutes;
-        const messageWithTimestamp = '<div style="border: 1px solid #ccc; background-color: ' + userColor + '; color: #fff; padding: 10px; border-radius: 10px; margin-bottom: 10px;">' +
-            '<pre><strong>' + author + '</strong>: ' + message + '</pre>' +
-            '<p style="font-size: 12px; color: #888;">' + timestamp + '</p>' +
-            '</div>';
-        const chatLog = document.querySelector('#chat-log');
-        chatLog.innerHTML += messageWithTimestamp;
-        chatLog.scrollTop = chatLog.scrollHeight; // Прокручиваем чат вниз
-    };
-
-    document.querySelector('#chat-input').addEventListener('keyup', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            const messageInputDom = document.querySelector('#chat-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message,
-                'author': user  // Отправляем имя автора сообщения
-            }));
-            messageInputDom.value = '';
-        }
-    });
-
-    document.querySelector('#chat-message-submit').addEventListener('click', function(e) {
-        const messageInputDom = document.querySelector('#chat-input');
-        const message = messageInputDom.value;
-        chatSocket.send(JSON.stringify({
-            'message': message,
-            'author': user  // Отправляем имя автора сообщения
-        }));
-        messageInputDom.value = '';
-    });
-</script>
-</body>
-</html>
+{% block script %}
+<script src="/static/dist/js/chat.js"></script>
+{% endblock %}

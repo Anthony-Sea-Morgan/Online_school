@@ -96,11 +96,11 @@ display: none;
 position: absolute;
 right: 0;
 top:100%;
-background-color: #ddd9c5;
+background: linear-gradient(#ffad5a, #fffac0);
 width: 200px;
 height: auto;
 z-index: 1;
-
+box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;
 }
 
 .nav-dropdown-content p {
@@ -114,7 +114,7 @@ height: 50px;
 margin: 0;
 }
 
-.nav-dropdown-content div:hover {background-color: #ddd}
+.nav-dropdown-content div:hover {background-color: #ff8000}
 
 .nav-dropdown:hover .nav-dropdown-content {
     display: block;

@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 
 {% block title %}
-{{ title }}
+Информация о курсе {{ course.title }}
 {% endblock %}
 
 {% block header %}
@@ -23,7 +23,7 @@
         <div class="course-detail-dos">Старт занятий с: {{ course.start_date }}</div>
             <div></div>
         </div>
-        <div class="course-detail-folder-img"><img src="{{ course.img }}" alt="{{ course.course.img }}"></div>
+        <div class="course-detail-folder-img"><img src="media/{{ course.img }}" alt="media/{{ course.course.img }}"></div>
         </div>
 
 </div>
