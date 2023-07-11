@@ -2,7 +2,7 @@ from tabulate import tabulate
 from datetime import date
 
 from .models import Course, Lesson, CustomGroup, CustomUser, Attendance, ChatMessage, TECHNOLOGIES
-from .forms import ProfileForm
+from .forms import ProfileForm, WalletForm
 
 from django.views.generic import DetailView
 from django.contrib import messages
@@ -57,7 +57,7 @@ def course_lessons(request, course_id):
 def personal_cabinet(request):
     """
      Отображает личный кабинет пользователя.
-     """
+    """
     user = request.user
     courses = user.courses.all().order_by(
         'start_date')  # Получаем список курсов пользователя, отсортированных по дате начала
@@ -69,11 +69,35 @@ def personal_cabinet(request):
     for course in courses:
         lessons = Lesson.objects.filter(course_owner=course)
         lessons_by_course[course] = lessons
+    wallet_form = WalletForm()
+    edit_form = ProfileForm(instance=request.user)
+    if request.method == 'POST':
+        wallet_form = WalletForm(request.POST, instance=request.user)
+        edit_form = ProfileForm(request.POST, instance=request.user)
+        if wallet_form.is_valid():
+            wallet_form.save()
+            return redirect('personal_cabinet')
+        if edit_form.is_valid():
+            edit_form.save()
+            return redirect('personal_cabinet')
+    else:
+        edit_form = ProfileForm(instance=request.user)
 
     return render(request, 'personal_cabinet.html',
-                  {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course})
+                  {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course, 'wallet_form': wallet_form,'edit_form': edit_form})
 
-
+@login_required
+def top_up_wallet(request):
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        user = request.user
+        user.wallet += float(amount)
+        user.save()
+        return redirect('personal_cabinet')
+    else:
+        form = WalletForm(instance=request.user)
+    return render(request, 'personal_cabinet.html',
+                  {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course, })
 @login_required
 def edit_profile(request):
     """
