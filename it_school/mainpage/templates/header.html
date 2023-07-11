@@ -17,12 +17,13 @@
     {% endif %}
     <div class="m-a">☰</div>
     <div class="nav-dropdown-content" id="NAV">
+        <div onclick="location.href='{% url 'index' %}'"><p>Главная страница</p></div>
         {% if user.is_authenticated %}
         <div onclick="location.href='{% url 'personal_cabinet' %}'"><p>Личный кабинет</p></div>
         {% if user.is_mentor %}
         <div onclick="location.href='{% url 'management:course_list' %}'"><p>Настройки курсов</p></div>
         {% endif %}
-        <div><p>Форум</p></div>
+        <div><p>Справка</p></div>
         <div><p>О нас</p></div>
         <div data-action="logout" onclick="location.href='{% url 'logout_view' %}?next={{ request.path }}';"><p>Выйти из аккаунта</p></div>
         {% else %}

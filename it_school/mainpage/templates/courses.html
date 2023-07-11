@@ -16,6 +16,7 @@
     <div class="courses-list-wrapper jc-c">
     <div class="courses-list-align">
         {% for x in courses %}
+            {% if x.id not in user_course_ids %}
     <div class="courses-unit-wrapper ib va" data-technology="{{ x.technologies }}" data-difficulty="{{ x.difficulty }}">
         <div class="courses-unit-texture">
         <div class="courses-unit-rating ws-nw va">{{ x.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="/static/dist/img/PNG/icon/rating.png" class="icn"></div>
@@ -27,6 +28,7 @@
         <div class="courses-unit-dos">Старт занятий с:<br> {{ x.start_date }}</div>
             </div>
     </div>
+        {% endif %}
         {% empty %}
                 <p>Нет доступных курсов</p>
         {% endfor %}

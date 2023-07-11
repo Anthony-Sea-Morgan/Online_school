@@ -1,5 +1,5 @@
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
-from mainpage.models import Course
+from mainpage.models import Course, Lesson, CustomGroup
 from django.forms import ModelForm, TextInput, Textarea,  ClearableFileInput
 from django import forms
 
@@ -26,4 +26,29 @@ class CourseForm(forms.ModelForm):
             'technologies': forms.CheckboxSelectMultiple(attrs={'class': 'form-group', 'style':'width: 25%;height: 100%;'}),
             'img': ClearableFileInput(attrs={'class': "file-input",'id': "img",'value': "",}),
             'tech_img': ClearableFileInput(attrs={'class': "file-input",'id': "img_tech",'value': "",}),
+        }
+
+class LessonForm(forms.ModelForm):
+    class Meta:
+        model = Lesson
+        fields = ['mentor_owner', 'title', 'material', 'day_of_week', 'start_date', 'start_time']
+        widgets = {
+            'mentor_owner': forms.Select(attrs={'class': 'form-group'}),
+            'title': forms.TextInput(attrs={'class': 'form-group'}),
+            'material': SummernoteWidget(attrs={'class': 'form-group'}),
+            'day_of_week': forms.Select(attrs={'class': 'form-group'}),
+            'start_date': forms.DateInput(attrs={'class': 'form-group', 'type': 'date'}),
+            'start_time': forms.TimeInput(attrs={'class': 'form-group', 'type': 'time'}),
+        }
+
+
+class CustomGroupForm(forms.ModelForm):
+    class Meta:
+        model = CustomGroup
+        fields = ['course_owner', 'name', 'description', 'users']
+        widgets = {
+            'course_owner': forms.Select(attrs={'class': 'form-group'}),
+            'name': forms.TextInput(attrs={'class': 'form-group'}),
+            'description': forms.Textarea(attrs={'class': 'form-group'}),
+            'users': forms.SelectMultiple(attrs={'class': 'form-group'}),
         }

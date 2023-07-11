@@ -5,79 +5,79 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация в онлайн школе</title>
+    <title>Редактировать курс</title>
     <link rel="shortcut icon" type="image/png" sizes="96x96" rel="icon" href="/static/dist/img/PNG/icon/online_school.png">
     <link rel="stylesheet" href="{% static 'dist/scss/wrapper-form.css'%}">
     <link rel="stylesheet" href="{% static 'dist/scss/body.css'%}">
 </head>
 <body>
-
-<div class="blank-global-container" style="position: inherit; height: auto;background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');">
+<div class="blank-global-container" style="display: block;position: inherit; height: auto;background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');">
   <div class="wrapper-blank" style="max-width: 800px;width: 720px;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
     <div class="close-btn" id="wrapper-blank-close-btn" onclick="window.location.href = '{% url 'management:course_list'%}'">⨯</div>
 
+    <h1>Редактировать курс</h1>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
 
+      <div class="form-group">
+        <label for="{{ form.title.id_for_label }}">Название:</label>
+        {{ form.title }}
+      </div>
 
-      <h1>Редактировать курс</h1>
-      <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
+      <div class="form-group">
+        <label for="{{ form.description.id_for_label }}">Полное описание:</label>
+        {{ form.description }}
+      </div>
 
-        <div class="form-group">
-          <label for="{{ form.title.id_for_label }}">Название:</label>
-          {{ form.title }}
-        </div>
+      <div class="form-group">
+        <label for="{{ form.short_des.id_for_label }}">Краткое описание:</label>
+        {{ form.short_des }}
+      </div>
 
-        <div class="form-group">
-          <label for="{{ form.description.id_for_label }}">Полное описание:</label>
-          {{ form.description }}
-        </div>
+      <div class="form-group">
+        <label for="{{ form.difficulty.id_for_label }}">Сложность курса:</label>
+        {{ form.difficulty }}
+      </div>
 
-        <div class="form-group">
-          <label for="{{ form.short_des.id_for_label }}">Краткое описание:</label>
-          {{ form.short_des }}
-        </div>
+      <div class="form-group">
+        <label>Применяемые технологии:</label>
+        {% for choice in technologies %}
+          <div class="form-check" style="height: 20px; display: flex; margin-bottom: 10px;">
+            <input style="width: 25%;height: 100%;" type="checkbox" id="id_technologies_{{ forloop.counter0 }}" name="technologies" value="{{ choice.0 }}" {% if choice.0 in course.technologies %}checked{% endif %} class="form-check-input">
+            <label style="width: 50%;" for="id_technologies_{{ forloop.counter0 }}" class="form-check-label">{{ choice.1 }}</label>
+          </div>
+        {% endfor %}
+      </div>
 
-        <div class="form-group">
-          <label for="{{ form.difficulty.id_for_label }}">Сложность курса:</label>
-          {{ form.difficulty }}
-        </div>
-<div class="form-group">
-  <label>Применяемые технологии:</label>
-  {% for choice in technologies %}
-    <div class="form-check" style="height: 20px; display: flex; margin-bottom: 10px;">
-      <input style="width: 25%;height: 100%;" type="checkbox" id="id_technologies_{{ forloop.counter0 }}" name="technologies" value="{{ choice.0 }}" {% if choice.0 in course.technologies %}checked{% endif %} class="form-check-input">
-      <label style="width: 50%;" for="id_technologies_{{ forloop.counter0 }}" class="form-check-label">{{ choice.1 }}</label>
-    </div>
-  {% endfor %}
-</div>
-        <div class="form-group">
-          <label for="{{ form.rating.id_for_label }}">Рейтинг курса:</label>
-          {{ form.rating }}
-        </div>
+      <div class="form-group">
+        <label for="{{ form.rating.id_for_label }}">Рейтинг курса:</label>
+        {{ form.rating }}
+      </div>
 
-        <div class="form-group">
-          <label for="{{ form.price.id_for_label }}">Стоимость курса:</label>
-          {{ form.price }}
-        </div>
+      <div class="form-group">
+        <label for="{{ form.price.id_for_label }}">Стоимость курса:</label>
+        {{ form.price }}
+      </div>
 
-        <div class="form-group">
-          <label for="{{ form.mentor.id_for_label }}">Ментор:</label>
-          {{ form.mentor }}
-        </div>
-                  <div class="form-group">
-          <label for="{{ form.lessons_count.id_for_label }}">Кол-во уроков:</label>
-          {{ form.lessons_count }}
-        </div>
+      <div class="form-group">
+        <label for="{{ form.mentor.id_for_label }}">Ментор:</label>
+        {{ form.mentor }}
+      </div>
 
-        <div class="form-group">
-          <label for="{{ form.start_date.id_for_label }}">Дата начала курса:</label>
-          {{ form.start_date }}
-        </div>
+      <div class="form-group">
+        <label for="{{ form.lessons_count.id_for_label }}">Кол-во уроков:</label>
+        {{ form.lessons_count }}
+      </div>
 
-        <div class="form-group">
-          <label for="{{ form.start_time.id_for_label }}">Время начала курса:</label>
-          {{ form.start_time }}
-        </div>
+      <div class="form-group">
+        <label for="{{ form.start_date.id_for_label }}">Дата начала курса:</label>
+        {{ form.start_date }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.start_time.id_for_label }}">Время начала курса:</label>
+        {{ form.start_time }}
+      </div>
 
       <div class="form-group">
         <label>Дни недели занятий:</label>
@@ -87,38 +87,82 @@
             <label style="width: 50%;" for="id_days_{{ forloop.counter0 }}" class="form-check-label">{{ choice.1 }}</label>
           </div>
         {% endfor %}
-        </div>
+      </div>
+
+      <div class="form-group">
         <label>Иконка курса:</label>
         <div class="file-drop-area" id="img_area">
-            <span class="fake-btn" > Иконка курса </span>
-            <span class="file-msg" id="file-msg-icon">{{ form.img }}</span>
-
+          <span class="fake-btn">Иконка курса</span>
+          <span class="file-msg" id="file-msg-icon">{{ form.img }}</span>
         </div>
-          <label>Иконка языка:</label>
-            <div class="file-drop-area" id="img_tech_area">
-            <span class="fake-btn" > Иконка языка </span>
-            <span class="file-msg" id="file-msg-icon-tech">{{ form.tech_img }}</span>
-        </div>
-      {% if form.errors %}
-      <div class="alert alert-danger" style="color: #e53500;">
-        <strong>Ошибка:</strong>
-        <ul>
-          {% for field in form %}
-            {% for error in field.errors %}
-              <li>{{ field.label }}: {{ error }}</li>
-            {% endfor %}
-          {% endfor %}
-        </ul>
       </div>
-      {% endif %}
-        <div class="form-group">
-{% include "confirm_delete.html" %}
-          <button type="submit" class="btn">Сохранить</button>
+
+      <div class="form-group">
+        <label>Иконка языка:</label>
+        <div class="file-drop-area" id="img_tech_area">
+          <span class="fake-btn">Иконка языка</span>
+          <span class="file-msg" id="file-msg-icon-tech">{{ form.tech_img }}</span>
         </div>
-      </form>
-              <button id="delete-btn" class="btn">Удалить</button>
+      </div>
+
+      {% if form.errors %}
+        <div class="alert alert-danger" style="color: #e53500;">
+          <strong>Ошибка:</strong>
+          <ul>
+            {% for field in form %}
+              {% for error in field.errors %}
+                <li>{{ field.label }}: {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <div class="form-group">
+        {% include "confirm_delete.html" %}
+        <button type="submit" class="btn">Сохранить</button>
+      </div>
+    </form>
+
+    <button id="delete-btn" class="btn">Удалить</button>
 </div>
+  <div class="wrapper-blank" style="max-width: 800px;width: 720px;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
+<h1>Участники группы</h1>
+<div class="form-group">
+  <label for="group-users">Участники:</label>
+  <ul>
+    {% for user in group.users.all %}
+      <li>ID: {{ user.id }}, Имя: {{ user.email }}</li>
+    {% empty %}
+      <li>Нет участников</li>
+    {% endfor %}
+  </ul>
+</div>
+
+  <!-- Форма для удаления участника -->
+<form method="POST" action="{% url 'management:remove_participant' pk=group.course_owner_id %}">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="participant-email">Email участника:</label>
+    <input type="email" id="participant-email" name="participant_email" required>
+  </div>
+  <button type="submit" class="btn">Удалить участника</button>
+</form>
+
+  <!-- Форма для добавления нового участника -->
+<form method="POST" action="{% url 'management:add_participant' pk=group.course_owner.id %}">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="participant-email">Email участника:</label>
+    <input type="email" id="participant-email" name="participant_email" required>
+  </div>
+  <button type="submit" class="btn">Добавить участника</button>
+</form>
+
+  </div>
+
 </div>
 </body>
 <script src="/static/dist/js/inputImage.js"></script>
 <script src="/static/dist/js/delete.js"></script>
+</html>
