@@ -1,7 +1,3 @@
-from django.contrib import admin
-from django.contrib.auth.admin import GroupAdmin, UserAdmin
-
-from registration.models import *
 from mainpage.models import *
 from django_summernote.admin import SummernoteModelAdmin
 

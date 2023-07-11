@@ -1,24 +1,15 @@
-import datetime
-import uuid
-import logging
+from uuid import uuid4
+from logging import getLogger
+from datetime import datetime, time
+
 from django.contrib.auth.models import Group
-from django.db.models.signals import m2m_changed, pre_save
-from django.dispatch import receiver
 from multiselectfield import MultiSelectField
 from django.core.validators import MaxValueValidator
-from django.utils import timezone
 from .fields import WEBPField
-from django.db import models
-from registration.models import CustomUser
 from django.contrib import admin
-from django.db import models
-from django.utils import timezone
-from datetime import datetime
 from registration.models import CustomUser
-from datetime import time as dt_time
 from django.db import models
 from django.utils import timezone
-import datetime
 
 DAYS_OF_WEEK_CHOICES = [
     ('monday', 'понедельник'),
@@ -35,36 +26,33 @@ DIFFICULTY_CHOICES = [
     ('Начинающий', 'Beginner'),
     ('Продвинутый', 'Advanced'),
 ]
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
+# Функция для определения пути сохранения изображения курса
 def image_folder_Course(instance, filename):
-    return 'mainpage/static/dist/img/Models/Course/CourseIcons/{}.webp'.format(uuid.uuid4().hex)
+    return 'mainpage/static/dist/img/Models/Course/CourseIcons/{}.webp'.format(uuid4().hex)
 
 
+# Функция для определения пути сохранения изображения языка
 def image_folder_Technology(instance, filename):
-    return 'mainpage/static/dist/img/Models/Course/TechIcons/{}.webp'.format(uuid.uuid4().hex)
+    return 'mainpage/static/dist/img/Models/Course/TechIcons/{}.webp'.format(uuid4().hex)
 
 
 class Course(models.Model):
     title = models.CharField(max_length=100)  # Тема курса
     description = models.TextField('Полное описание', blank=True)  # Описание
     short_des = models.TextField('Краткое описание', default='', max_length=100)
-
     difficulty = models.CharField('Сложность курса', max_length=15, choices=DIFFICULTY_CHOICES)  # Сложность
     rating = models.DecimalField('Рейтинг курса', max_digits=3, decimal_places=1)  # Рейтинг(оценка) курса
     price = models.DecimalField('Стоимость курса', max_digits=6, decimal_places=2)  # Стоимость курса
     mentor = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-
     start_date = models.DateField('Дата начала курса', default=timezone.now)  # Поле даты начала курса
-    start_time = models.TimeField('Время начала курса', default=datetime.time(19, 0))  # Поле времени начала курса
-
+    start_time = models.TimeField('Время начала курса', default=time(19, 0))  # Поле времени начала курса
     days_of_week = MultiSelectField('Дни недели занятий', choices=DAYS_OF_WEEK_CHOICES,
-
                                     validators=[MaxValueValidator(7)],
                                     default='monday')  # Чекбоксы для выбора дней недели
     technologies = MultiSelectField('Применяемы языки', choices=TECHNOLOGY_CHOICES,
-
                                     validators=[MaxValueValidator(5)],
                                     default='Python')  # Чекбоксы для выбора дней недели
     lessons_count = models.IntegerField(default=1)  # Кол-во уроков в курсе
@@ -84,8 +72,8 @@ class Course(models.Model):
         В функции происходит создание Занятий, согласно их количеству.
         При редактировании количества занятий, либо добавляются новые, либо удаляются последние.
         """
-        if self.mentor.is_mentor != True:
-            print("Пользователь не является ментором")
+        if not self.mentor.is_mentor:
+            logger.warning("Пользователь не является ментором")
             return 1
         if not self.days_of_week:
             self.days_of_week = ['wednesday', 'saturday']
@@ -98,7 +86,7 @@ class Course(models.Model):
 
         if is_created:
             group = CustomGroup.objects.create(course_owner=self, name=f'{self.title}.{self.difficulty}.Группа.')
-            print(f'ГРУППА: {group.pk}')
+            logger.info(f'Создана группа: {group.pk}')
             next_date = self.start_date
             for i in range(self.lessons_count):
                 count = len(self.days_of_week)
@@ -153,25 +141,20 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
-    course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lesson_course',
-
+    course_owner = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lesson_course',
                                      null=False, editable=False)  # Курс, к которому принадлежит занятие
     mentor_owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='lesson_mentor',
                                      null=False,
                                      default=1)  # Ментор, который проводит занятие
-
     title = models.CharField(max_length=255, default='Lesson 1', blank=True)
     material = models.TextField('Полное описание', default='Полное описание')
     day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK_CHOICES, default='monday')
     start_date = models.DateField(default=timezone.now)
-    start_time = models.TimeField('Время начала курса', default='19:00')
+    start_time = models.TimeField('Время начала курса', default=time(19, 0))
     is_past = models.BooleanField(default=False, editable=False)
 
     def is_past_lesson(self):
         return self.start_date < timezone.now().date()
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     def __str__(self):
         return str(f'{self.title}')
@@ -180,7 +163,7 @@ class Lesson(models.Model):
         if self.mentor_owner.is_mentor:
             super().save(*args, **kwargs)
         else:
-            print("Пользователь не является ментором!")
+            logger.warning("Пользователь не является ментором")
 
     class Meta:
         verbose_name = 'Занятие'
@@ -188,7 +171,7 @@ class Lesson(models.Model):
 
 
 class CustomGroup(Group):
-    course_owner = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='group_course',
+    course_owner = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='group_course',
                                      default=1)  # Курс, к которому принадлежит группа
     description = models.TextField(blank=True)
     users = models.ManyToManyField(CustomUser, related_name='custom_groups')
@@ -204,7 +187,7 @@ class CustomGroup(Group):
 class CustomGroupAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.prefetch_related('users')  #Включаем связанных пользователей (это оптимизация запроса)
+        queryset = queryset.prefetch_related('users')  # Включаем связанных пользователей (это оптимизация запроса)
         return queryset
 
     def get_users_list(self, obj):
@@ -221,7 +204,7 @@ class CustomGroupAdmin(admin.ModelAdmin):
 class Review(models.Model):
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reviews', null=False)
     title = models.CharField(max_length=1000, blank=False)
-    objective = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='objective', null=False)
+    objective = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='objective', null=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -232,8 +215,8 @@ class Review(models.Model):
 
 
 class Attendance(models.Model):
-    lesson = models.ForeignKey('Lesson', on_delete=models.CASCADE)
-    group = models.ForeignKey('CustomGroup', on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE)
     student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     attended = models.BooleanField(default=False)
 
