@@ -96,8 +96,9 @@ class CourseDetailView(DetailView):
     template_name = 'course_detail.html'
     context_object_name = 'course'
     def get(self, request, *args, **kwargs):
-        if request.user.courses.filter(pk=self.get_object().pk).exists():
-            return redirect('index')
+        if request.user.is_authenticated:
+            if request.user.courses.filter(pk=self.get_object().pk).exists():
+                return redirect('index')
         return super().get(request, *args, **kwargs)
     def post(self, request, *args, **kwargs):
         if 'confirm_payment' in request.POST:
