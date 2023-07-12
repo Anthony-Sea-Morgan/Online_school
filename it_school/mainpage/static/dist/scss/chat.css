@@ -13,6 +13,10 @@
     width: 20%;
     padding: 20px;
     background-color: #f2f2f2;
+    display: block;
+    position: fixed;
+    height: calc(100% - 50px);
+    right: 0;
 }
 
 .chat-header {
