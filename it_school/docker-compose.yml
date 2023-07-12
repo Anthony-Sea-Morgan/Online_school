@@ -3,7 +3,7 @@ version: '3'
 services:
   web:
     build: ./it_school
-    command: python manage.py runserver 0.0.0.0:8000
+    command: uvicorn it_school.asgi:application --host 0.0.0.0 --port 8000
     volumes:
       - .:/it_school
     ports:
