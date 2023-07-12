@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  web:
+    build: ./it_school
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/it_school
+    ports:
+      - '8000:8000'
+    depends_on:
+      - sqlite3
+
+  sqlite3:
+    image: nouchka/sqlite3:latest
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./db/:/root/db/
