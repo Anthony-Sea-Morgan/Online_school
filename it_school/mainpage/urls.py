@@ -2,9 +2,8 @@ from django.contrib import admin
 from django.views.decorators.cache import cache_page
 from django.urls import include, path
 import registration.views
-from .views import lesson_list
 
-from .views import CourseDetailView, purchase_confirmation, index, attendance_table, chat_room, send_message, personal_cabinet, course_lessons, edit_profile,about_us_view
+from .views import CourseDetailView, purchase_confirmation, index, attendance_table, chat_room, send_message, personal_cabinet, course_lessons, about_us_view
 
 from registration.views import CustomTokenObtainPairView, CustomTokenRefreshView
 
@@ -14,9 +13,7 @@ urlpatterns = [
     path('api/', include('restapi.urls')),
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
-    path('lessons/', lesson_list, name='lesson_list'),
     path('personal_cabinet/', personal_cabinet, name='personal_cabinet'),
-    path('edit_profile/', edit_profile, name='edit_profile'),
     path('about/', about_us_view, name='about_us'),
     path('course/<int:course_id>/lessons/', course_lessons, name='course_lessons'),
     path('<int:pk>', CourseDetailView.as_view(), name='course_detail'),

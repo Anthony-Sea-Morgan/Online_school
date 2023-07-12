@@ -31,15 +31,7 @@ def index(request):
     return render(request, template, data)
 
 
-@login_required
-def lesson_list(request):
-    """
-    Отображает список всех уроков.
-    """
-    now = date.today()
-    lessons = Lesson.objects.all()
-    context = {'lessons': lessons, 'now': now}
-    return render(request, 'lesson_list.html', context)
+
 
 
 @login_required
@@ -50,7 +42,7 @@ def course_lessons(request, course_id):
     now = date.today()
     course = Course.objects.get(id=course_id)
     lessons = Lesson.objects.filter(course_owner=course)
-    return render(request, 'course_lissons.html', {'course': course, 'lessons': lessons, 'now': now})
+    return render(request, 'course_lissons.html', {'course': course,'page_label': 'Список уроков курса', 'lessons': lessons, 'now': now})
 
 
 @login_required
@@ -84,41 +76,15 @@ def personal_cabinet(request):
         edit_form = ProfileForm(instance=request.user)
 
     return render(request, 'personal_cabinet.html',
-                  {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course, 'wallet_form': wallet_form,'edit_form': edit_form})
+                  {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course, 'wallet_form': wallet_form,'edit_form': edit_form,'page_label': 'Личный кабинет'})
 
-@login_required
-def top_up_wallet(request):
-    if request.method == 'POST':
-        amount = request.POST.get('amount')
-        user = request.user
-        user.wallet += float(amount)
-        user.save()
-        return redirect('personal_cabinet')
-    else:
-        form = WalletForm(instance=request.user)
-    return render(request, 'personal_cabinet.html',
-                  {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course, })
-@login_required
-def edit_profile(request):
-    """
-    Отображает форму редактирования профиля пользователя и обрабатывает ее сохранение.
-    """
-    if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('personal_cabinet')  # Перенаправление на личный кабинет после сохранения
-    else:
-        form = ProfileForm(instance=request.user)
-
-    return render(request, 'edit_profile.html', {'form': form})
 
 
 def about_us_view(request):
     """
     Отображает страницу "О нас".
     """
-    return render(request, 'about.html')
+    return render(request, 'about.html',{ 'page_label': 'Информация о нас'})
 
 
 class CourseDetailView(DetailView):
@@ -129,7 +95,6 @@ class CourseDetailView(DetailView):
     model = Course
     template_name = 'course_detail.html'
     context_object_name = 'course'
-
     def get(self, request, *args, **kwargs):
         if request.user.courses.filter(pk=self.get_object().pk).exists():
             return redirect('index')
@@ -157,6 +122,7 @@ class CourseDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['error_message'] = self.error
+        context['page_label'] = 'Информация о курсе'
         if self.error:
             context['styleconfp'] = 'display: flex;'
         return context
@@ -224,7 +190,7 @@ def attendance_table(request):
             'table': tabulate(table, headers=table_headers, tablefmt='grid')
         })
 
-    return render(request, 'attendance.html', {'attendance_tables': attendance_tables})
+    return render(request, 'attendance.html', {'attendance_tables': attendance_tables,'page_label': 'Журнал посещения'})
 
 
 def check_mentor_permission(view_func):

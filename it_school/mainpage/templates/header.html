@@ -24,7 +24,7 @@
         <div onclick="location.href='{% url 'management:course_list' %}'"><p>Настройки курсов</p></div>
         {% endif %}
         <div><p>Справка</p></div>
-        <div><p>О нас</p></div>
+        <div onclick="location.href='{% url 'about_us' %}'"><p>О нас</p></div>
         <div data-action="logout" onclick="location.href='{% url 'logout_view' %}?next={{ request.path }}';"><p>Выйти из аккаунта</p></div>
         {% else %}
         <div id="LOGIN" data-action="login"><p>Авторизация</p></div>

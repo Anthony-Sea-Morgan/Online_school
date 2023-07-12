@@ -112,3 +112,12 @@ class LessonView(View):
         lessons = Lesson.objects.all()
         return render(request, 'management/lesson.html', {'lessons': lessons})
 
+@method_decorator(check_mentor_permission, name='dispatch')
+def lesson_list(request):
+    """
+    Отображает список всех уроков.
+    """
+    now = date.today()
+    lessons = Lesson.objects.all()
+    context = {'lessons': lessons, 'now': now,'page_label': 'Список всех занятий'}
+    return render(request, 'lesson_list.html', context)

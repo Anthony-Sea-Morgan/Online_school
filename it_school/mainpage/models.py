@@ -31,12 +31,12 @@ logger = getLogger(__name__)
 
 # Функция для определения пути сохранения изображения курса
 def image_folder_Course(instance, filename):
-    return 'mainpage/static/dist/img/Models/Course/CourseIcons/{}.webp'.format(uuid4().hex)
+    return 'Models/Course/CourseIcons/{}.webp'.format(uuid4().hex)
 
 
 # Функция для определения пути сохранения изображения языка
 def image_folder_Technology(instance, filename):
-    return 'mainpage/static/dist/img/Models/Course/TechIcons/{}.webp'.format(uuid4().hex)
+    return 'Models/Course/TechIcons/{}.webp'.format(uuid4().hex)
 
 
 class Course(models.Model):
@@ -59,12 +59,12 @@ class Course(models.Model):
     img = WEBPField(  # изображение курса
         verbose_name=('Изображение курса'),
         upload_to=image_folder_Course,
-        default='mainpage/static/dist/img/Models/no_image_big.png',
+        default='media/Models/no_image_big.png',
     )
     tech_img = WEBPField(  # изображение языка
         verbose_name=('Изображение языка'),
         upload_to=image_folder_Technology,
-        default='mainpage/static/dist/img/Models/no_image_big.png',
+        default='media/Models/no_image_big.png',
     )
 
     def save(self, *args, **kwargs):

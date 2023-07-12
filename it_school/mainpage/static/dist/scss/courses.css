@@ -10,10 +10,14 @@ background-image: url('https://img.freepik.com/free-vector/topographic-contour-l
 height: 100vh;
 }
 .courses-filter-wrapper{
-background-color: #ddddd7;
-width: 260px;
-height: 100%;
-
+/*background-color: #ddddd7;*/
+width: 400px;
+margin-bottom: 0;
+padding: 20px;
+/*background: linear-gradient(0deg, #00000059, #666666);*/
+/*background: linear-gradient(0deg, #ffffff, #c1c1c1);*/
+backdrop-filter: invert(60%);
+color: aliceblue;
 }
 
 .form__input {
@@ -50,10 +54,11 @@ width: 400px;
 height: 300px;
 backdrop-filter: blur(2px) saturate(100%) brightness(110%);
 margin: 30px 60px 20px 60px;
-border-radius: 3px 3px 3px 3px;
+border-radius: 25px;
 box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;
 position: relative;
 text-align: center;
+border: solid 3px #e8b266;
  /*background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg');*/
 }
 
