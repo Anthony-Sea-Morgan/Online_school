@@ -1,0 +1,251 @@
+.course-detail-wrapper{
+width: 100%;
+height: 800px;
+/*background: linear-gradient(to top, #fffffff5, #fff);/*#2c2c2c#1e5058#2c2823);*/
+backdrop-filter: blur(0px) saturate(100%) brightness(105%) invert(60%);
+ /* border-bottom: 10px solid #bbaa89;*/
+  color: aliceblue;
+}
+.hcd{
+height: 10vh;
+}
+.course-detail-rating{
+width: 35px;
+height: 25px;
+text-align: center;
+font-size: 20px;
+}
+.course-detail-texture{
+width: 100%;
+height: 800px;
+position: relative;
+left: 0;
+/*background-image: url('/static/dist/img/PNG/geometryTransparent1.png');*/
+background-size: cover;
+justify-content: left;
+display: flex;
+}
+.course-detail-content{
+padding-left: 15%;
+width: 60%;
+}
+.course-detail-title h2{
+font-size: 90px;
+margin-bottom: 5px;
+margin-top: 15px;
+margin: 20px 20px;
+margin-left: auto;
+margin-right: auto;
+font-family: 'Jost-Medium';
+}
+.course-detail-a{
+margin-bottom: 3px;
+font-size: 15px;
+}
+.course-detail-difficulty{
+font-size: 15px;
+margin-bottom: 3px;
+width: 6em;
+height: 1em;
+color: #b3b3b3;
+}
+.course-detail-technologies{
+color: #b3ab86;
+}
+.course-detail-shortdes{
+width: auto;
+font-size: 20px;
+margin-bottom: 20px;
+text-align: justify;
+}
+.course-detail-price{
+bottom: 1.5em;
+width: 100%;
+/*color: #9e8659;*/
+color: #ffaf18;
+}
+.course-detail-dos{
+width: 100%;
+height: 3.3em;
+font-size: 15px;
+}
+.course-detail-folder-img{
+position: absolute;
+width: 400px;
+height: 400px;
+/*left: 1117px;*/
+right: 20px;
+bottom: 50px;
+background-image: url('/static/dist/img/PNG/folder-back.png');
+background-size: cover;
+transform: rotate(30deg);
+}
+.course-detail-folder-img img{
+margin-top: 110px;
+margin-left: 110px;
+width:200px;
+height:200px;
+}
+.btn-reg-wrapper{
+width: 100%;
+height: 80px;
+background-color: #ffad5a;/*#bbaa89;*/
+display: flex;
+box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;
+justify-content: center;
+}
+.btn-reg{
+width: 50%;
+height: 100%;
+  flex-shrink: 0;
+  border: none;
+  background-color: rgba(255, 255, 255, 0%);
+  padding: 8px 15px;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #000000;
+  cursor: pointer;
+}
+.t-list-wrapper{
+display: flex;
+width: 100%;
+height: auto;
+justify-content: center;
+}
+.t-list-unit{
+text-align: center;
+width: 260px;
+height: 200px;
+/*background-color: #cfbc8f;*/
+margin-left: 20px;
+margin-top: 20px;
+position: relative;
+}
+.t-list-unit p{
+margin-left: 5%;
+width: 90%;
+font-size: 18px;
+text-align: justify;
+}
+.t-list-unit h2{
+margin-bottom: 3px;
+color: #c79c00;
+}
+.t-list-unit hr{
+border: 0;
+    height: 3px;
+    background: white/*#5a5a5a*/;
+}
+.description-wrapper{
+display: flex;
+width: 100%;
+height: auto;
+justify-content: center;
+}
+.description-content{
+width: 80%;
+height: 100%;
+/*background-color: #efedea;*/
+/*backdrop-filter: blur(2px) saturate(100%) brightness(80%);*/
+border-radius: 20px;
+padding: 10px;
+justify-content: center;
+}
+.t-container{
+width: 800px;
+height: 300px;
+text-align: left;
+padding: 20px;
+}
+.t-container h1{
+color: #c79c00;
+}
+.t-list-skills{
+width: 650px;
+height: 420px;
+display: inline-block;
+margin-left: 20px;
+margin-top: 20px;
+}
+.t-list-skills-label{
+width: 40%;
+height:100%;
+color: black;
+text-align: left;
+}
+.t-list-skills-label h2{
+color: #c79c00;
+}
+.t-list-skills-img{
+width: 55%;
+height:100%;
+background-size: cover;
+}
+.g-list-wrapper{
+width: 100%;
+height: auto;
+/*background-color: #bbaa89;*/
+backdrop-filter: invert(60%);
+color: aliceblue;
+padding-top: 30px;
+padding-bottom: 30px;
+justify-content: center;
+display: flex;
+}
+.g-list-unit{
+width: 550px;
+height: 100%;
+text-align: left;
+margin-left: 60px;
+position: relative;
+}
+.g-list-unit h2{
+}
+.g-list-unit h1{
+margin-top: 15px;
+margin-bottom: 0px;
+font-size: 50px;
+font-family: 'Jost-Medium';
+}
+.g-list-unit h4{
+margin-top: 5px;
+}
+.g-list-unit p{
+font-size: 15px;
+}
+.g-list-form{
+margin: 20px;
+width: 360px;
+height: 500px;
+background-color: #191919;
+position: relative;
+text-align: center;
+padding: 25px;
+}
+.g-list-form h3{
+font-size: 15px;
+margin-top: 40px;
+}
+.g-list-form p{
+font-size: 15px;
+margin-top: -12px;
+}
+.g-list-form-btn{
+    margin-top: 100px;
+    background-color: #ff8c00;
+    border: none;
+    border-radius: 3px;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px;
+    width: 75%;
+    height: 50px;
+    transition: 0.3s;
+}
+.g-list-form-btn:hover {
+background-color: #e8b266;
+}
+.btn-reg-wrapper:hover {
+background-color: #e8b266;
+}
