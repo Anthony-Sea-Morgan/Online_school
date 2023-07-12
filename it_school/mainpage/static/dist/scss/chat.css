@@ -10,7 +10,7 @@
 }
 
 .chat {
-    width: 25%;
+    width: 20%;
     padding: 20px;
     background-color: #f2f2f2;
 }
@@ -23,8 +23,9 @@
 }
 
 #chat-log {
-    height: calc(100% - 60px); /* Высота чата с учетом поля ввода текста и кнопки отправки */
+    height: calc(100% - 130px); /* Высота чата с учетом поля ввода текста и кнопки отправки */
     overflow-y: scroll;
+    font-size: 15px
 }
 
 #chat-input-container {
@@ -36,6 +37,9 @@
 #chat-input {
     flex: 1; /* Занимает всю доступную ширину */
     margin-right: 10px; /* Отступ справа */
+    border: solid 1px black;
+    border-radius: 0.2rem;
+    resize: none;
 }
 
 #chat-message-submit {
@@ -45,7 +49,13 @@
     padding: 0;
     width: 0;
     height: 0;
-    border-top: 10px solid transparent;
-    border-left: 16px solid #007bff; /* Синий цвет треугольника */
-    border-bottom: 10px solid transparent;
+    border-top: 13px solid transparent;
+    border-left: 20px solid #ffad5a; /* Синий цвет треугольника */
+    border-bottom: 13px solid transparent;
+}
+#chat-log pre{
+margin: 0.6em 0px;
+}
+#chat-log p{
+margin: 0.3em 0px;
 }

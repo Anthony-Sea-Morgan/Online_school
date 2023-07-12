@@ -170,7 +170,7 @@ EMAIL_HOST_USER = "norepy.onlinecourses@gmail.com"
 EMAIL_HOST_PASSWORD = 'phaysmgicsudrfwj'
 EMAIL_USE_TLS = True
 
-DEFAULT_FROM_EMAIL = 'noreply.onlinecourses@gmail.com'
+DEFAULT_FROM_EMAIL = 'norepy.onlinecourses@gmail.com'
 # Добавьте следующие настройки JWT в конец файла settings.py
 from datetime import timedelta
 DJOSER = {
