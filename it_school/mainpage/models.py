@@ -1,6 +1,6 @@
 from uuid import uuid4
 from logging import getLogger
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 from django.contrib.auth.models import Group
 from multiselectfield import MultiSelectField
@@ -96,7 +96,7 @@ class Course(models.Model):
                     self.days_of_week = list(self.days_of_week)
 
                 while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
-                    next_date += datetime.timedelta(days=1)
+                    next_date += timedelta(days=1)
 
                 Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
@@ -114,7 +114,7 @@ class Course(models.Model):
                 if isinstance(self.days_of_week, set):
                     self.days_of_week = list(self.days_of_week)
                 while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
-                    next_date += datetime.timedelta(days=1)
+                    next_date += timedelta(days=1)
 
                 Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
