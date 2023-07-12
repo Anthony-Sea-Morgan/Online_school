@@ -25,7 +25,12 @@ def register_view(request):
             serializer.save()
             user = serializer.instance
             redirect_url = request.GET.get('next', '/')
-
+            subject = 'Регистрация успешна'
+            html_message = render_to_string('email_templates/registration_confirmation.html')
+            plain_message = strip_tags(html_message)
+            from_email = 'norepy.onlinecourses@gmail.com'
+            to_email = user.email
+            send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
             # Авторизация пользователя
             auth_user = authenticate(request, username=user.username, password=request.POST['password'])
             if auth_user:
