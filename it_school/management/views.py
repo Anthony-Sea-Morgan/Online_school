@@ -4,7 +4,8 @@ from mainpage.models import Course, Lesson, CustomGroup
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from mainpage.views import *
 from django.urls import reverse_lazy
-from mainpage.models import Course, Lesson, TECHNOLOGIES, CustomUser, TECHNOLOGY_CHOICES,DIFFICULTY_CHOICES, DAYS_OF_WEEK_CHOICES
+from mainpage.models import Course, Lesson, TECHNOLOGIES, CustomUser, TECHNOLOGY_CHOICES, DIFFICULTY_CHOICES, \
+    DAYS_OF_WEEK_CHOICES
 from management.forms import CourseForm, LessonForm, CustomGroupForm
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
@@ -12,11 +13,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 
 
-
-
 @check_mentor_permission
 def CourseListView(request):
-    course_object = Course.objects.all()
+    user = request.user
+    course_object = Course.objects.filter(mentor=user)
     for i in course_object:
         i.img = str(i.img)[5:]
         i.imgTech = str(i.tech_img)[5:]
@@ -30,12 +30,14 @@ def CourseListView(request):
     template = 'manage_page.html'
     return render(request, template, data)
 
+
 @method_decorator(check_mentor_permission, name='dispatch')
 class CourseCreateView(CreateView):
     model = Course
     template_name = 'course_form.html'
     form_class = CourseForm
     success_url = reverse_lazy('management:course_list')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['mentors'] = CustomUser.objects.all()
@@ -99,6 +101,7 @@ def add_participant(request, pk):
     else:
         raise Http404('Invalid request method.')
 
+
 # def lesson_update(request, pk):
 #     lesson = get_object_or_404(Lesson, pk=pk)
 #     return HttpResponse("Lesson update view")
@@ -106,11 +109,14 @@ class CourseDeleteView(DeleteView):
     model = Course
     template_name = 'course_confirm_delete.html'
     success_url = reverse_lazy('management:course_list')
+
+
 @method_decorator(check_mentor_permission, name='dispatch')
 class LessonView(View):
     def get(self, request):
         lessons = Lesson.objects.all()
         return render(request, 'management/lesson.html', {'lessons': lessons})
+
 
 @method_decorator(check_mentor_permission, name='dispatch')
 def lesson_list(request):
@@ -119,5 +125,5 @@ def lesson_list(request):
     """
     now = date.today()
     lessons = Lesson.objects.all()
-    context = {'lessons': lessons, 'now': now,'page_label': 'Список всех занятий'}
+    context = {'lessons': lessons, 'now': now, 'page_label': 'Список всех занятий'}
     return render(request, 'lesson_list.html', context)

@@ -3,7 +3,8 @@ from django.views.decorators.cache import cache_page
 from django.urls import include, path
 import registration.views
 
-from .views import CourseDetailView, purchase_confirmation, index, attendance_table, chat_room, send_message, personal_cabinet, course_lessons, about_us_view
+from .views import CourseDetailView, purchase_confirmation, index, attendance_table, personal_cabinet, course_lessons, \
+    about_us_view
 
 from registration.views import CustomTokenObtainPairView, CustomTokenRefreshView
 
@@ -19,10 +20,5 @@ urlpatterns = [
     path('<int:pk>', CourseDetailView.as_view(), name='course_detail'),
     path('attendance/', attendance_table, name='attendance_table'),
     path('purchase_confirmation/<int:pk>/', purchase_confirmation, name='purchase_confirmation'),
-    #path('room/<int:group_id>/', chat_room, name='chat_room'),
-    #path('room/<int:group_id>/send_message/', send_message, name='send_message'),
-
-
-
 
 ]

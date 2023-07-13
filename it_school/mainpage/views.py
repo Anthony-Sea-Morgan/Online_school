@@ -13,6 +13,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+
 @csrf_protect
 def index(request):
     """
@@ -33,18 +34,25 @@ def index(request):
     return render(request, template, data)
 
 
-
-
-
 @login_required
 def course_lessons(request, course_id):
     """
     Отображает список уроков для определенного курса.
     """
+    user = request.user
     now = date.today()
+
     course = Course.objects.get(id=course_id)
     lessons = Lesson.objects.filter(course_owner=course)
-    return render(request, 'course_lissons.html', {'course': course,'page_label': 'Список уроков курса', 'lessons': lessons, 'now': now})
+
+    is_course_owner = course.mentor == user
+    is_course_added = user.courses.filter(id=course_id).exists()
+
+    if is_course_owner is False and is_course_added is False:
+        return render(request, 'access_deny.html')
+
+    return render(request, 'course_lissons.html',
+                  {'course': course, 'page_label': 'Список уроков курса', 'lessons': lessons, 'now': now})
 
 
 @login_required
@@ -78,15 +86,15 @@ def personal_cabinet(request):
         edit_form = ProfileForm(instance=request.user)
 
     return render(request, 'personal_cabinet.html',
-                  {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course, 'wallet_form': wallet_form,'edit_form': edit_form,'page_label': 'Личный кабинет'})
-
+                  {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course, 'wallet_form': wallet_form,
+                   'edit_form': edit_form, 'page_label': 'Личный кабинет'})
 
 
 def about_us_view(request):
     """
     Отображает страницу "О нас".
     """
-    return render(request, 'about.html',{ 'page_label': 'Информация о нас'})
+    return render(request, 'about.html', {'page_label': 'Информация о нас'})
 
 
 class CourseDetailView(DetailView):
@@ -97,11 +105,13 @@ class CourseDetailView(DetailView):
     model = Course
     template_name = 'course_detail.html'
     context_object_name = 'course'
+
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             if request.user.courses.filter(pk=self.get_object().pk).exists():
                 return redirect('index')
         return super().get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         if 'confirm_payment' in request.POST:
             course = self.get_object()
@@ -174,6 +184,9 @@ def attendance_table(request):
     """
     Отображает таблицу посещаемости для всех групп.
     """
+    user = request.user
+    if not user.is_mentor:
+        return render(request, 'access_deny.html')
     groups = CustomGroup.objects.all()
     attendance_tables = []
 
@@ -199,7 +212,8 @@ def attendance_table(request):
             'table': tabulate(table, headers=table_headers, tablefmt='grid')
         })
 
-    return render(request, 'attendance.html', {'attendance_tables': attendance_tables,'page_label': 'Журнал посещения'})
+    return render(request, 'attendance.html',
+                  {'attendance_tables': attendance_tables, 'page_label': 'Журнал посещения'})
 
 
 def check_mentor_permission(view_func):
@@ -210,27 +224,3 @@ def check_mentor_permission(view_func):
         return view_func(request, *args, **kwargs)
 
     return wrapped_view
-
-
-@login_required
-def chat_room(request, group_id):
-    """
-    Отображает комнату чата для определенной группы.
-    """
-    group = get_object_or_404(CustomGroup, id=group_id)
-    messages = ChatMessage.objects.filter(group=group).order_by('timestamp')
-    return render(request, 'room.html', {'group': group, 'messages': messages})
-
-
-@login_required
-def send_message(request, group_id):
-    """
-    Отправляет сообщение в чат для определенной группы.
-    """
-    if request.method == 'POST':
-        group = get_object_or_404(CustomGroup, id=group_id)
-        sender = request.user
-        message_text = request.POST.get('message_text')
-        if message_text:
-            ChatMessage.objects.create(sender=sender, group=group, text=message_text)
-    return redirect('chat_room', group_id=group_id)
