@@ -25,39 +25,6 @@
             <li>{{ lesson.start_time }}</li>
             <pre class="summernote-content" style="color: black;">{{ lesson.material|safe }}</pre>
         </ul>
-<div class="wrapper-blank" style="max-width: 800px;width: 720px;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
-<h1>Участники группы</h1>
-<div class="form-group">
-  <label for="group-users">Участники:</label>
-  <ul>
-    {% for user in group.users.all %}
-      <li>ID: {{ user.id }}, Имя: {{ user.email }}</li>
-    {% empty %}
-      <li>Нет участников</li>
-    {% endfor %}
-  </ul>
-    <!-- Форма для удаления участника -->
-<form method="POST" action="{% url 'management:remove_participant' pk=group.course_owner_id %}">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="participant-email">Email участника:</label>
-    <input type="email" id="participant-email" name="participant_email" required>
-  </div>
-  <button type="submit" class="btn">Удалить участника</button>
-</form>
-
-  <!-- Форма для добавления нового участника -->
-<form method="POST" action="{% url 'management:add_participant' pk=group.course_owner.id %}">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="participant-email">Email участника:</label>
-    <input type="email" id="participant-email" name="participant_email" required>
-  </div>
-  <button type="submit" class="btn">Добавить участника</button>
-</form>
-
-</div>
-</div>
 
     </div>
     {% endif %}
@@ -73,46 +40,51 @@
 </div>
 
 
-<div class="chat" style="display:none;">
-    <table class="form-group">
-        <h3 style="margin-top: 50px;">Участники группы:</h3>
-  <tr><th>Логин Email:</th></tr>
-        <div  class="chat-log">
-  <tr class="user-row">
+<d<div class="chat" style="display:none;">
+  <h3 style="margin-top: 50px;">Участники группы:</h3>
+  <table class="form-group">
+    <tr>
+      <th>Логин Email:</th>
+    </tr>
     {% for user in group.users.all %}
-
-      <th>
+    <tr class="user-row">
+      <td>
         <span class="past-lesson">
           {{ user.username }}
           {{ user.email }}
         </span>
-      </th>
-
+      </td>
+    </tr>
     {% empty %}
+    <tr>
       <td>Нет участников</td>
+    </tr>
     {% endfor %}
-  </tr>
-</div>
-</table>
+  </table>
+
   <!-- Форма для удаления участника -->
-<form method="POST" action="{% url 'management:remove_participant' pk=group.course_owner_id %}">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="participant-email">Email участника:</label>
-    <input type="email" id="participant-email" name="participant_email" required>
-  </div>
-  <button type="submit" class="btn">Удалить участника</button>
-</form>
+  <form method="POST" action="{% url 'management:remove_participant' pk=group.course_owner_id %}" style="{ display }">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="participant-email">Email участника:</label>
+      <input type="email" id="participant-email" name="participant_email" required>
+    </div>
+    <button type="submit" class="btn">Удалить участника</button>
+  </form>
 
   <!-- Форма для добавления нового участника -->
-<form method="POST" action="{% url 'management:add_participant' pk=group.course_owner.id %}">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="participant-email">Email участника:</label>
-    <input type="email" id="participant-email" name="participant_email" required>
+  <form method="POST" action="{% url 'management:add_participant' pk=group.course_owner_id %}" style="{ display }">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="participant-email">Email участника:</label>
+      <input type="email" id="participant-email" name="participant_email" required>
+    </div>
+    <button type="submit" class="btn">Добавить участника</button>
+  </form>
+
+  <div>
+    <p>{{ request.GET.error_message }}</p>
   </div>
-  <button type="submit" class="btn">Добавить участника</button>
-</form>
 </div>
 {% endblock %}
 

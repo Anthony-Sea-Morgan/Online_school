@@ -19,12 +19,12 @@
     background-color: #f2f2f2;
     position:fixed;
     right: 0;
-    top: 0;
-    height: 100%;
+    top: 50px;
+    height: calc(100%);
+    /*background: linear-gradient(#e5e5e5, #fff6eb);*/
 }
 .chat div{
 height: auto;
-margin-top: 50px;
 }
 .chat-header {
     margin-top: 0;
@@ -36,7 +36,9 @@ margin-top: 50px;
 #chat-log {
     height: calc(100% - 210px); /* Высота чата с учетом поля ввода текста и кнопки отправки */
     overflow-y: scroll;
-    font-size: 15px
+    font-size: 15px;
+    box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5);
+    /*background-image: url('/static/dist/img/PNG/geometryTransparent1.png');*/
 }
 
 #chat-input-container {
@@ -44,14 +46,17 @@ margin-top: 50px;
     align-items: center;
     justify-content: space-between;
     border-radius: 30px;
+    margin-top: 20px;
+
 }
 
 #chat-input {
     flex: 1; /* Занимает всю доступную ширину */
     margin-right: 10px; /* Отступ справа */
-    border: solid 1px black;
+    border: solid 1px #ababab;
     border-radius: 0.2rem;
     resize: none;
+    background: linear-gradient(314deg, #ffffff, transparent);
 
 }
 
@@ -69,9 +74,9 @@ margin-top: 50px;
 
 }
 #chat-message-submit:hover{
-    border-top: 25px solid #e37200;
+    border-top: 25px solid #ff8c18;
     border-left: 32px solid #f7a34e;
-    border-bottom: 25px solid #e37200;
+    border-bottom: 25px solid #ffb76f;
     transform: rotate(112deg);
     margin-left: -20px;
 

@@ -113,26 +113,25 @@ class CourseUpdateView(UpdateView):
 
 
 def remove_participant(request, pk):
-    group = get_object_or_404(CustomGroup, course_owner_id=pk)
-    if request.method == 'POST':
-        participant_email = request.POST.get('participant_email')
-        participant = get_object_or_404(CustomUser, email=participant_email)
-        group.users.remove(participant)
-        return redirect('management:course_update', pk=pk)
-    else:
-        raise Http404('Invalid request method.')
-
-
-def add_participant(request, pk):
-    group = get_object_or_404(CustomGroup, course_owner_id=pk)
+    group = get_object_or_404(CustomGroup, pk=pk)
     if request.method == 'POST':
         participant_email = request.POST.get('participant_email')
         participant = get_object_or_404(CustomUser, email=participant_email)
         group.users.add(participant)
-        return redirect('management:course_update', pk=pk)
+        return redirect('chat_room', room_name=pk)
     else:
-        raise Http404('Invalid request method.')
+        return redirect('chat_room', room_name=pk, error_message='пользователя с таким email адресом не существует', display = 'display:inherit')
 
+
+def add_participant(request, pk):
+    group = get_object_or_404(CustomGroup, pk=pk)
+    if request.method == 'POST':
+        participant_email = request.POST.get('participant_email')
+        participant = get_object_or_404(CustomUser, email=participant_email)
+        group.users.remove(participant)
+        return redirect('chat_room', room_name=pk)
+    else:
+        return redirect('chat_room', room_name=pk, error_message='пользователя с таким email адресом не существует', display = 'display:inherit')
 
 # def lesson_update(request, pk):
 #     lesson = get_object_or_404(Lesson, pk=pk)
