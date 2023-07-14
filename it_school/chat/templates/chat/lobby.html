@@ -26,6 +26,7 @@
             <pre class="summernote-content" style="color: black;">{{ lesson.material|safe }}</pre>
         </ul>
 
+
     </div>
     {% endif %}
 
@@ -40,51 +41,46 @@
 </div>
 
 
-<d<div class="chat" style="display:none;">
-  <h3 style="margin-top: 50px;">Участники группы:</h3>
-  <table class="form-group">
-    <tr>
-      <th>Логин Email:</th>
-    </tr>
+<div class="chat" style="display:none;">
+    <table class="form-group">
+        <h3 style="margin-top: 50px;">Участники группы:</h3>
+  <tr><th>Логин Email:</th></tr>
+        <div  class="chat-log">
+  <tr class="user-row">
     {% for user in group.users.all %}
-    <tr class="user-row">
-      <td>
+
+      <th>
         <span class="past-lesson">
           {{ user.username }}
           {{ user.email }}
         </span>
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td>Нет участников</td>
-    </tr>
-    {% endfor %}
-  </table>
+      </th>
 
+    {% empty %}
+      <td>Нет участников</td>
+    {% endfor %}
+  </tr>
+</div>
+</table>
   <!-- Форма для удаления участника -->
-  <form method="POST" action="{% url 'management:remove_participant' pk=group.course_owner_id %}" style="{ display }">
-    {% csrf_token %}
-    <div class="form-group">
-      <label for="participant-email">Email участника:</label>
-      <input type="email" id="participant-email" name="participant_email" required>
-    </div>
-    <button type="submit" class="btn">Удалить участника</button>
-  </form>
+<form method="POST" action="{% url 'management:remove_participant' pk=group.course_owner_id %}">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="participant-email">Email участника:</label>
+    <input type="email" id="participant-email" name="participant_email" required>
+  </div>
+  <button type="submit" class="btn">Удалить участника</button>
+</form>
 
   <!-- Форма для добавления нового участника -->
-  <form method="POST" action="{% url 'management:add_participant' pk=group.course_owner_id %}" style="{ display }">
-    {% csrf_token %}
-    <div class="form-group">
-      <label for="participant-email">Email участника:</label>
-      <input type="email" id="participant-email" name="participant_email" required>
-    </div>
-    <button type="submit" class="btn">Добавить участника</button>
-  </form>
-
-  <div>
-    <p>{{ request.GET.error_message }}</p>
+<form method="POST" action="{% url 'management:add_participant' pk=group.course_owner.id %}">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="participant-email">Email участника:</label>
+    <input type="email" id="participant-email" name="participant_email" required>
   </div>
+  <button type="submit" class="btn">Добавить участника</button>
+</form>
 </div>
 {% endblock %}
 
