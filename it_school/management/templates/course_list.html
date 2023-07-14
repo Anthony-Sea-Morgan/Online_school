@@ -1,3 +1,17 @@
+{% extends 'index.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block page_label %}
+{{ title }}
+{% endblock %}
+{% block header %}
+{% include "header.html" %}
+{% endblock %}
+
+{% block content %}
 <div class="courses-base wr" style="display:flex;">
     <div class="courses-filter-wrapper">
            <select class="form__input" id="technology-filter">
@@ -60,3 +74,8 @@
         </ul>
       </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script src="/static/dist/js/coursesFilter.js"></script>
+{% endblock %}
