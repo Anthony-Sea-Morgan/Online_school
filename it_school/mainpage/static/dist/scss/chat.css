@@ -74,8 +74,8 @@ height: auto;
 
 }
 #chat-message-submit:hover{
-    border-top: 25px solid #ff8c18;
-    border-left: 32px solid #f7a34e;
+    border-top: 25px solid #ffb76f;
+    border-left: 32px solid #ff8000;
     border-bottom: 25px solid #ffb76f;
     transform: rotate(112deg);
     margin-left: -20px;
