@@ -7,14 +7,25 @@
     width: 75%;
     padding: 20px;
     background-color: #f9f9f9;
+    text-align: center;
 }
-
+.info ul {
+    list-style-type: none;
+        margin: 0px 20px;
+}
 .chat {
-    width: 25%;
+    width: 20%;
     padding: 20px;
     background-color: #f2f2f2;
+    position:fixed;
+    right: 0;
+    top: 50px;
+    height: calc(100%);
+    /*background: linear-gradient(#e5e5e5, #fff6eb);*/
 }
-
+.chat div{
+height: auto;
+}
 .chat-header {
     margin-top: 0;
     margin-bottom: 10px;
@@ -23,19 +34,30 @@
 }
 
 #chat-log {
-    height: calc(100% - 60px); /* Высота чата с учетом поля ввода текста и кнопки отправки */
+    height: calc(100% - 210px); /* Высота чата с учетом поля ввода текста и кнопки отправки */
     overflow-y: scroll;
+    font-size: 15px;
+    box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5);
+    /*background-image: url('/static/dist/img/PNG/geometryTransparent1.png');*/
 }
 
 #chat-input-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-radius: 30px;
+    margin-top: 20px;
+
 }
 
 #chat-input {
     flex: 1; /* Занимает всю доступную ширину */
     margin-right: 10px; /* Отступ справа */
+    border: solid 1px #ababab;
+    border-radius: 0.2rem;
+    resize: none;
+    background: linear-gradient(314deg, #ffffff, transparent);
+
 }
 
 #chat-message-submit {
@@ -45,7 +67,23 @@
     padding: 0;
     width: 0;
     height: 0;
-    border-top: 10px solid transparent;
-    border-left: 16px solid #007bff; /* Синий цвет треугольника */
-    border-bottom: 10px solid transparent;
+    border-top: 13px solid transparent;
+    border-left: 20px solid #ffad5a; /* Синий цвет треугольника */
+    border-bottom: 13px solid transparent;
+    transition: 0.3s;
+
+}
+#chat-message-submit:hover{
+    border-top: 25px solid #ff8c18;
+    border-left: 32px solid #f7a34e;
+    border-bottom: 25px solid #ffb76f;
+    transform: rotate(112deg);
+    margin-left: -20px;
+
+}
+#chat-log pre{
+margin: 0.6em 0px;
+}
+#chat-log p{
+margin: 0.3em 0px;
 }

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from mainpage.models import Course, Lesson, CustomGroup
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
@@ -113,14 +113,14 @@ class CourseUpdateView(UpdateView):
 
 
 def remove_participant(request, pk):
-    group = get_object_or_404(CustomGroup, pk=pk)
+    group = get_object_or_404(CustomGroup, course_owner_id=pk)
     if request.method == 'POST':
         participant_email = request.POST.get('participant_email')
         participant = get_object_or_404(CustomUser, email=participant_email)
-        group.users.add(participant)
+        group.users.remove(participant)
         return redirect('chat_room', room_name=pk)
     else:
-        return redirect('chat_room', room_name=pk, error_message='пользователя с таким email адресом не существует', display = 'display:inherit')
+        raise Http404('Invalid request method.')
 
 
 def add_participant(request, pk):
@@ -128,10 +128,10 @@ def add_participant(request, pk):
     if request.method == 'POST':
         participant_email = request.POST.get('participant_email')
         participant = get_object_or_404(CustomUser, email=participant_email)
-        group.users.remove(participant)
+        group.users.add(participant)
         return redirect('chat_room', room_name=pk)
     else:
-        return redirect('chat_room', room_name=pk, error_message='пользователя с таким email адресом не существует', display = 'display:inherit')
+        raise Http404('Invalid request method.')
 
 # def lesson_update(request, pk):
 #     lesson = get_object_or_404(Lesson, pk=pk)

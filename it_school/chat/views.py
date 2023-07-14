@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from mainpage.models import Lesson
+from django.shortcuts import render, get_object_or_404
+from mainpage.models import Lesson, CustomGroup
 from django.contrib.auth.decorators import login_required
 @login_required  # Декоратор для требования аутентификации пользователя
 def chat_room(request, room_name):
@@ -14,7 +14,7 @@ def chat_room(request, room_name):
 
     # Проверяем, является ли пользователь владельцем курса
     is_course_owner = lesson.course_owner.mentor == user
-
+    group = get_object_or_404(CustomGroup, course_owner_id=room_name)
     # Проверяем, является ли пользователь членом группы-владельца курса
     is_group_member = lesson.course_owner.group_course.filter(users=user).exists()
 
@@ -26,5 +26,6 @@ def chat_room(request, room_name):
     return render(request, 'chat/lobby.html', {
         'room_name': room_name,
         'lesson': lesson,
-        'user': user
+        'user': user,
+        'group': group,
     })
