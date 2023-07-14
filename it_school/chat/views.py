@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from mainpage.models import Lesson
+from mainpage.models import Lesson, CustomGroup
 from django.contrib.auth.decorators import login_required
 
 
@@ -13,7 +13,7 @@ def chat_room(request, room_name):
     """
     user = request.user
     lesson = Lesson.objects.filter(pk=room_name).first()
-
+    group = CustomGroup.objects.get()
     # Проверяем, является ли пользователь владельцем курса
     is_course_owner = lesson.course_owner.mentor == user
 
@@ -24,9 +24,10 @@ def chat_room(request, room_name):
         # Если пользователь не является владельцем курса и не является членом группы-владельца,
         # то перенаправляем его на другую страницу или показываем сообщение об ошибке.
         return render(request, 'access_deny.html')
-
-    return render(request, 'chat/lobby.html', {
+    data = {
         'room_name': room_name,
         'lesson': lesson,
-        'user': user
-    })
+        'user': user,
+        'group': group,
+    }
+    return render(request, 'chat/lobby.html', data)

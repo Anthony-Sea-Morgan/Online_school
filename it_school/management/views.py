@@ -1,18 +1,50 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from mainpage.models import Course, Lesson, CustomGroup
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from mainpage.views import *
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from mainpage.models import Course, Lesson, TECHNOLOGIES, CustomUser, TECHNOLOGY_CHOICES, DIFFICULTY_CHOICES, \
     DAYS_OF_WEEK_CHOICES
-from management.forms import CourseForm, LessonForm, CustomGroupForm
+from management.forms import CourseForm, LessonForm, CustomGroupForm, CustomUserListForm
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 
 
+class UserListView(View):
+    template_name = 'user_list.html'
+    form_class = CustomUserListForm
+    queryset = CustomUser.objects.all()
+    forms = []
+
+    def get(self, request):
+        forms = []
+        for user in self.queryset:
+            form = self.form_class(instance=user)
+            forms.append((user, form))
+        context = {
+            'page_label': 'Список всех пользователей',
+            'users_forms': forms,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        forms = []
+        for user in self.queryset:
+            form = self.form_class(request.POST, instance=user)
+            if form.is_valid():
+                if form.has_changed():
+                    is_mentor = form.cleaned_data.get('is_mentor')
+                    form.instance.is_student = not is_mentor
+                    form.save()
+            forms.append((user, form))
+        context = {
+            'page_label': 'Список всех пользователей',
+            'users_forms': forms,
+        }
+        return redirect(reverse('management:user_list'))
 @check_mentor_permission
 def CourseListView(request):
     user = request.user
@@ -27,7 +59,7 @@ def CourseListView(request):
         'technology': ['Все технологии'] + TECHNOLOGIES,
         'difficulty': ['Любая сложность', 'Начинающий', 'Продвинутый'],
     }
-    template = 'manage_page.html'
+    template = 'course_list.html'
     return render(request, template, data)
 
 

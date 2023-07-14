@@ -1,6 +1,7 @@
 .blank-global-container{
-width:100%;
-height: 100%;
+height:max-content;
+min-height: 100vh;
+
 top: 0;
 left: 0;
 position: fixed;
@@ -37,6 +38,7 @@ border-radius: 15px;
     margin: 0 auto;
     max-width: 300px;
     padding: 20px;
+    font-size: 15px;
 }
 .wrapper-blank label {
     color: #555555;
@@ -150,8 +152,12 @@ th, td {
     text-align: left;
     font-weight: bold;
     border-bottom: 1px solid #ddd;
+    font-size: 15px;
 }
+td{
+text-align: center;
 
+}
 th {
     background-color: #f2f2f2;
 }
@@ -163,7 +169,6 @@ a {
 
 .past-lesson {
     color: #555;
-    font-weight: bold;
 }
 
 .current-lesson {
@@ -173,7 +178,6 @@ a {
 
 .future-lesson {
     color: black;
-    font-weight: bold;
 }
 .edit-profile-button {
 display: inline-block;

@@ -1,0 +1,137 @@
+{% extends 'index.html' %}
+
+{% block title %}
+{{ page_label }}
+{% endblock %}
+
+{% block page_label %}
+{{ page_label }}
+{% endblock %}
+
+{% block header %}
+{% include "header.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="blank-global-container" style="position: inherit;background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');">
+  <div class="wrapper-blank" style="max-width: max-content;width: max-content;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
+
+    <h2>Все пользователи</h2>
+      <input type="text" id="search-input" name="search" placeholder="Поиск" value="{{ request.GET.search }}">
+<form method="post">
+  {% csrf_token %}
+  <table id="user-table">
+    <tr>
+      <th>Логин пользователя</th>
+      <th>Email пользователя</th>
+      <th>Имя Фамилия</th>
+      <th>Кошелек пользователя</th>
+      <th>Ментор/студент</th>
+      <th>Стаф</th>
+      <th>Суперюзер</th>
+    </tr>
+    {% for user, form in users_forms %}
+    <tr class="btn white">
+    <tr class="user-row">
+      <td>
+        <span class="past-lesson">
+          {{ user.username }}
+        </span>
+      </td>
+      <td>
+        <span class="past-lesson">
+          {{ user.email }}
+        </span>
+      </td>
+      <td>
+        <span class="past-lesson">
+          {{ user.first_name }} {{ user.last_name }}
+        </span>
+      </td>
+      <td>
+        <span class="past-lesson">
+          {{ form.wallet }}
+        </span>
+      </td>
+      <td>
+        <input type="checkbox" class="mentor-checkbox" name="{{ form.is_mentor.name }}" id="{{ form.is_mentor.id_for_label }}" {% if form.is_mentor.value %}checked{% endif %} />
+        <label id="mentor" for="{{ form.is_mentor.id_for_label }}">Ментор</label>
+      </td>
+    <td hidden>
+        <input type="checkbox" class="student-checkbox" name="{{ form.is_student.name }}" id="{{ form.is_student.id_for_label }}" {% if form.is_student %}checked{% endif %} />
+        <label id="student" for="{{ form.is_student.id_for_label }}">Студент</label>
+        <input type="hidden" name="{{ form.is_student.name }}" value="{{ form.is_student.value }}">
+      </td>
+      <td>
+        <input type="checkbox" name="{{ form.is_staff.name }}" id="{{ form.is_staff.id_for_label }}" {% if form.is_staff.value %}checked{% endif %} />
+        <label for="{{ form.is_staff.id_for_label }}">Стаф</label>
+      </td>
+      <td>
+        <input type="checkbox" name="{{ form.is_superuser.name }}" id="{{ form.is_superuser.id_for_label }}" {% if form.is_superuser.value %}checked{% endif %} />
+        <label for="{{ form.is_superuser.id_for_label }}">Суперюзер</label>
+      </td>
+    </tr>
+    </tr>
+    {% endfor %}
+  </table>
+  <button class="btn" type="submit">Применить</button>
+</form>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const userTable = document.getElementById('user-table');
+    const userRows = userTable.getElementsByClassName('user-row');
+
+    function filterUsers() {
+      const searchText = searchInput.value.toLowerCase();
+
+      for (let i = 0; i < userRows.length; i++) {
+        const userRow = userRows[i];
+        const username = userRow.cells[0].textContent.toLowerCase();
+        const email = userRow.cells[1].textContent.toLowerCase();
+        const name = userRow.cells[2].textContent.toLowerCase();
+
+        if (
+          username.includes(searchText) ||
+          email.includes(searchText) ||
+          name.includes(searchText)
+        ) {
+          userRow.style.display = '';
+        } else {
+          userRow.style.display = 'none';
+        }
+      }
+    }
+
+    searchInput.addEventListener('input', filterUsers);
+
+    const mentorCheckboxes = document.getElementsByClassName('mentor-checkbox');
+
+    for (let i = 0; i < mentorCheckboxes.length; i++) {
+      const mentorCheckbox = mentorCheckboxes[i];
+      const roleLabel = mentorCheckbox.nextElementSibling;
+
+      mentorCheckbox.addEventListener('change', function() {
+        if (mentorCheckbox.checked) {
+          roleLabel.textContent = 'Ментор';
+        } else {
+          roleLabel.textContent = 'Студент';
+        }
+      });
+
+      // Initialize label text based on initial checkbox state
+      if (mentorCheckbox.checked) {
+        roleLabel.textContent = 'Ментор';
+      } else {
+        roleLabel.textContent = 'Студент';
+      }
+    }
+  });
+</script>
+{% endblock %}

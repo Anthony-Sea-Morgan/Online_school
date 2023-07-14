@@ -7,14 +7,25 @@
     width: 75%;
     padding: 20px;
     background-color: #f9f9f9;
+    text-align: center;
 }
-
+.info ul {
+    list-style-type: none;
+        margin: 0px 20px;
+}
 .chat {
     width: 20%;
     padding: 20px;
     background-color: #f2f2f2;
+    position:fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
 }
-
+.chat div{
+height: auto;
+margin-top: 50px;
+}
 .chat-header {
     margin-top: 0;
     margin-bottom: 10px;
@@ -23,7 +34,7 @@
 }
 
 #chat-log {
-    height: calc(100% - 130px); /* Высота чата с учетом поля ввода текста и кнопки отправки */
+    height: calc(100% - 210px); /* Высота чата с учетом поля ввода текста и кнопки отправки */
     overflow-y: scroll;
     font-size: 15px
 }
@@ -32,6 +43,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-radius: 30px;
 }
 
 #chat-input {
@@ -40,6 +52,7 @@
     border: solid 1px black;
     border-radius: 0.2rem;
     resize: none;
+
 }
 
 #chat-message-submit {
@@ -52,6 +65,16 @@
     border-top: 13px solid transparent;
     border-left: 20px solid #ffad5a; /* Синий цвет треугольника */
     border-bottom: 13px solid transparent;
+    transition: 0.3s;
+
+}
+#chat-message-submit:hover{
+    border-top: 25px solid #e37200;
+    border-left: 32px solid #f7a34e;
+    border-bottom: 25px solid #e37200;
+    transform: rotate(112deg);
+    margin-left: -20px;
+
 }
 #chat-log pre{
 margin: 0.6em 0px;

@@ -1,5 +1,6 @@
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 from mainpage.models import Course, Lesson, CustomGroup
+from registration.models import CustomUser
 from django.forms import ModelForm, TextInput, Textarea,  ClearableFileInput
 from django import forms
 
@@ -10,7 +11,7 @@ class CourseForm(forms.ModelForm):
 
     class Meta:
         model = Course
-        fields = ['title', 'description', 'short_des', 'lessons_count', 'difficulty', 'technologies', 'rating', 'price', 'mentor', 'start_date','start_time', 'days_of_week', 'img', 'tech_img',]
+        fields = ['title', 'description', 'short_des', 'lessons_count', 'difficulty', 'technologies', 'rating', 'price', 'mentor', 'start_date','start_time', 'days_of_week', 'img', 'tech_img']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-group'}),
             'description': SummernoteWidget(attrs={'class': 'form-group'}),
@@ -52,3 +53,25 @@ class CustomGroupForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-group'}),
             'users': forms.SelectMultiple(attrs={'class': 'form-group'}),
         }
+class CustomUserListForm(forms.ModelForm):
+
+    class Meta:
+        model = CustomUser
+        fields = ('is_superuser', 'is_mentor', 'is_staff', 'wallet', 'is_student', 'courses', 'groups', 'user_permissions')
+        widgets ={
+            'is_superuser': forms.CheckboxInput(attrs={'class': 'custom-checkbox'}),
+            'is_mentor': forms.CheckboxInput(attrs={'class': 'custom-checkbox'}),
+            'is_staff': forms.CheckboxInput(attrs={'class': 'custom-checkbox'}),
+            'wallet': forms.NumberInput(attrs={'class': 'form-control'}),
+            'is_student': forms.CheckboxInput(attrs={'class': 'custom-checkbox'}),
+            # 'courses': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            # 'groups': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            # 'user_permissions': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            }
+
+    def clean_is_mentor(self):
+        is_student = self.cleaned_data.get('is_student', False)
+        is_mentor = self.cleaned_data.get('is_mentor', False)
+        if is_student and not is_mentor:
+            is_mentor = not is_student
+        return is_mentor
