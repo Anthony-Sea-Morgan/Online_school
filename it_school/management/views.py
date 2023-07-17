@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from mainpage.models import Course, Lesson, CustomGroup
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.forms import formset_factory
 from mainpage.views import *
 from django.urls import reverse_lazy, reverse
-from mainpage.models import Course, Lesson, TECHNOLOGIES, CustomUser, TECHNOLOGY_CHOICES, DIFFICULTY_CHOICES, \
-    DAYS_OF_WEEK_CHOICES
+from mainpage.models import Course, Lesson, TECHNOLOGIES, CustomUser, TECHNOLOGY_CHOICES, DIFFICULTY_CHOICES, DAYS_OF_WEEK_CHOICES
 from management.forms import CourseForm, LessonForm, CustomGroupForm, CustomUserListForm
+from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.core.exceptions import ObjectDoesNotExist
@@ -15,36 +16,37 @@ from django.http import Http404
 
 class UserListView(View):
     template_name = 'user_list.html'
-    form_class = CustomUserListForm
+    formset_class = modelformset_factory(CustomUser, form=CustomUserListForm, extra=0)
     queryset = CustomUser.objects.all()
-    forms = []
 
     def get(self, request):
-        forms = []
-        for user in self.queryset:
-            form = self.form_class(instance=user)
-            forms.append((user, form))
+        formset = self.formset_class(queryset=self.queryset)
         context = {
             'page_label': 'Список всех пользователей',
-            'users_forms': forms,
+            'formset': formset,
         }
         return render(request, self.template_name, context)
 
     def post(self, request):
-        forms = []
-        for user in self.queryset:
-            form = self.form_class(request.POST, instance=user)
-            if form.is_valid():
-                if form.has_changed():
-                    is_mentor = form.cleaned_data.get('is_mentor')
-                    form.instance.is_student = not is_mentor
-                    form.save()
-            forms.append((user, form))
+        formset = self.formset_class(request.POST, queryset=self.queryset)
+        if formset.is_valid():
+            instances = formset.save()
+            for instance in instances:
+                is_mentor = instance.is_mentor
+                instance.is_student = not is_mentor
+                print("Username:", instance.username)
+                print("Email:", instance.email)
+                print("First Name:", instance.first_name)
+                print("Last Name:", instance.last_name)
+                instance.save()
+            return redirect(reverse('management:user_list'))
+        else:
+            print(formset.errors)
         context = {
             'page_label': 'Список всех пользователей',
-            'users_forms': forms,
+            'formset': formset,
         }
-        return redirect(reverse('management:user_list'))
+        return render(request, self.template_name, context)
 @check_mentor_permission
 def CourseListView(request):
     user = request.user

@@ -20,6 +20,7 @@
       <input type="text" id="search-input" name="search" placeholder="Поиск" value="{{ request.GET.search }}">
 <form method="post">
   {% csrf_token %}
+   {{ formset.management_form }}
   <table id="user-table">
     <tr>
       <th>Логин пользователя</th>
@@ -30,83 +31,80 @@
       <th>Стаф</th>
       <th>Суперюзер</th>
     </tr>
-    {% for user, form in users_forms %}
-    <tr class="btn white">
-    <tr class="user-row">
-      <td>
-        <span class="past-lesson">
-          {{ user.username }}
-        </span>
-      </td>
-      <td>
-        <span class="past-lesson">
-          {{ user.email }}
-        </span>
-      </td>
-      <td>
-        <span class="past-lesson">
-          {{ user.first_name }} {{ user.last_name }}
-        </span>
-      </td>
-      <td>
-        <span class="past-lesson">
-          {{ form.wallet }}
-        </span>
-      </td>
-      <td>
-        <input type="checkbox" class="mentor-checkbox" name="{{ form.is_mentor.name }}" id="{{ form.is_mentor.id_for_label }}" {% if form.is_mentor.value %}checked{% endif %} />
-        <label id="mentor" for="{{ form.is_mentor.id_for_label }}">Ментор</label>
-      </td>
-    <td hidden>
-        <input type="checkbox" class="student-checkbox" name="{{ form.is_student.name }}" id="{{ form.is_student.id_for_label }}" {% if form.is_student %}checked{% endif %} />
-        <label id="student" for="{{ form.is_student.id_for_label }}">Студент</label>
-        <input type="hidden" name="{{ form.is_student.name }}" value="{{ form.is_student.value }}">
-      </td>
-      <td>
-        <input type="checkbox" name="{{ form.is_staff.name }}" id="{{ form.is_staff.id_for_label }}" {% if form.is_staff.value %}checked{% endif %} />
-        <label for="{{ form.is_staff.id_for_label }}">Стаф</label>
-      </td>
-      <td>
-        <input type="checkbox" name="{{ form.is_superuser.name }}" id="{{ form.is_superuser.id_for_label }}" {% if form.is_superuser.value %}checked{% endif %} />
-        <label for="{{ form.is_superuser.id_for_label }}">Суперюзер</label>
-      </td>
-    </tr>
-    </tr>
-    {% endfor %}
-  </table>
-  <button class="btn" type="submit">Применить</button>
-</form>
-
+    {% for form in formset %}
+ <tr class="user-row">
+            <td>
+              <span class="past-lesson">
+                 {{ form.prefix }}-{{ form.id }}
+                 {{ form.prefix }}-{{ form.username }}
+              </span>
+            </td>
+            <td>
+              <span class="past-lesson">
+                 {{ form.prefix }}-{{ form.email }}
+              </span>
+            </td>
+            <td>
+              <span class="past-lesson">
+                 {{ form.prefix }}-{{ form.wallet }}
+              </span>
+            </td>
+            <td>
+              <span class="past-lesson">
+                 {{ form.prefix }}-{{ form.is_mentor }}
+                <label id="mentor" for="{{ form.is_mentor.id_for_label }}">Ментор</label>
+              </span>
+            </td>
+            <td hidden>
+              <span class="past-lesson">
+                 {{ form.prefix }}-{{ form.is_student }}
+              </span>
+            </td>
+            <td>
+              <span class="past-lesson">
+                 {{ form.prefix }}-{{ form.is_staff }}
+                <label for="{{ form.is_staff.id_for_label }}">Стаф</label>
+              </span>
+            </td>
+            <td>
+              <span class="past-lesson">
+                 {{ form.prefix }}-{{ form.is_superuser }}
+                <label for="{{ form.is_superuser.id_for_label }}">Суперюзер</label>
+              </span>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+      <button class="btn" type="submit">Применить</button>
+    </form>
   </div>
 </div>
 {% endblock %}
 
 {% block script %}
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-input');
     const userTable = document.getElementById('user-table');
     const userRows = userTable.getElementsByClassName('user-row');
 
     function filterUsers() {
-      const searchText = searchInput.value.toLowerCase();
+        const searchText = searchInput.value.toLowerCase();
 
-      for (let i = 0; i < userRows.length; i++) {
-        const userRow = userRows[i];
-        const username = userRow.cells[0].textContent.toLowerCase();
-        const email = userRow.cells[1].textContent.toLowerCase();
-        const name = userRow.cells[2].textContent.toLowerCase();
+        for (let i = 0; i < userRows.length; i++) {
+            const userRow = userRows[i];
+            const username = userRow.cells[0].querySelector('.past-lesson input[type="text"]').value.toLowerCase();
+            const email = userRow.cells[1].querySelector('.past-lesson input[type="email"]').value.toLowerCase();
 
-        if (
-          username.includes(searchText) ||
-          email.includes(searchText) ||
-          name.includes(searchText)
-        ) {
-          userRow.style.display = '';
-        } else {
-          userRow.style.display = 'none';
+            if (
+                username.includes(searchText) ||
+                email.includes(searchText)
+            ) {
+                userRow.style.display = '';
+            } else {
+                userRow.style.display = 'none';
+            }
         }
-      }
     }
 
     searchInput.addEventListener('input', filterUsers);

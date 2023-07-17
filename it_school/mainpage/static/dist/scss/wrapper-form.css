@@ -1,6 +1,7 @@
 .blank-global-container{
 height:max-content;
 min-height: 100vh;
+width: 100%;
 
 top: 0;
 left: 0;
@@ -52,6 +53,7 @@ border-radius: 15px;
     padding: 8px;
     width: 94%;
     margin-bottom: 15px;
+    margin-right: -60px;
 }
 .btn {
     margin-top: 20px;
@@ -191,4 +193,13 @@ transition: background-color 0.3s ease;
 
 .edit-profile-button:hover {
 background-color: #ddd;
+}
+.past-lesson{
+font-size: 0px;
+}
+.past-lesson input{
+font-size: 15px;
+}
+.past-lesson label{
+font-size: 15px;
 }
