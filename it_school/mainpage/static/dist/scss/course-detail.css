@@ -30,7 +30,9 @@ padding-left: 15%;
 width: 60%;
 }
 .course-detail-title h2{
-font-size: 5vw;
+font-size: 45px;
+line-height: 1.5;
+text-transform: uppercase;
 margin-bottom: 5px;
 margin-top: 15px;
 margin: 20px 20px;

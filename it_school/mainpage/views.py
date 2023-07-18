@@ -22,7 +22,6 @@ def index(request):
     course_object = Course.objects.all()
     for i in course_object:
         i.img = str(i.img)[5:]
-        i.imgTech = str(i.tech_img)[5:]
     data = {
         'title': 'Online school',
         'page_label': 'Главная страница',
@@ -51,7 +50,7 @@ def course_lessons(request, course_id):
     if is_course_owner is False and is_course_added is False:
         return render(request, 'access_deny.html')
 
-    return render(request, 'course_lissons.html',
+    return render(request, 'course_lessons.html',
                   {'course': course, 'page_label': 'Список уроков курса', 'lessons': lessons, 'now': now})
 
 

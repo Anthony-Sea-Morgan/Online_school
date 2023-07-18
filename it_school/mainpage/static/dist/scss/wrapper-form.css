@@ -53,7 +53,6 @@ border-radius: 15px;
     padding: 8px;
     width: 94%;
     margin-bottom: 15px;
-    margin-right: -60px;
 }
 .btn {
     margin-top: 20px;
@@ -137,7 +136,7 @@ background-color: #ffffff00;
 }
 
 h2 {
-    color: black;
+    color: #ffa300;
     text-align: center;
     font-weight: bold;
     font-size: 24px;
@@ -170,7 +169,7 @@ a {
 }
 
 .past-lesson {
-    color: #555;
+    color: #9d9d9d;
 }
 
 .current-lesson {
@@ -194,12 +193,9 @@ transition: background-color 0.3s ease;
 .edit-profile-button:hover {
 background-color: #ddd;
 }
-.past-lesson{
+.form-prefix{
 font-size: 0px;
 }
-.past-lesson input{
-font-size: 15px;
-}
-.past-lesson label{
+.form-prefix label{
 font-size: 15px;
 }

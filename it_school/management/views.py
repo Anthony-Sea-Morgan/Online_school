@@ -53,7 +53,6 @@ def CourseListView(request):
     course_object = Course.objects.filter(mentor=user)
     for i in course_object:
         i.img = str(i.img)[5:]
-        i.imgTech = str(i.tech_img)[5:]
     data = {
         'title': 'Online school',
         'page_label': 'Главная страница',
@@ -81,7 +80,9 @@ class CourseCreateView(CreateView):
         context['lesson_form'] = LessonForm()
         context['group_form'] = CustomGroupForm()
         context['lessons'] = Lesson.objects.filter(course_owner=self.object)
+        context['view_name'] = self.request.resolver_match.view_name
         return context
+
 
 
 @method_decorator(check_mentor_permission, name='dispatch')
@@ -101,17 +102,16 @@ class CourseUpdateView(UpdateView):
         group = CustomGroup.objects.get(course_owner_id=self.kwargs['pk'])
         context['group'] = group
         context['lessons'] = Lesson.objects.filter(course_owner=self.object)
+        context['view_name'] = self.request.resolver_match.view_name
         return context
 
-    def form_valid(self, form):
-        if self.request.POST.get('delete_course') == 'yes':
-            self.object = self.get_object()  # Получение текущего объекта
-            self.object.delete()  # Удаление объекта
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('delete_course') == 'yes':
+            self.object = self.get_object()
+            self.object.delete()
             return HttpResponseRedirect(self.success_url)
         else:
-            self.object = form.save(commit=False)
-            self.object.save()
-            return HttpResponseRedirect(self.get_success_url())
+            return super().post(request, *args, **kwargs)
 
 
 def remove_participant(request, pk):

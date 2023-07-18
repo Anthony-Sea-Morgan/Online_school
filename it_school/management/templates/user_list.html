@@ -25,7 +25,6 @@
     <tr>
       <th>Логин пользователя</th>
       <th>Email пользователя</th>
-      <th>Имя Фамилия</th>
       <th>Кошелек пользователя</th>
       <th>Ментор/студент</th>
       <th>Стаф</th>
@@ -34,40 +33,40 @@
     {% for form in formset %}
  <tr class="user-row">
             <td>
-              <span class="past-lesson">
+              <span class="past-lesson form-prefix">
                  {{ form.prefix }}-{{ form.id }}
                  {{ form.prefix }}-{{ form.username }}
               </span>
             </td>
             <td>
-              <span class="past-lesson">
+              <span class="past-lesson form-prefix">
                  {{ form.prefix }}-{{ form.email }}
               </span>
             </td>
             <td>
-              <span class="past-lesson">
+              <span class="past-lesson form-prefix">
                  {{ form.prefix }}-{{ form.wallet }}
               </span>
             </td>
             <td>
-              <span class="past-lesson">
+              <span class="past-lesson form-prefix">
                  {{ form.prefix }}-{{ form.is_mentor }}
                 <label id="mentor" for="{{ form.is_mentor.id_for_label }}">Ментор</label>
               </span>
             </td>
             <td hidden>
-              <span class="past-lesson">
+              <span class="past-lesson form-prefix">
                  {{ form.prefix }}-{{ form.is_student }}
               </span>
             </td>
             <td>
-              <span class="past-lesson">
+              <span class="past-lesson form-prefix">
                  {{ form.prefix }}-{{ form.is_staff }}
                 <label for="{{ form.is_staff.id_for_label }}">Стаф</label>
               </span>
             </td>
             <td>
-              <span class="past-lesson">
+              <span class="past-lesson form-prefix">
                  {{ form.prefix }}-{{ form.is_superuser }}
                 <label for="{{ form.is_superuser.id_for_label }}">Суперюзер</label>
               </span>
@@ -95,10 +94,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const userRow = userRows[i];
             const username = userRow.cells[0].querySelector('.past-lesson input[type="text"]').value.toLowerCase();
             const email = userRow.cells[1].querySelector('.past-lesson input[type="email"]').value.toLowerCase();
+            console.log(userRow.cells[3].querySelector('.past-lesson label').innerHTML.toLowerCase());
+            const mentor = userRow.cells[3].querySelector('.past-lesson label').innerHTML.toLowerCase();
+<!--            const staff = userRow.cells[5].querySelector('.past-lesson label').innerHTML.toLowerCase();-->
+<!--            const superuser = userRow.cells[6].querySelector('.past-lesson label').innerHTML.toLowerCase();-->
 
             if (
                 username.includes(searchText) ||
-                email.includes(searchText)
+                email.includes(searchText) ||
+                mentor.includes(searchText) ||
+                staff.includes(searchText) ||
+                superuser.includes(searchText)
             ) {
                 userRow.style.display = '';
             } else {
@@ -123,7 +129,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
 
-      // Initialize label text based on initial checkbox state
       if (mentorCheckbox.checked) {
         roleLabel.textContent = 'Ментор';
       } else {

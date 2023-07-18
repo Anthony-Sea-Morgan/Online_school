@@ -3,15 +3,19 @@ from mainpage.models import Course, Lesson, CustomGroup
 from registration.models import CustomUser
 from django.forms import ModelForm, TextInput, Textarea,  ClearableFileInput, formset_factory
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
-
-
+class CustomClearableFileInput(ClearableFileInput):
+    clear_checkbox_label = _("")
+    initial_text = _("")
+    input_text = _("Изображение курса")
+    template_name = "custom_clearable_file_input.html"
 
 class CourseForm(forms.ModelForm):
 
     class Meta:
         model = Course
-        fields = ['title', 'description', 'short_des', 'lessons_count', 'difficulty', 'technologies', 'rating', 'price', 'mentor', 'start_date','start_time', 'days_of_week', 'img', 'tech_img']
+        fields = ['title', 'description', 'short_des', 'lessons_count', 'difficulty', 'technologies', 'rating', 'price', 'mentor', 'start_date','start_time', 'days_of_week', 'img']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-group'}),
             'description': SummernoteWidget(attrs={'class': 'form-group'}),
@@ -25,8 +29,7 @@ class CourseForm(forms.ModelForm):
             'start_time': forms.TimeInput(attrs={'class': 'form-group','id': 'id_start_time', 'name': 'start_time', 'type':'time'}),
             'days_of_week': forms.CheckboxSelectMultiple(attrs={'class': 'form-group', 'style':'width: 25%;height: 100%;'}),
             'technologies': forms.CheckboxSelectMultiple(attrs={'class': 'form-group', 'style':'width: 25%;height: 100%;'}),
-            'img': ClearableFileInput(attrs={'class': "file-input",'id': "img",'value': "",}),
-            'tech_img': ClearableFileInput(attrs={'class': "file-input",'id': "img_tech",'value': "",}),
+            'img': CustomClearableFileInput(attrs={'class': "file-input", 'id': "img", 'value': ""}),
         }
 
 class LessonForm(forms.ModelForm):

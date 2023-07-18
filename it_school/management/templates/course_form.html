@@ -92,18 +92,11 @@
       <div class="form-group">
         <label>Иконка курса:</label>
         <div class="file-drop-area" id="img_area">
-          <span class="fake-btn">Иконка курса</span>
-          <span class="file-msg" id="file-msg-icon">{{ form.img }}</span>
+
+          {{ form.img }}
         </div>
       </div>
 
-      <div class="form-group">
-        <label>Иконка языка:</label>
-        <div class="file-drop-area" id="img_tech_area">
-          <span class="fake-btn">Иконка языка</span>
-          <span class="file-msg" id="file-msg-icon-tech">{{ form.tech_img }}</span>
-        </div>
-      </div>
 
       {% if form.errors %}
         <div class="alert alert-danger" style="color: #e53500;">
@@ -124,7 +117,11 @@
       </div>
     </form>
 
-    <button id="delete-btn" class="btn">Удалить</button>
+    {% if view_name == 'management:course_update' %}
+  <button id="delete-btn" class="btn">Удалить</button>
+{% elif view_name == 'management:course_create' %}
+  <button class="btn" onclick="window.location.href = '{% url 'management:course_list' %}'">Отмена</button>
+{% endif %}
 </div>
 
 

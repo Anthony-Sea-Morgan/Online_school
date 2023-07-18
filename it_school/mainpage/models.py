@@ -33,12 +33,6 @@ logger = getLogger(__name__)
 def image_folder_Course(instance, filename):
     return 'Models/Course/CourseIcons/{}.webp'.format(uuid4().hex)
 
-
-# Функция для определения пути сохранения изображения языка
-def image_folder_Technology(instance, filename):
-    return 'Models/Course/TechIcons/{}.webp'.format(uuid4().hex)
-
-
 class Course(models.Model):
     title = models.CharField(max_length=50)  # Тема курса
     description = models.TextField('Полное описание', blank=True)  # Описание
@@ -61,11 +55,6 @@ class Course(models.Model):
         upload_to=image_folder_Course,
         default='media/Models/no_image_big.png',
     )
-    tech_img = WEBPField(  # изображение языка
-        verbose_name=('Изображение языка'),
-        upload_to=image_folder_Technology,
-        default='media/Models/no_image_big.png',
-    )
 
     def save(self, *args, **kwargs):
         """Функция срабатывает при сохранении курса
@@ -79,7 +68,6 @@ class Course(models.Model):
             self.days_of_week = ['wednesday', 'saturday']
 
         is_created = not bool(self.pk)
-
         super().save(*args, **kwargs)
 
         lesson_count = Lesson.objects.filter(course_owner_id=self.pk).count()

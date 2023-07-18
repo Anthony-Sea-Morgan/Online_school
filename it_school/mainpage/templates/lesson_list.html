@@ -18,21 +18,21 @@
     <table>
         <thead>
             <tr>
-                <th style="color: black;">Название</th>
-                <th style="color: black;">Материал</th>
-                <th style="color: black;">День недели</th>
-                <th style="color: black;">Дата начала</th>
-                <th style="color: black;">Время начала</th>
+                <th>Название</th>
+                <th>Материал</th>
+                <th>День недели</th>
+                <th>Дата начала</th>
+                <th>Время начала</th>
             </tr>
         </thead>
         <tbody>
             {% for lesson in lessons %}
             <tr {% if lesson.is_past %}style="background-color: gray;"{% endif %}>
-                <td style="color: black;">{{ lesson.title }}</td>
-                <td style="color: black;">{{ lesson.material }}</td>
-                <td style="color: black;">{{ lesson.day_of_week }}</td>
-                <td style="color: black;">{{ lesson.start_date }}</td>
-                <td style="color: black;">{{ lesson.start_time }}</td>
+                <td>{{ lesson.title }}</td>
+                <td>{{ lesson.material }}</td>
+                <td>{{ lesson.day_of_week }}</td>
+                <td>{{ lesson.start_date }}</td>
+                <td>{{ lesson.start_time }}</td>
             </tr>
             {% endfor %}
 
@@ -43,7 +43,6 @@
 {% endblock %}
 
 {% block script %}
-<script src="/static/dist/js/coursesFilter.js"></script>
 {% endblock %}
 
 <style>
