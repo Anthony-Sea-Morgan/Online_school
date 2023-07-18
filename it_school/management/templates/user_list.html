@@ -14,7 +14,7 @@
 
 {% block content %}
 <div class="blank-global-container" style="position: inherit;background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');">
-  <div class="wrapper-blank" style="max-width: max-content;width: max-content;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
+  <div class="wrapper-blank" style="max-width: max-content;min-width: 930px;min-height: 550px;width: max-content;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
 
     <h2>Все пользователи</h2>
       <input type="text" id="search-input" name="search" placeholder="Поиск" value="{{ request.GET.search }}">
@@ -51,7 +51,7 @@
             <td>
               <span class="past-lesson form-prefix">
                  {{ form.prefix }}-{{ form.is_mentor }}
-                <label id="mentor" for="{{ form.is_mentor.id_for_label }}">Ментор</label>
+                <label id="mentor" for="{{ form.is_mentor.id_for_label }}">{% if form.is_mentor.value %}Ментор{% else %}Студент{% endif %}</label>
               </span>
             </td>
             <td hidden>
@@ -62,13 +62,13 @@
             <td>
               <span class="past-lesson form-prefix">
                  {{ form.prefix }}-{{ form.is_staff }}
-                <label for="{{ form.is_staff.id_for_label }}">Стаф</label>
+                <label for="{{ form.is_staff.id_for_label }}">{% if form.is_staff.value %}Стаф{% else %}Юзер{% endif %}</label>
               </span>
             </td>
             <td>
               <span class="past-lesson form-prefix">
                  {{ form.prefix }}-{{ form.is_superuser }}
-                <label for="{{ form.is_superuser.id_for_label }}">Суперюзер</label>
+                <label for="{{ form.is_superuser.id_for_label }}">{% if form.is_superuser.value %}Суперюзер{% else %}Юзер{% endif %}</label>
               </span>
             </td>
           </tr>

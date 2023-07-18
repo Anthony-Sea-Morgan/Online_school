@@ -61,7 +61,7 @@
                         <div class="courses-unit-title"><h2 style="background-color: #ffffff00;"><strong>{{ course.title }}</strong></h2></div>
                         <div class="courses-unit-difficulty">{{ course.difficulty }}</div>
                          <div class="courses-unit-shortdes">{{ course.short_des }}</div>
-                        <div class="courses-unit-a" style="margin-bottom: 80px;"><button onclick="location.href='{% url 'course_lessons' course.id %}'" class="btn">Перейти к занятиям →</button></div>
+                        <div class="courses-unit-a"><button onclick="location.href='{% url 'course_lessons' course.id %}'" class="btn">Перейти к занятиям →</button></div>
                     </div>
                 </div>
                 {% empty %}

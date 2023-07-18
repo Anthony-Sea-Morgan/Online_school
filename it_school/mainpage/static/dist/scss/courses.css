@@ -91,6 +91,9 @@ overflow-wrap: anywhere;
 .courses-unit-a{
 margin-bottom: 3px;
 font-size: 15px;
+position: absolute;
+bottom: 30px;
+left: 116px;
 }
 .courses-unit-difficulty{
 font-size: 15px;

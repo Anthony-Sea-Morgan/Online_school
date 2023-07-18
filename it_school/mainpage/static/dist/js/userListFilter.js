@@ -45,16 +45,16 @@ userTable.addEventListener('change', function(event) {
   } else if (target.classList.contains('staff-checkbox')) {
   const roleLabel = target.nextElementSibling;
   if (target.checked) {
-      roleLabel.textContent = 'стаф';
+      roleLabel.textContent = 'Стаф';
     } else {
-      roleLabel.textContent = 'юзер';
+      roleLabel.textContent = 'Юзер';
     }
   } else if(target.classList.contains('superuser-checkbox')) {
   const roleLabel = target.nextElementSibling;
   if (target.checked) {
-      roleLabel.textContent = 'суперюзер';
+      roleLabel.textContent = 'Суперюзер';
     } else {
-      roleLabel.textContent = 'юзер';
+      roleLabel.textContent = 'Юзер';
     }
   }
 });
