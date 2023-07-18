@@ -4,6 +4,7 @@ from registration.models import CustomUser
 from django.forms import ModelForm, TextInput, Textarea,  ClearableFileInput, formset_factory
 from django import forms
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import get_user_model
 
 class CustomClearableFileInput(ClearableFileInput):
     clear_checkbox_label = _("")
@@ -12,7 +13,8 @@ class CustomClearableFileInput(ClearableFileInput):
     template_name = "custom_clearable_file_input.html"
 
 class CourseForm(forms.ModelForm):
-
+    mentor = forms.ModelChoiceField(queryset=get_user_model().objects.filter(is_mentor=True),
+                                    widget=forms.Select(attrs={'class': 'form-group'}))
     class Meta:
         model = Course
         fields = ['title', 'description', 'short_des', 'lessons_count', 'difficulty', 'technologies', 'rating', 'price', 'mentor', 'start_date','start_time', 'days_of_week', 'img']
@@ -24,7 +26,6 @@ class CourseForm(forms.ModelForm):
             'rating': forms.NumberInput(attrs={'class': 'form-group', 'type':'number'}),
             'lessons_count': forms.NumberInput(attrs={'class': 'form-group', 'type':'number'}),
             'price': forms.NumberInput(attrs={'class': 'form-group', 'type':'number'}),
-            'mentor': forms.Select(attrs={'class': 'form-group'}),
             'start_date': forms.DateInput(attrs={'class': 'form-group','id': 'id_start_date', 'name': 'start_date', 'type':'date'}),
             'start_time': forms.TimeInput(attrs={'class': 'form-group','id': 'id_start_time', 'name': 'start_time', 'type':'time'}),
             'days_of_week': forms.CheckboxSelectMultiple(attrs={'class': 'form-group', 'style':'width: 25%;height: 100%;'}),

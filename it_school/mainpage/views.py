@@ -168,7 +168,26 @@ def add_users_in_group(user, course):
     except Exception as e:
         print(f'Error: {str(e)}')
         return 1
-
+def remove_user_from_group(user, course):
+    try:
+        group = CustomGroup.objects.filter(course_owner=course.pk).first()
+        if group is not None:
+            if user.courses.filter(pk=course.pk).exists():
+                # Удаляем пользователя из курса
+                user.courses.remove(course)
+                # Удаляем пользователя из группы
+                group.users.remove(user)
+                print(f'{user} удален из {course} и группы {group}')
+                return 0
+            else:
+                # Пользователь не найден в курсе
+                return 1
+        else:
+            # Группа не найдена
+            return 1
+    except Exception as e:
+        print(f'Error: {str(e)}')
+        return 1
 
 def purchase_confirmation(request, pk):
     """
@@ -220,6 +239,22 @@ def check_mentor_permission(view_func):
     def wrapped_view(request, *args, **kwargs):
         if not request.user.is_mentor:
             return redirect('index')
+        return view_func(request, *args, **kwargs)
+
+    return wrapped_view
+def check_staff_permission(view_func):
+    @login_required
+    def wrapped_view(request, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect('index')  # Перенаправление на главную страницу
+        return view_func(request, *args, **kwargs)
+
+    return wrapped_view
+def check_superuser_permission(view_func):
+    @login_required
+    def wrapped_view(request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return redirect('index')  # Перенаправление на главную страницу
         return view_func(request, *args, **kwargs)
 
     return wrapped_view

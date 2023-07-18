@@ -95,6 +95,9 @@ position: absolute;
 bottom: 30px;
 left: 116px;
 }
+.courses-unit-a:hover{
+text-decoration: underline;
+}
 .courses-unit-difficulty{
 font-size: 15px;
 margin-bottom: 3px;

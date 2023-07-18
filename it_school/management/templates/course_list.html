@@ -25,6 +25,9 @@
     <option value="{{ diffic }}">{{ diffic }}</option>
   {% endfor %}
               </select>
+        <select class="form__input" id="mentors-filter">
+            <option value="Все менторы">Все менторы</option>
+              </select>
     </div>
       <div class="courses-list-manage-wrapper">
         <ul class="courses-list-manage">
@@ -78,4 +81,5 @@
 
 {% block script %}
 <script src="/static/dist/js/coursesFilter.js"></script>
+<script src="/static/dist/js/сoursesFilterMentors.js"></script>
 {% endblock %}

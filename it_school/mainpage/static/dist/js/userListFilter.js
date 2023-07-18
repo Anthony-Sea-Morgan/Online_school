@@ -11,15 +11,15 @@
         const username = userRow.cells[0].querySelector('.past-lesson input[type="text"]').value.toLowerCase();
         const email = userRow.cells[1].querySelector('.past-lesson input[type="email"]').value.toLowerCase();
         const mentor = userRow.cells[3].querySelector('.past-lesson label').innerHTML.toLowerCase();
-        const staff = userRow.cells[5].querySelector('.past-lesson label').innerHTML.toLowerCase();
-        const superuser = userRow.cells[6].querySelector('.past-lesson label').innerHTML.toLowerCase();
+        const staff = userRow.cells[5]?.querySelector('.past-lesson label').innerHTML.toLowerCase();
+        const superuser = userRow.cells[6]?.querySelector('.past-lesson label').innerHTML.toLowerCase();
 
         if (
           username.includes(searchText) ||
           email.includes(searchText) ||
           mentor.includes(searchText) ||
-          staff.includes(searchText) ||
-          superuser.includes(searchText)
+          staff?.includes(searchText) ||
+          superuser?.includes(searchText)
         ) {
           userRow.style.display = '';
         } else {
@@ -47,14 +47,14 @@ userTable.addEventListener('change', function(event) {
   if (target.checked) {
       roleLabel.textContent = 'Стаф';
     } else {
-      roleLabel.textContent = 'Юзер';
+      roleLabel.textContent = '---';
     }
   } else if(target.classList.contains('superuser-checkbox')) {
   const roleLabel = target.nextElementSibling;
   if (target.checked) {
       roleLabel.textContent = 'Суперюзер';
     } else {
-      roleLabel.textContent = 'Юзер';
+      roleLabel.textContent = '---';
     }
   }
 });

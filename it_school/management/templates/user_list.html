@@ -27,10 +27,13 @@
       <th>Email пользователя</th>
       <th>Кошелек пользователя</th>
       <th>Ментор/студент</th>
-      <th>Стаф</th>
+      {% if request.user.is_superuser %}
+        <th>Стаф</th>
       <th>Суперюзер</th>
+        {% endif %}
     </tr>
     {% for form in formset %}
+
  <tr class="user-row">
             <td>
               <span class="past-lesson form-prefix">
@@ -59,18 +62,20 @@
                  {{ form.prefix }}-{{ form.is_student }}
               </span>
             </td>
+      {% if request.user.is_superuser %}
             <td>
               <span class="past-lesson form-prefix">
                  {{ form.prefix }}-{{ form.is_staff }}
-                <label for="{{ form.is_staff.id_for_label }}">{% if form.is_staff.value %}Стаф{% else %}Юзер{% endif %}</label>
+                <label for="{{ form.is_staff.id_for_label }}">{% if form.is_staff.value %}Стаф{% else %}---{% endif %}</label>
               </span>
             </td>
             <td>
               <span class="past-lesson form-prefix">
                  {{ form.prefix }}-{{ form.is_superuser }}
-                <label for="{{ form.is_superuser.id_for_label }}">{% if form.is_superuser.value %}Суперюзер{% else %}Юзер{% endif %}</label>
+                <label for="{{ form.is_superuser.id_for_label }}">{% if form.is_superuser.value %}Суперюзер{% else %}---{% endif %}</label>
               </span>
             </td>
+     {% endif %}
           </tr>
         {% endfor %}
       </table>

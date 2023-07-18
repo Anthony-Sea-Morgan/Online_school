@@ -3,7 +3,7 @@ from django.views import View
 from mainpage.models import Course, Lesson, CustomGroup
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.forms import formset_factory
-from mainpage.views import *
+from mainpage.views import check_staff_permission, check_mentor_permission, add_users_in_group, remove_user_from_group
 from django.urls import reverse_lazy, reverse
 from mainpage.models import Course, Lesson, TECHNOLOGIES, CustomUser, TECHNOLOGY_CHOICES, DIFFICULTY_CHOICES, DAYS_OF_WEEK_CHOICES
 from management.forms import CourseForm, LessonForm, CustomGroupForm, CustomUserListForm
@@ -12,14 +12,19 @@ from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import user_passes_test
 
-
+@method_decorator(check_staff_permission, name='dispatch')
 class UserListView(View):
     template_name = 'user_list.html'
     formset_class = modelformset_factory(CustomUser, form=CustomUserListForm, extra=0)
     queryset = CustomUser.objects.all()
-
     def get(self, request):
+        if request.user.is_superuser:
+            self.queryset = CustomUser.objects.all()
+        else:
+            self.queryset = CustomUser.objects.exclude(is_staff=True).exclude(is_superuser=True)
         formset = self.formset_class(queryset=self.queryset)
         context = {
             'page_label': 'Список всех пользователей',
@@ -34,6 +39,9 @@ class UserListView(View):
             for instance in instances:
                 is_mentor = instance.is_mentor
                 instance.is_student = not is_mentor
+                if not request.user.is_superuser:
+                    instance.is_staff = False
+                    instance.is_superuser = False
                 print("Username:", instance.username)
                 print("Email:", instance.email)
                 print("First Name:", instance.first_name)
@@ -47,10 +55,10 @@ class UserListView(View):
             'formset': formset,
         }
         return render(request, self.template_name, context)
-@check_mentor_permission
+@check_staff_permission
 def CourseListView(request):
     user = request.user
-    course_object = Course.objects.filter(mentor=user)
+    course_object = Course.objects.all()
     for i in course_object:
         i.img = str(i.img)[5:]
     data = {
@@ -64,7 +72,7 @@ def CourseListView(request):
     return render(request, template, data)
 
 
-@method_decorator(check_mentor_permission, name='dispatch')
+@method_decorator(check_staff_permission, name='dispatch')
 class CourseCreateView(CreateView):
     model = Course
     template_name = 'course_form.html'
@@ -83,14 +91,21 @@ class CourseCreateView(CreateView):
         context['view_name'] = self.request.resolver_match.view_name
         return context
 
+    def form_valid(self, form):
+        self.object = form.save()
+        user = self.object.mentor
+        if add_users_in_group(user=user, course=self.object) == 0:
+            user.save()
+        return super().form_valid(form)
 
 
-@method_decorator(check_mentor_permission, name='dispatch')
+@method_decorator(check_staff_permission, name='dispatch')
 class CourseUpdateView(UpdateView):
     model = Course
     template_name = 'course_form.html'
     form_class = CourseForm
     success_url = reverse_lazy('management:course_list')
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -103,6 +118,7 @@ class CourseUpdateView(UpdateView):
         context['group'] = group
         context['lessons'] = Lesson.objects.filter(course_owner=self.object)
         context['view_name'] = self.request.resolver_match.view_name
+        self.prev_mentor = self.get_object().mentor
         return context
 
     def post(self, request, *args, **kwargs):
@@ -111,9 +127,21 @@ class CourseUpdateView(UpdateView):
             self.object.delete()
             return HttpResponseRedirect(self.success_url)
         else:
-            return super().post(request, *args, **kwargs)
+            form = self.get_form()
+            if form.is_valid():
+                course = self.get_object()
+                prev_mentor = course.mentor
+                new_mentor = form.cleaned_data.get('mentor')
+                if prev_mentor != new_mentor:
+                    if remove_user_from_group(user=prev_mentor, course=course) == 0:
+                        prev_mentor.save()
+                    if add_users_in_group(user=new_mentor, course=course) == 0:
+                        new_mentor.save()
+                return super().post(request, *args, **kwargs)
+            else:
+                return self.form_invalid(form)
 
-
+@check_mentor_permission
 def remove_participant(request, pk):
     group = get_object_or_404(CustomGroup, course_owner_id=pk)
     if request.method == 'POST':
@@ -124,7 +152,7 @@ def remove_participant(request, pk):
     else:
         raise Http404('Invalid request method.')
 
-
+@check_mentor_permission
 def add_participant(request, pk):
     group = get_object_or_404(CustomGroup, pk=pk)
     if request.method == 'POST':
@@ -138,20 +166,21 @@ def add_participant(request, pk):
 # def lesson_update(request, pk):
 #     lesson = get_object_or_404(Lesson, pk=pk)
 #     return HttpResponse("Lesson update view")
+@method_decorator(check_staff_permission, name='dispatch')
 class CourseDeleteView(DeleteView):
     model = Course
     template_name = 'course_confirm_delete.html'
     success_url = reverse_lazy('management:course_list')
 
 
-@method_decorator(check_mentor_permission, name='dispatch')
+@method_decorator(check_staff_permission, name='dispatch')
 class LessonView(View):
     def get(self, request):
         lessons = Lesson.objects.all()
         return render(request, 'management/lesson.html', {'lessons': lessons})
 
 
-@method_decorator(check_mentor_permission, name='dispatch')
+@method_decorator(check_staff_permission, name='dispatch')
 def lesson_list(request):
     """
     Отображает список всех уроков.
