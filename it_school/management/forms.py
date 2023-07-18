@@ -62,9 +62,9 @@ class CustomUserListForm(forms.ModelForm):
         model = CustomUser
         fields = ('is_superuser', 'is_mentor', 'is_staff', 'wallet', 'is_student', 'username', 'email', 'first_name', 'last_name')
         widgets ={
-            'is_superuser': forms.CheckboxInput(attrs={'class': 'custom-checkbox'}),
+            'is_superuser': forms.CheckboxInput(attrs={'class': 'superuser-checkbox'}),
             'is_mentor': forms.CheckboxInput(attrs={'class': 'mentor-checkbox'}),
-            'is_staff': forms.CheckboxInput(attrs={'class': 'custom-checkbox'}),
+            'is_staff': forms.CheckboxInput(attrs={'class': 'staff-checkbox'}),
             'wallet': forms.NumberInput(attrs={'class': 'form-control'}),
             'is_student': forms.CheckboxInput(attrs={'class': 'custom-checkbox'}),
             # 'courses': forms.SelectMultiple(attrs={'class': 'form-control'}),
