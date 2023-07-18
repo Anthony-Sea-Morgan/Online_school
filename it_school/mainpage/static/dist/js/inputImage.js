@@ -18,7 +18,6 @@ fileInput.addEventListener('change', function(e) {
     let siblingElement =  textContainer.nextElementSibling;
     let fileName = fileInput;
     textContainer.innerHTML = fileName.value.split('\\').pop();
-    siblingElement.innerHTML = fileName.value.split('\\').pop();
     droparea.style.backgroundColor= 'rgb(255 140 0 / 22%)';
 
 
