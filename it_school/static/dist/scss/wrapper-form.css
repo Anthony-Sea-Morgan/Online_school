@@ -1,6 +1,7 @@
 .blank-global-container{
 height:max-content;
 min-height: 100vh;
+width: 100%;
 
 top: 0;
 left: 0;
@@ -135,7 +136,7 @@ background-color: #ffffff00;
 }
 
 h2 {
-    color: black;
+    color: #ffa300;
     text-align: center;
     font-weight: bold;
     font-size: 24px;
@@ -168,7 +169,7 @@ a {
 }
 
 .past-lesson {
-    color: #555;
+    color: #9d9d9d;
 }
 
 .current-lesson {
@@ -191,4 +192,10 @@ transition: background-color 0.3s ease;
 
 .edit-profile-button:hover {
 background-color: #ddd;
+}
+.form-prefix{
+font-size: 0px;
+}
+.form-prefix label{
+font-size: 15px;
 }

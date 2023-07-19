@@ -30,13 +30,17 @@ padding-left: 15%;
 width: 60%;
 }
 .course-detail-title h2{
-font-size: 90px;
+font-size: 45px;
+line-height: 1.5;
+text-transform: uppercase;
 margin-bottom: 5px;
 margin-top: 15px;
 margin: 20px 20px;
 margin-left: auto;
 margin-right: auto;
 font-family: 'Jost-Medium';
+width: auto;
+overflow-wrap: anywhere;
 }
 .course-detail-a{
 margin-bottom: 3px;
@@ -54,10 +58,11 @@ color: #b3ab86;
 }
 .course-detail-shortdes{
 width: auto;
-font-size: 20px;
+font-size: 15px;
 margin-bottom: 20px;
 text-align: justify;
 word-wrap: break-word;
+max-width: 300px;
 }
 .course-detail-price{
 bottom: 1.5em;
