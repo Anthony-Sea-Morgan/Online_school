@@ -42,26 +42,28 @@
 
 
 <div class="chat" style="display:none;">
-    <table class="form-group">
-        <h3 style="margin-top: 50px;">Участники занятия:</h3>
-  <tr><th>Логин Email:</th></tr>
-        <div  class="chat-log">
-  <tr class="user-row">
-    {% for user in group.users.all %}
 
-      <th>
-        <span class="past-lesson">
-          {{ user.username }}
+        <h3 style="margin-top: 50px;">Участники занятия:</h3>
+
+        <div  class="chat-log" style="overflow-y: scroll;overflow-x: hidden; max-height: 200px;">
+            <table class="form-group">
+                  <tr><td>Email:</td></tr>
+    {% for user in group.users.all %}
+    <tr class="user-row">
+        <td>
+        <span class="future-lesson">
           {{ user.email }}
         </span>
-      </th>
-
-    {% empty %}
-      <td>Нет участников</td>
-    {% endfor %}
+      </td>
   </tr>
-</div>
+    {% empty %}
+      <tr class="user-row"> <td>Нет участников</td>  </tr>
+    {% endfor %}
+
+
 </table>
+</div>
+
   <!-- Форма для удаления участника -->
 <form method="POST" action="{% url 'management:remove_participant' pk=group.course_owner_id %}">
   {% csrf_token %}
