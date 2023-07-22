@@ -17,20 +17,20 @@
 <div class="container">
     {% if lesson %}
     <div class="info">
-        <h1 style="color: black;">Курсу {{ lesson.course_owner.title }}</h1>
+        <h1>{{ lesson.title }}</h1>
 
-        <ul style="color: black;">
-            <li>{{ lesson.title }}</li>
+        <ul>
+            <li>{{ lesson.course_owner.title }}</li>
             <li>{{ lesson.start_date }}</li>
             <li>{{ lesson.start_time }}</li>
-            <pre class="summernote-content" style="color: black;">{{ lesson.material|safe }}</pre>
+            <pre class="summernote-content">{{ lesson.material|safe }}</pre>
         </ul>
-
-
     </div>
     {% endif %}
+</div>
 
-    <div class="chat">
+<div class="chat" id="lobby-chat" style="display:none;">
+    <div class="close-btn" id="chat-close-btn">⨯</div>
         <h2 class="chat-header">Комната сообщений</h2>
         <div id="chat-log"></div>
         <div id="chat-input-container">
@@ -38,12 +38,10 @@
             <button id="chat-message-submit" class="chat-message-submit"></button>
         </div>
     </div>
-</div>
 
-
-<div class="chat" style="display:none;">
-
-        <h3 style="margin-top: 50px;">Участники занятия:</h3>
+<div class="chat" id="lobby-participants" style="display:none;">
+<div class="close-btn" id="participants-close-btn">⨯</div>
+        <h3 class="chat-header">Участники занятия:</h3>
 
         <div  class="chat-log" style="overflow-y: scroll;overflow-x: hidden; max-height: 200px;">
             <table class="form-group">
@@ -84,6 +82,8 @@
   <button type="submit" class="btn">Добавить участника</button>
 </form>
 </div>
+<button id="show-chat" class="side-btns">💬</button>
+<!--<div id="show-participants" class="side-btns"><button>Управление участниками</button></div>-->
 {% endblock %}
 
 {% block script %}
@@ -124,8 +124,8 @@
         const hours = now.getHours();
         const minutes = now.getMinutes();
         const timestamp = hours + ':' + minutes;
-        const messageWithTimestamp = '<div style="border: 1px solid #ccc; background-color: ' + userColor + '; color: #fff; padding: 10px; border-radius: 10px; margin-bottom: 10px;">' +
-            '<pre><strong>' + author + '</strong>: ' + message + '</pre>' +
+        const messageWithTimestamp = '<div style="background-color: ' + userColor + '24; color: #000; padding: 1px 10px 1px 10px; border-radius: 8px; margin-bottom: 10px;filter: brightness(70%);">' +
+            '<pre style="text-wrap: balance;"><strong style="color: ' + userColor + ';">' + author + '</strong>: ' + message + '</pre>' +
             '<p style="font-size: 12px; color: #888;">' + timestamp + '</p>' +
             '</div>';
         const chatLog = document.querySelector('#chat-log');
@@ -154,5 +154,6 @@
         }));
         messageInputDom.value = '';
     });
+makeLayer('lobby-chat','block', 'show-chat', 'chat-close-btn')
 </script>
 {% endblock %}

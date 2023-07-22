@@ -1,1 +1,1 @@
-makeLayer('blank-delete', 'delete-btn', 'wrapper-blank-close-btn-delete', 'blank-delete-no')
+makeLayer('blank-delete', 'flex', 'delete-btn', 'wrapper-blank-close-btn-delete', 'blank-delete-no')

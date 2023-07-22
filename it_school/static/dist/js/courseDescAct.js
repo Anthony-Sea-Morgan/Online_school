@@ -6,22 +6,7 @@ function scrollToAnchor(anchorId) {
     anchor.scrollIntoView({ behavior: 'smooth' });
   }
 }
-if (document.getElementById('confirm_payment')){
-document.getElementById('confirm_payment').onclick = function() {
-  var payConfBlank = document.getElementById('reg-blank-payconf');
-
-  if (payConfBlank.style.display == 'none') {
-    payConfBlank.style.display = 'flex';
-    payConfBlank.style.zIndex = 1;
-  } else {
-    payConfBlank.style.display = 'none';
-    payConfBlank.style.zIndex = -999
-  }
-}} else{
+if (makeLayer('reg-blank-payconf', 'confirm_payment', 'wrapper-blank-close-btn-payconf') == 0){
+} else{
 document.getElementById('LOGIN-redirect').onclick = document.getElementById('LOGIN').onclick;
-}
-document.getElementById('wrapper-blank-close-btn-payconf').onclick = function hide() {
-  var loginBlank = document.getElementById('reg-blank-payconf');
-  loginBlank.style.display = 'none';
-  loginBlank.style.zIndex = -999;
 }
