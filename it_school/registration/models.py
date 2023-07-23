@@ -8,7 +8,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 class CustomUser(AbstractUser):
     wallet = models.DecimalField(max_digits=6, decimal_places=2, default=0)  # кошелёк
     is_student = models.BooleanField(default=True)  # чекбокс является ли студентом
-    is_mentor = models.BooleanField(default=not is_student)  # чекбокс является ли ментором
+    is_mentor = models.BooleanField(default=False)  # чекбокс является ли ментором
     courses = models.ManyToManyField('mainpage.Course', blank=True,
                                      default=[])  # список курсов к которому у порльзователя имеется доступ
     groups = models.ManyToManyField('mainpage.CustomGroup', blank=True, related_name='customuser_set')
