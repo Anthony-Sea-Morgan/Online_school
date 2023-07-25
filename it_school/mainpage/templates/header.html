@@ -20,10 +20,10 @@
         <div onclick="location.href='{% url 'index' %}'"><p>Главная страница</p></div>
         {% if user.is_authenticated %}
         <div onclick="location.href='{% url 'personal_cabinet' %}'"><p>Личный кабинет</p></div>
-        {% if user.is_mentor %}
+        {% if user.is_staff %}
         <div onclick="location.href='{% url 'management:course_list' %}'"><p>Настройки курсов</p></div>
         {% endif %}
-        {% if user.is_superuser %}
+        {% if user.is_staff %}
         <div onclick="location.href='{% url 'management:user_list' %}'"><p>Пользователи</p></div>
         {% endif %}
         <div><p>Справка</p></div>

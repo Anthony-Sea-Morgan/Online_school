@@ -34,9 +34,9 @@ height: 100%;
 align-items: center;
 border-radius: 20px;
 vertical-align: middle;
-background-color: #ffad5a;
+border: solid 1px black;
 cursor: pointer;
-font-size: 30px;
+font-size: 15px;
 }
 .border-right-li{
 border-right: 1px solid #dddddd;

@@ -25,16 +25,19 @@
             </tr>
             {% for lesson in lessons|dictsort:'start_date' %}
             <tr class="btn white" onclick="location.href='{% url 'chat_room' lesson.id %}'">
-                <td>{{ forloop.counter }}</td>
+                <td>
+                    <span class="{% if lesson.start_date|date:'Y-m-d' == now|date:'Y-m-d' %}current-lesson{% elif lesson.is_past_lesson %}past-lesson{% else %}future-lesson{% endif %}">
+                    {{ forloop.counter }}
+                    </span>
                 <td>
                     <span class="{% if lesson.start_date|date:'Y-m-d' == now|date:'Y-m-d' %}current-lesson{% elif lesson.is_past_lesson %}past-lesson{% else %}future-lesson{% endif %}">
                         {{ lesson.start_date|date:'d.m.Y' }}
                     </span>
                 </td>
                 <td>
-                    <a class="{% if lesson.start_date|date:'Y-m-d' == now|date:'Y-m-d' %}current-lesson{% elif lesson.is_past_lesson %}past-lesson{% else %}future-lesson{% endif %}">
+                    <span class="{% if lesson.start_date|date:'Y-m-d' == now|date:'Y-m-d' %}current-lesson{% elif lesson.is_past_lesson %}past-lesson{% else %}future-lesson{% endif %}">
                         {{ lesson.title }}
-                    </a>
+                    </span>
                 </td>
             </tr>
             {% endfor %}
