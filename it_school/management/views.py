@@ -6,7 +6,7 @@ from django.forms import formset_factory
 from mainpage.views import check_staff_permission, check_mentor_permission, add_users_in_group, remove_user_from_group
 from django.urls import reverse_lazy, reverse
 from mainpage.models import Course, Lesson, TECHNOLOGIES, CustomUser, TECHNOLOGY_CHOICES, DIFFICULTY_CHOICES, DAYS_OF_WEEK_CHOICES
-from management.forms import CourseForm, LessonForm, CustomGroupForm, CustomUserListForm
+from management.forms import CourseForm, LessonForm, CustomGroupForm, CustomUserListForm, LessonListForm
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
@@ -14,6 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
+from datetime import date
 
 @method_decorator(check_staff_permission, name='dispatch')
 class UserListView(View):
@@ -53,6 +54,43 @@ class UserListView(View):
         context = {
             'page_label': 'Список всех пользователей',
             'formset': formset,
+        }
+        return render(request, self.template_name, context)
+
+@method_decorator(check_mentor_permission, name='dispatch')
+class LessonListView(View):
+
+    template_name = 'lessons_list.html'
+    formset_class = modelformset_factory(Lesson, form=LessonListForm, extra=0)
+    queryset = Lesson.objects.all()
+
+    def get(self, request, course_id):
+        now = date.today()
+        course = Course.objects.get(id=course_id)
+        self.queryset = Lesson.objects.filter(course_owner=course)
+        formset = self.formset_class(queryset=self.queryset)
+        context = {
+            'page_label': 'Список уроков курса',
+            'formset': formset,
+            'course': course,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, course_id):
+        now = date.today()
+        course = Course.objects.get(id=course_id)
+        formset = self.formset_class(request.POST, queryset=self.queryset)
+        if formset.is_valid():
+            instances = formset.save()
+            for instance in instances:
+                instance.save()
+            return redirect(reverse('management:lessons_list', args=[course_id]))
+        else:
+            print(formset.errors)
+        context = {
+            'page_label': 'Список уроков курса',
+            'formset': formset,
+            'course': course,
         }
         return render(request, self.template_name, context)
 @check_staff_permission
@@ -118,6 +156,7 @@ class CourseUpdateView(UpdateView):
         context['group'] = group
         context['lessons'] = Lesson.objects.filter(course_owner=self.object)
         context['view_name'] = self.request.resolver_match.view_name
+        context['hide'] = 'hidden'
         self.prev_mentor = self.get_object().mentor
         return context
 
@@ -173,19 +212,40 @@ class CourseDeleteView(DeleteView):
     success_url = reverse_lazy('management:course_list')
 
 
-@method_decorator(check_staff_permission, name='dispatch')
-class LessonView(View):
-    def get(self, request):
-        lessons = Lesson.objects.all()
-        return render(request, 'management/lesson.html', {'lessons': lessons})
+def create_lesson(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    if request.method == 'POST':
+        form = LessonForm(request.POST)
+        if form.is_valid():
+            lesson = form.save(commit=False)
+            lesson.course_owner = course
+            lesson.save()
+            return redirect('management:lessons_list',course_id=course_id)  # Перенаправление на страницу деталей урока после успешного добавления
+    else:
+        form = LessonForm()
 
+    context = {
+        'form': form,
+        'page_label': 'Добавить урок',
+        'course_id': course.id,
+    }
+    return render(request, 'lesson_form.html', context)
 
-@method_decorator(check_staff_permission, name='dispatch')
-def lesson_list(request):
-    """
-    Отображает список всех уроков.
-    """
-    now = date.today()
-    lessons = Lesson.objects.all()
-    context = {'lessons': lessons, 'now': now, 'page_label': 'Список всех занятий'}
-    return render(request, 'lesson_list.html', context)
+def update_lesson(request, lesson_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    course_id = lesson.course_owner_id
+    if request.method == 'POST':
+        form = LessonForm(request.POST, instance=lesson)
+        if form.is_valid():
+            lesson = form.save(commit=False)
+            lesson.save()
+            return redirect('management:lessons_list', course_id=lesson.course_owner.id)
+    else:
+        form = LessonForm(instance=lesson)
+
+    context = {
+        'form': form,
+        'page_label': 'Редактировать урок',
+        'course_id': course_id,
+    }
+    return render(request, 'lesson_form.html', context)

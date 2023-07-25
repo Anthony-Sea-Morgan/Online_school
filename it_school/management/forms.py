@@ -33,19 +33,27 @@ class CourseForm(forms.ModelForm):
             'img': CustomClearableFileInput(attrs={'class': "file-input", 'id': "img", 'value': ""}),
         }
 
+class LessonListForm(forms.ModelForm):
+    class Meta:
+        model = Lesson
+        fields = ['id', 'mentor_owner', 'title', 'start_date', 'start_time']
+        widgets = {
+            'id': forms.NumberInput(attrs={'class': 'form-group', 'type': 'number'}),
+            'mentor_owner': forms.Select(attrs={'class': 'form-group'}),
+            'title': forms.TextInput(attrs={'class': 'form-group'}),
+            'start_date': forms.DateInput(attrs={'class': 'form-group','id': 'id_start_date', 'name': 'start_date', 'type':'date'}),
+            'start_time': forms.TimeInput(attrs={'class': 'form-group','id': 'id_start_time', 'name': 'start_time', 'type':'time'}),
+        }
 class LessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
-        fields = ['mentor_owner', 'title', 'material', 'day_of_week', 'start_date', 'start_time']
+        fields = ['title', 'material', 'start_date', 'start_time']
         widgets = {
-            'mentor_owner': forms.Select(attrs={'class': 'form-group'}),
             'title': forms.TextInput(attrs={'class': 'form-group'}),
             'material': SummernoteWidget(attrs={'class': 'form-group'}),
-            'day_of_week': forms.Select(attrs={'class': 'form-group'}),
-            'start_date': forms.DateInput(attrs={'class': 'form-group', 'type': 'date'}),
-            'start_time': forms.TimeInput(attrs={'class': 'form-group', 'type': 'time'}),
+            'start_date': forms.DateInput(attrs={'class': 'form-group', 'id': 'id_start_date', 'name': 'start_date', 'type': 'date'}),
+            'start_time': forms.TimeInput(attrs={'class': 'form-group', 'id': 'id_start_time', 'name': 'start_time', 'type': 'time'}),
         }
-
 
 class CustomGroupForm(forms.ModelForm):
     class Meta:
