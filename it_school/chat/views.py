@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from mainpage.models import Lesson, CustomGroup
 from django.contrib.auth.decorators import login_required
+
+
 @login_required  # Декоратор для требования аутентификации пользователя
 def chat_room(request, room_name):
     """
