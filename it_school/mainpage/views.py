@@ -14,6 +14,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib.auth.decorators import user_passes_test
 
+
 @csrf_protect
 def index(request):
     """
@@ -224,4 +225,3 @@ def check_mentor_permission(view_func):
         return view_func(request, *args, **kwargs)
 
     return wrapped_view
-

@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from mainpage.models import Course, DAYS_OF_WEEK_CHOICES
-from .models import ChatMessage
+from mainpage.models import Course, DAYS_OF_WEEK_CHOICES, Lesson, CustomUser
 
 
 class WeekdaysField(serializers.Field):
@@ -18,7 +17,7 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id', 'title', 'description', 'short_des', 'difficulty', 'rating', 'price', 'start_date',
-                  'start_time', 'days_of_week', 'technologies', 'lessons_count', 'img', 'tech_img', 'mentor']
+                  'start_time', 'days_of_week', 'technologies', 'lessons_count', 'mentor']
 
     def create(self, validated_data):
         days_of_week = validated_data.get('days_of_week', [])
@@ -33,13 +32,21 @@ class CourseSerializer(serializers.ModelSerializer):
         return instance
 
 
-class ChatMessageSerializer(serializers.ModelSerializer):
-    author = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
+class CustomUserSerializer(serializers.ModelSerializer):
+    courses = CourseSerializer(many=True, read_only=True)
 
     class Meta:
-        model = ChatMessage
-        fields = ['id', 'text', 'author', 'created_at']
-        read_only_fields = ['author']
-        extra_kwargs = {
-            'text': {'required': False}
-        }
+        model = CustomUser
+        fields = ('id', 'username', 'courses')
+
+
+class LessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ('id', 'title', 'start_date', 'start_time')
+
+
+class LessonDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ('id', 'title', 'start_date', 'start_time', 'material')
