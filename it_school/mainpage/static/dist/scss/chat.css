@@ -113,3 +113,9 @@ transition: 0.3s;
 .side-btns:hover {
 background-color: #ffc26b;
 }
+.chocolate{
+background-color: chocolate;
+}
+.chocolate:hover {
+background-color: #ff835d;
+}

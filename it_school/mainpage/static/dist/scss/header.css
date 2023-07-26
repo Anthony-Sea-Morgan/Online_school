@@ -121,6 +121,27 @@ margin: 0;
     display: block;
 }
 
-nav-dropdown:hover .nav-dropdown {
+.nav-dropdown:hover .nav-dropdown {
     background-color: #0b7dda;
+}
+.mentor-panel{
+    height: 20px;
+    width: calc(100vh - 15px);
+    background-color: #ffad5a;
+padding-left: 52%;
+    border-radius: 0 0 10px 10px;
+    position: fixed;
+    top: 45px;
+    z-index: 5;
+    animation: fadeInUp 1s ease-in-out;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px); /* Начальное положение сдвига */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px); /* Конечное положение сдвига */
+  }
 }

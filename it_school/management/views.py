@@ -63,10 +63,11 @@ class LessonListView(View):
     template_name = 'lessons_list.html'
     formset_class = modelformset_factory(Lesson, form=LessonListForm, extra=0)
     queryset = Lesson.objects.all()
-
     def get(self, request, course_id):
         now = date.today()
         course = Course.objects.get(id=course_id)
+        if not request.user == course.mentor:
+            return render(request, 'access_deny.html')
         self.queryset = Lesson.objects.filter(course_owner=course)
         formset = self.formset_class(queryset=self.queryset)
         context = {
@@ -186,7 +187,8 @@ def remove_participant(request, pk):
     if request.method == 'POST':
         participant_email = request.POST.get('participant_email')
         participant = get_object_or_404(CustomUser, email=participant_email)
-        group.users.remove(participant)
+        if not participant.is_staff or not participant.is_superuser:
+            group.users.remove(participant)
         return redirect('chat_room', room_name=pk)
     else:
         raise Http404('Invalid request method.')
@@ -211,9 +213,11 @@ class CourseDeleteView(DeleteView):
     template_name = 'course_confirm_delete.html'
     success_url = reverse_lazy('management:course_list')
 
-
+@check_mentor_permission
 def create_lesson(request, course_id):
     course = get_object_or_404(Course, id=course_id)
+    if not request.user ==  course.mentor:
+        return render(request, 'access_deny.html')
     if request.method == 'POST':
         form = LessonForm(request.POST)
         if form.is_valid():
@@ -231,9 +235,12 @@ def create_lesson(request, course_id):
     }
     return render(request, 'lesson_form.html', context)
 
+@check_mentor_permission
 def update_lesson(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     course_id = lesson.course_owner_id
+    if not request.user == lesson.course_owner.mentor:
+        return render(request, 'access_deny.html')
     if request.method == 'POST':
         form = LessonForm(request.POST, instance=lesson)
         if form.is_valid():

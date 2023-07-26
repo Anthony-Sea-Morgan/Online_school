@@ -42,9 +42,9 @@
 </div>
     <div class="white-space hcd"></div>
 <div class="description-wrapper">
-    <div class="description-content">
-    {{ course.description }}
-    </div></div>
+    <pre class="summernote-content">
+    {{ course.description|safe }}
+    </pre></div>
 
 <div class="white-space hcd"></div>
     <div class="t-list-wrapper">

@@ -19,6 +19,9 @@ def index(request):
     """
     Отображает главную страницу и список курсов.
     """
+    if request.user.is_authenticated:
+        if request.user.is_mentor:
+            return redirect('personal_cabinet')
     course_object = Course.objects.all()
     for i in course_object:
         i.img = str(i.img)[5:]
@@ -86,7 +89,8 @@ def personal_cabinet(request):
 
     return render(request, 'personal_cabinet.html',
                   {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course, 'wallet_form': wallet_form,
-                   'edit_form': edit_form, 'page_label': 'Личный кабинет'})
+                   'edit_form': edit_form, 'page_label': 'Личный кабинет','technology': ['Все технологии'] + TECHNOLOGIES,
+        'difficulty': ['Любая сложность', 'Начинающий', 'Продвинутый'],})
 
 
 def about_us_view(request):

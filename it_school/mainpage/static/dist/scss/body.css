@@ -67,3 +67,7 @@ margin: -20px 0 0 -20px;
 close-btn:hover .close-btn {
     background-color: #0b7dda;
 }
+.summernote-content{
+overflow-wrap: anywhere;
+text-wrap: wrap;
+}

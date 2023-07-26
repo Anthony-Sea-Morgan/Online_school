@@ -14,36 +14,19 @@
 
 
 {% block content %}
-
 <div class="courses-base" style="display:flex;">
     <div class="courses-filter-wrapper">
 
-           <select class="form__input" id="technology-filter">
+<select class="form__input" id="technology-filter">
 
-
-    <option value="Все технологии">Все технологии</option>
-
-    <option value="Python">Python</option>
-
-    <option value="C++">C++</option>
-
-    <option value="Java">Java</option>
-
-    <option value="C#">C#</option>
-
-    <option value="Pascal">Pascal</option>
-
-    <option value="Frontend">Frontend</option>
-
+   {% for tech in technology %}
+    <option value="{{ tech }}">{{ tech }}</option>
+  {% endfor %}
                  </select>
         <select class="form__input" id="difficulty-filter">
-
-    <option value="Любая сложность">Любая сложность</option>
-
-    <option value="Начинающий">Начинающий</option>
-
-    <option value="Продвинутый">Продвинутый</option>
-
+   {% for diffic in difficulty %}
+    <option value="{{ diffic }}">{{ diffic }}</option>
+  {% endfor %}
               </select>
 
     </div>
@@ -51,7 +34,11 @@
         <div style="backdrop-filter: invert(20%); width: 100%; height: 100%;justify-content: center;display: flex;">
         <div class="courses-list-wrapper jc-c">
             <div class="courses-list-align">
+                                {% if request.user.is_mentor%}
+                <h2 style="color: black; text-align: center">Ваши курсы:</h2>
+                {% else %}
                 <h2 style="color: black; text-align: center">Имеющиеся курсы:</h2>
+                {% endif %}
                 {% for course in user.courses.all %}
                 <div class="courses-unit-wrapper ib va" data-technology="{{ course.technologies }}" data-difficulty="{{ course.difficulty }}" style="background: linear-gradient(1deg, #fffcfa7d, #ededed);">
                     <!--background: linear-gradient(1deg, #ffad5a47, #ffad5a);-->
@@ -61,7 +48,7 @@
                         <div class="courses-unit-title"><h2 style="background-color: #ffffff00;"><strong>{{ course.title }}</strong></h2></div>
                         <div class="courses-unit-difficulty">{{ course.difficulty }}</div>
                          <div class="courses-unit-shortdes">{{ course.short_des }}</div>
-                        <div class="courses-unit-a"><button onclick="location.href='{% url 'course_lessons' course.id %}'" class="btn">Перейти к занятиям →</button></div>
+                        <div class="courses-unit-a"><button onclick="location.href='{% if request.user.is_mentor%}{% url 'management:lessons_list' course.id %}{% else %}{% url 'course_lessons' course.id %}{% endif %}'" class="btn">Перейти к занятиям →</button></div>
                     </div>
                 </div>
                 {% empty %}
@@ -80,10 +67,11 @@
         <p>Email: {{ user.email }}</p>
         <p>Номер телефона: {{ user.phone_number }}</p>
         <button id="edit-profile" class="btn">Редактировать профиль</button>
+        {% if not request.user.is_mentor%}
         <h4>Кошелек:</h4>
         <p>Баланс: {{ user.wallet }}</p>
         <button id="edit-wallet" class="btn">Пополнить кошелек</button>
-
+        {% endif %}
 </div>
 </div>
 {% include "edit_profile.html" %}

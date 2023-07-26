@@ -9,7 +9,7 @@
             <input type="submit"  value="Подтвердить оплату" class="btn" style="width: 100%">
         </div>
       <div>
-        <p>{{ error_message }}</p>
+        <p>{{ error_message }}{% if error_message %} Вы можете пополнить свой счет в <strong><a href="{% url 'personal_cabinet' %}"> личном кабинете</a></strong>{% endif %}</p>
       </div>
     </form>
 </div>
