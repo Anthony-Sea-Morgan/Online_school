@@ -3,7 +3,11 @@ from datetime import date
 
 from .models import Course, Lesson, CustomGroup, CustomUser, Attendance, ChatMessage, TECHNOLOGIES
 from .forms import ProfileForm, WalletForm
-
+from django.utils import timezone
+import calendar
+from django.db.models import Q
+from itertools import groupby
+from operator import attrgetter
 from django.views.generic import DetailView
 from django.contrib import messages
 from django.shortcuts import redirect, render, get_object_or_404
@@ -19,9 +23,6 @@ def index(request):
     """
     Отображает главную страницу и список курсов.
     """
-    if request.user.is_authenticated:
-        if request.user.is_mentor:
-            return redirect('personal_cabinet')
     course_object = Course.objects.all()
     for i in course_object:
         i.img = str(i.img)[5:]
@@ -64,15 +65,23 @@ def personal_cabinet(request):
     """
     user = request.user
     courses = user.courses.all().order_by(
-        'start_date')  # Получаем список курсов пользователя, отсортированных по дате начала
-
-    # Создаем пустой словарь для хранения уроков по курсам
+        'start_date')
     lessons_by_course = {}
-
-    # Получаем список уроков для каждого курса
+    all_lessons = Lesson.objects.all()
     for course in courses:
-        lessons = Lesson.objects.filter(course_owner=course)
+        lessons = all_lessons.filter(course_owner=course)
         lessons_by_course[course] = lessons
+
+    now = timezone.now()
+    current_month = now.month
+    current_year = now.year
+    cal = calendar.monthcalendar(current_year, current_month)
+
+    user_courses = user.courses.all()
+    user_lessons = all_lessons.filter(course_owner__in=user_courses)
+    sorted_lessons = sorted(user_lessons.filter(Q(start_date__gte=now.date()) | Q(start_date=now.date(), start_time__gte=now.time())), key=attrgetter('start_date'))
+    grouped_lessons = {date: list(lessons) for date, lessons in groupby(sorted_lessons, key=attrgetter('start_date'))}
+
     wallet_form = WalletForm()
     edit_form = ProfileForm(instance=request.user)
     if request.method == 'POST':
@@ -86,11 +95,23 @@ def personal_cabinet(request):
             return redirect('personal_cabinet')
     else:
         edit_form = ProfileForm(instance=request.user)
+    context = {
+        'month': now.strftime('%B'),
+        'year': current_year,
+        'calendar': cal,
+        'user': user,
+        'courses': courses,
+        'lessons_by_course': lessons_by_course,
+        'wallet_form': wallet_form,
+        'edit_form': edit_form,
+        'page_label': 'Личный кабинет',
+        'technology': ['Все технологии'] + TECHNOLOGIES,
+        'difficulty': ['Любая сложность', 'Начинающий', 'Продвинутый'],
+        'grouped_lessons': grouped_lessons,
+    }
+    return render(request, 'personal_cabinet.html',context)
 
-    return render(request, 'personal_cabinet.html',
-                  {'user': user, 'courses': courses, 'lessons_by_course': lessons_by_course, 'wallet_form': wallet_form,
-                   'edit_form': edit_form, 'page_label': 'Личный кабинет','technology': ['Все технологии'] + TECHNOLOGIES,
-        'difficulty': ['Любая сложность', 'Начинающий', 'Продвинутый'],})
+
 
 
 def about_us_view(request):

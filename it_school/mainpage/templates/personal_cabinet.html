@@ -48,8 +48,10 @@
                         <div class="courses-unit-title"><h2 style="background-color: #ffffff00;"><strong>{{ course.title }}</strong></h2></div>
                         <div class="courses-unit-difficulty">{{ course.difficulty }}</div>
                          <div class="courses-unit-shortdes">{{ course.short_des }}</div>
-                        <div class="courses-unit-a"><button onclick="location.href='{% if request.user.is_mentor%}{% url 'management:lessons_list' course.id %}{% else %}{% url 'course_lessons' course.id %}{% endif %}'" class="btn">Перейти к занятиям →</button></div>
+                        {% if request.user.is_mentor%}<div class="courses-unit-a-management"><button onclick="location.href='{% url 'management:lessons_list' course.id %}'" class="btn" >🛠️</button></div>{% endif %}
+                        <div class="courses-unit-a"><button onclick="location.href='{% url 'course_lessons' course.id %}'" class="btn">Перейти к занятиям →</button></div>
                     </div>
+
                 </div>
                 {% empty %}
                 <p>Нет имеющихся курсов</p>
@@ -61,7 +63,7 @@
 <div class="courses-filter-wrapper">
 
         <h3>Информация о пользователе:</h3>
-        <p>Имя пользователя: {{ user.username }}</p>
+        <p>Идентификатор: {{ user.username }}</p>
         <p>Имя: {{ user.first_name }}</p>
         <p>Фамилия: {{ user.last_name }}</p>
         <p>Email: {{ user.email }}</p>
@@ -74,6 +76,44 @@
         {% endif %}
 </div>
 </div>
+<table>
+        <tr>
+            <th>Пн</th>
+            <th>Вт</th>
+            <th>Ср</th>
+            <th>Чт</th>
+            <th>Пт</th>
+            <th>Сб</th>
+            <th>Вс</th>
+        </tr>
+        {% for week in calendar %}
+        <tr>
+            {% for day in week %}
+            <td>{{ day }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+<div class="courses-base" style="display:flex;">
+    <div class="courses-list-align">
+    <h1>Ближайшие занятия</h1>
+    {% for date, lessons in grouped_lessons.items %}
+    <div class="date-unit-wrapper ib va">
+        <h5> {{ date }}</h5>
+        {% for lesson in lessons %}
+        <div class="date-unit-lesson">
+            <h2>{{ lesson.title }}</h2>
+            <h5>{{ lesson.start_time }}</h5>
+        </div>
+        {% endfor %}
+    </div>
+    {% empty %}
+    <p>занятий нет</p>
+    {% endfor %}
+</div>
+</div>
+
+
 {% include "edit_profile.html" %}
 {% include "wallet_replenishment.html" %}
 {% endblock %}

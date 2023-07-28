@@ -89,11 +89,13 @@ padding: 5px 30px;
 overflow-wrap: anywhere;
 }
 .courses-unit-a{
-margin-bottom: 3px;
-font-size: 15px;
+bottom: -20px;
+width: 100%;
+left: 0;
 position: absolute;
-bottom: 30px;
-left: 116px;
+}
+.courses-unit-a button{
+border-radius: 0 0 20px 20px;
 }
 .courses-unit-a:hover{
 text-decoration: underline;
@@ -111,6 +113,7 @@ text-align: justify;
 margin-left: auto;
 margin-right: auto;
 word-wrap: break-word;
+text-align: center;
 }
 .courses-unit-price{
 bottom: 1.5em;
