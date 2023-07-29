@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     'restapi',
     'rest_framework_simplejwt',
     'chat',
+    'django_celery_beat',
+
+
 ]
 
 CHANNEL_LAYERS = {
@@ -231,6 +234,25 @@ LOGGING = {
     'root': {
         'handlers': ['console'],
         'level': 'INFO',
-    }
+    },
+    'loggers': {
+        'it_school.tasks': {  # Указываем модуль для логирования
+            'handlers': ['console'],
+            'level': 'INFO',  # Уровень логирования для этого модуля
+            'propagate': False,
+        },
+    },
 }
 LOGIN_REDIRECT_URL = 'index'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+CELERY_BEAT_SCHEDULE = {
+    'send_reminder_email_task': {
+        'task': 'it_school.tasks.send_reminder_email_task',
+        'schedule': timedelta(minutes=1),  # Укажите периодичность, например, каждый час
+        # 'schedule': crontab(minute=0, hour='*/1'),  # Пример с использованием crontab для каждого часа
+    },
+}

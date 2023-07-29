@@ -33,6 +33,7 @@ logger = getLogger(__name__)
 def image_folder_Course(instance, filename):
     return 'Models/Course/CourseIcons/{}.webp'.format(uuid4().hex)
 
+
 class Course(models.Model):
     title = models.CharField(max_length=50)  # Тема курса
     description = models.TextField('Полное описание', blank=True)  # Описание
@@ -156,6 +157,14 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'Занятие'
         verbose_name_plural = 'Занятия'
+
+
+class LessonRegistration(models.Model):
+    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ['student', 'lesson']
 
 
 class CustomGroup(Group):

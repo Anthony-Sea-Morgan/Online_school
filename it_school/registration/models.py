@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
 
 
+
 class CustomUser(AbstractUser):
     wallet = models.DecimalField(max_digits=6, decimal_places=2, default=0)  # кошелёк
     is_student = models.BooleanField(default=True)  # чекбокс является ли студентом
@@ -25,3 +26,7 @@ class CustomUser(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+
+
+
