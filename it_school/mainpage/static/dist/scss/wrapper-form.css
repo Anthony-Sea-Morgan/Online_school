@@ -190,7 +190,6 @@ position: absolute;
 }
 .courses-unit-a-management button{
     background-color: #ff8c0000;
-    border: 1px solid #bdbdbd;
 }
 .edit-profile-button {
 display: inline-block;
@@ -245,4 +244,56 @@ color: #747474;
 font-size: 15px;
 margin: 10px;
 color: black;
+}
+.personal-calendar-align{
+ backdrop-filter: invert(70%);
+ display: flex;
+ position: relative;
+ left: 0;
+ width: calc(100% - 580px);
+ height: max-content;
+ justify-content: center;
+}
+.personal-calendar{
+    width: 500px;
+    margin: 30px;
+    padding: 20px;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    color: white;
+}
+.personal-calendar tr{
+}
+.personal-calendar td{
+    border: none;
+}
+.personal-calendar th{
+    background-color: #ffffff00;
+    border: none;
+}
+#calendar2 {
+  width: 100%;
+  font: monospace;
+  line-height: 1.2em;
+  font-size: 15px;
+  text-align: center;
+}
+#calendar thead tr:last-child {
+  font-size: small;
+  color: #b9b9b9;
+}
+#calendar thead tr:nth-child(1) td:nth-child(2) {
+  color: #ffb100;
+}
+#calendar thead tr:nth-child(1) td:nth-child(1):hover, #calendar thead tr:nth-child(1) td:nth-child(3):hover {
+  cursor: pointer;
+}
+#calendar tbody td {
+  color: #dddddd;
+}
+#calendar tbody td:nth-child(n+6), #calendar .holiday {
+  color: #8b8b8b;
+}
+#calendar tbody td.today {
+  color: #ffb100;
 }

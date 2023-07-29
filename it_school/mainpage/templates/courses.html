@@ -1,18 +1,4 @@
-<div class="courses-base" style="display:flex;">
-    <div class="courses-filter-wrapper">
-           <select class="form__input" id="technology-filter">
-
-   {% for tech in technology %}
-    <option value="{{ tech }}">{{ tech }}</option>
-  {% endfor %}
-                 </select>
-        <select class="form__input" id="difficulty-filter">
-   {% for diffic in difficulty %}
-    <option value="{{ diffic }}">{{ diffic }}</option>
-  {% endfor %}
-              </select>
-
-    </div>
+<div class="courses-base" style="width: calc(100% - 290px);left: 290px;display:flex;background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');">
     <div class="courses-list-wrapper jc-c">
     <div class="courses-list-align">
         {% for x in courses %}
@@ -35,3 +21,17 @@
         </div>
     </div>
 </div>
+<div class="courses-filter-wrapper" style="left:0;">
+           <select class="form__input" id="technology-filter">
+
+   {% for tech in technology %}
+    <option value="{{ tech }}">{{ tech }}</option>
+  {% endfor %}
+                 </select>
+        <select class="form__input" id="difficulty-filter">
+   {% for diffic in difficulty %}
+    <option value="{{ diffic }}">{{ diffic }}</option>
+  {% endfor %}
+              </select>
+
+    </div>

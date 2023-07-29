@@ -6,7 +6,7 @@ from .forms import ProfileForm, WalletForm
 from django.utils import timezone
 import calendar
 from django.db.models import Q
-from itertools import groupby
+from itertools import groupby, islice
 from operator import attrgetter
 from django.views.generic import DetailView
 from django.contrib import messages
@@ -73,14 +73,10 @@ def personal_cabinet(request):
         lessons_by_course[course] = lessons
 
     now = timezone.now()
-    current_month = now.month
-    current_year = now.year
-    cal = calendar.monthcalendar(current_year, current_month)
-
     user_courses = user.courses.all()
     user_lessons = all_lessons.filter(course_owner__in=user_courses)
     sorted_lessons = sorted(user_lessons.filter(Q(start_date__gte=now.date()) | Q(start_date=now.date(), start_time__gte=now.time())), key=attrgetter('start_date'))
-    grouped_lessons = {date: list(lessons) for date, lessons in groupby(sorted_lessons, key=attrgetter('start_date'))}
+    grouped_lessons = {date: list(lessons) for date, lessons in islice(groupby(sorted_lessons, key=attrgetter('start_date')), 4)}
 
     wallet_form = WalletForm()
     edit_form = ProfileForm(instance=request.user)
@@ -96,9 +92,6 @@ def personal_cabinet(request):
     else:
         edit_form = ProfileForm(instance=request.user)
     context = {
-        'month': now.strftime('%B'),
-        'year': current_year,
-        'calendar': cal,
         'user': user,
         'courses': courses,
         'lessons_by_course': lessons_by_course,

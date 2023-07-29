@@ -20,6 +20,7 @@ body {
   overflow-x: hidden;
   background: linear-gradient(to top, #F4ECE1, #F4ECE1);/*#2c2c2c#1e5058#2c2823);*/
   background-size: cover;
+  /*background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');*/
 }
 .ib{display: inline-block;}
 .db{display: block;}
