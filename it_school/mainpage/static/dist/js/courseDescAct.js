@@ -7,7 +7,6 @@ function createDetailPiece() {
 const detailContainer = document.getElementById('puzzleContainer');
 const containerWidth = detailContainer.offsetWidth;
 const containerHeight = detailContainer.offsetHeight;
-console.log(containerWidth, containerHeight);
 for (let i = 0; i < 30; i++) {
   const piece = createDetailPiece();
   detailContainer.appendChild(piece);

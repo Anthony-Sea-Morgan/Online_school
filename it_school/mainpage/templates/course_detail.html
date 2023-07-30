@@ -129,7 +129,9 @@
     </div>
 
     </div>
+        {% if user.is_authenticated %}
 {% include "confirm_payment.html" %}
+{% endif %}
 {% endblock %}
 {% block script %}
 <script src="/static/dist/js/courseDescAct.js"></script>

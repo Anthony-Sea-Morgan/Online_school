@@ -15,7 +15,7 @@
   <div class="wrapper-blank" style="max-width: 800px;width: 720px;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
     <div class="close-btn" id="wrapper-blank-close-btn" onclick="window.location.href = '{% url 'management:course_list'%}'">⨯</div>
 
-    <h1>Редактировать курс</h1>
+    <h1>{{ form_status }}</h1>
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
 
