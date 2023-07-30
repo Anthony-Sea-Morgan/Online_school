@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from mainpage.views import check_mentor_permission
 from .serializers import UserSerializer, LoginSerializer
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -19,6 +18,10 @@ from urllib.parse import urlencode
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.core.mail import send_mail
+
+from django.shortcuts import render
+from django.utils import timezone
 
 
 @csrf_protect
@@ -72,7 +75,6 @@ def logout_view(request):
     logout(request)
     redirect_url = 'index'  # request.GET.get('next', 'index') - возврат на страницу, с которой был выполнен логаут
     return redirect(redirect_url)
-
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
