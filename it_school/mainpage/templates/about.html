@@ -9,71 +9,64 @@
 {% endblock %}
 
 {% block content %}
+
 <style>
-    body {
-        background-color: #ddddd7;
+    html, body {
+        background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');
+        background-repeat: repeat;
+        background-size: cover;
         color: black;
+        min-height: 100vh;
+        font-size: 18px;
     }
 
-    .container {
-        padding: 20px;
+    .courses-base {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .courses-content {
+        width: 800px;
+        padding: 40px;
         text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     }
 
     h1 {
         font-size: 32px;
         font-weight: bold;
         margin-bottom: 20px;
+        color: black;
     }
 
     p {
         font-size: 18px;
         line-height: 1.5;
         margin-bottom: 10px;
+        color: black;
     }
 
-    .t-list-wrapper {
-        padding: 40px 0;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 20px;
-        justify-items: center;
+    .section {
+        margin-bottom: 40px;
     }
 
-    .t-list-skills {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .t-list-skills-label {
-        padding: 20px;
-        text-align: center;
-    }
-
-    .t-list-skills-label h2 {
+    .section-heading {
         font-size: 24px;
         font-weight: bold;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
+        color: black;
     }
 
-    .t-list-skills-label p {
-        font-size: 18px;
-        line-height: 1.5;
-        margin-bottom: 0;
-    }
-
-    .t-list-skills-img {
-        width: 120px;
-        height: 120px;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
+    .section-content {
+        text-align: left;
+        color: black;
     }
 
     .contact-section {
-        background-color: white;
-        padding: 40px 0;
+        margin-top: 40px;
     }
 
     .contact-section ul {
@@ -87,65 +80,112 @@
         font-size: 18px;
         line-height: 1.5;
         margin-bottom: 10px;
+        font-weight: bold;
+        color: black;
+    }
+
+    .graduate-list li {
+        margin-bottom: 20px;
+        color: black;
+    }
+
+    .graduate {
+        display: flex;
+        align-items: center;
+        color: black;
+    }
+
+    .graduate-avatar img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .graduate-details h3 {
+        font-size: 18px;
+        margin-bottom: 5px;
+        color: black;
+    }
+
+    .graduate-details p {
+        font-size: 16px;
+        color: black;
     }
 </style>
-
-<div>
-    <div class="container">
-        <h1>О нас</h1>
+<div class="courses-base">
+    <div class="courses-content">
+        <h1>Добро пожаловать в Online School</h1>
         <p>Мы являемся ведущей IT-школой, специализирующейся на предоставлении качественного образования и профессиональных навыков в сфере информационных технологий.</p>
         <p>Наша миссия - помочь студентам достичь успеха в сфере IT, предоставляя высококлассные образовательные программы, опытных преподавателей и современные технологии.</p>
-        <p>Мы предлагаем широкий выбор курсов, включая программирование, веб-разработку, базы данных, искусственный интеллект и многое другое.</p>
-        <p>Присоединяйтесь к нам и начните свой путь к успешной карьере в IT!</p>
-    </div>
-
-    <div class="white-space hcd"></div>
-
-    <div class="t-list-wrapper">
-        <div class="t-list-skills transparent-box">
-            <div class="t-list-skills-label ib va">
-                <h2>Идеальное резюме</h2>
-                <p>Мы подскажем, как создать конкурентоспособное резюме и релевантное сопроводительное письмо, чтобы выделиться среди других кандидатов</p>
+        <div class="section">
+            <h2 class="section-heading">Бывшие студенты</h2>
+            <div class="section-content">
+                <p>Мы гордимся нашими бывшими студентами, которые достигли успеха в IT-индустрии. Они трудятся в ведущих международных компаниях и продолжают развиваться в своей карьере.</p>
+                <p>Примеры наших выпускников:</p>
+                <ul class="graduate-list">
+                    <li>
+                        <div class="graduate">
+                            <div class="graduate-avatar">
+                                <img src="/static/dist/img/PNG/student1.jpg" alt="Иван Смирнов">
+                            </div>
+                            <div class="graduate-details">
+                                <h3>Иван Смирнов</h3>
+                                <p>Разработчик Python в Google</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="graduate">
+                            <div class="graduate-avatar">
+                                <img src="/static/dist/img/PNG/student2.jpg" alt="Анна Иванова">
+                            </div>
+                            <div class="graduate-details">
+                                <h3>Анна Иванова</h3>
+                                <p>Веб-разработчик в Amazon</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="graduate">
+                            <div class="graduate-avatar">
+                                <img src="/static/dist/img/PNG/student3.jpg" alt="Максим Петров">
+                            </div>
+                            <div class="graduate-details">
+                                <h3>Максим Петров</h3>
+                                <p>Программист C++ в Microsoft</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/photo.svg');"></div>
         </div>
-        <div class="t-list-skills transparent-box">
-            <div class="t-list-skills-label ib va">
-                <h2>Профиль в LinkedIn</h2>
-                <p>Расскажем, как заполнить профессиональный профиль в LinkedIn, чтобы его начали замечать рекрутеры</p>
-            </div>
-            <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/LinkedIn.svg');"></div>
-        </div>
-        <div class="t-list-skills transparent-box">
-            <div class="t-list-skills-label ib va">
-                <h2>Подготовка к собеседованию</h2>
-                <p>Расскажем, из каких этапов состоит собеседование, а также научим презентовать себя и свои сильные стороны для его успешного прохождения</p>
-            </div>
-            <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/SoftSkills.svg');"></div>
-        </div>
-        <div class="t-list-skills transparent-box">
-            <div class="t-list-skills-label ib va">
-                <h2>Твоя работа в IT</h2>
-                <p>Отправим подготовленное резюме нашим партнёрам международным IT-компаниям и дождемся вместе с тобой твой первый оффер на работу мечты</p>
-            </div>
-            <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/__IT.svg');"></div>
-        </div>
-    </div>
-
-    <div class="white-space hcd"></div>
-
-    <div class="contact-section">
-        <div class="container">
-            <h2>Контакты</h2>
-            <p>Если у вас есть вопросы или вы хотите узнать больше о наших курсах, свяжитесь с нами:</p>
+            <div class="section">
+        <h2 class="section-heading">Достижения</h2>
+        <div class="section-content">
+            <p>Мы гордимся своими достижениями и признанием в IT-сообществе. Некоторые из наших достижений:</p>
             <ul>
-                <li>Телефон: +375 (44) 741-56-89</li>
-                <li>Email: info@example.com</li>
-                <li>Адрес: г. Минск, ул. Примерная, д. 123</li>
+                <li>Награда "Лучшая IT-школа года" от журнала "IT Excellence"</li>
+                <li>Более 1000 выпускников, успешно трудящихся в крупных IT-компаниях</li>
+                <li>Партнерство с ведущими технологическими компаниями, такими как Google, Microsoft, Amazon</li>
+                <li>Публикация научных статей и исследований в известных журналах и конференциях</li>
             </ul>
         </div>
     </div>
+
+    <div class="contact-section">
+        <h2>Если у вас есть вопросы или вы хотите узнать больше о нас, свяжитесь с нами:</h2>
+        <ul>
+            <li>Телефон: +375 (44) 741-56-89</li>
+            <li>Email: norepy.onlinecourses@gmail.com</li>
+            <li>Адрес: г. Минск, ул. Примерная, д. 123</li>
+        </ul>
+    </div>
+</div>
 </div>
 {% endblock %}
+
+
+
 
 
