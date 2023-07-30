@@ -55,7 +55,32 @@ class Course(models.Model):
         verbose_name=('Изображение курса'),
         upload_to=image_folder_Course,
         default='media/Models/no_image_big.png',
+        blank=True,
+        null=True
     )
+
+    def get_lesson_dates(self):
+        """
+        Метод для вычисления дат занятий на основе параметров курса.
+        Возвращает словарь, где ключами являются идентификаторы занятий,
+        а значениями - соответствующие даты.
+        """
+        lesson_dates = {}
+        next_date = self.start_date
+
+        for i in range(self.lessons_count):
+            count = len(self.days_of_week)
+            day = i % count
+
+            if isinstance(self.days_of_week, set):
+                self.days_of_week = list(self.days_of_week)
+
+            while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
+                next_date += timedelta(days=1)
+
+            lesson_dates[i + 1] = next_date.isoformat()
+
+        return lesson_dates
 
     def save(self, *args, **kwargs):
         """Функция срабатывает при сохранении курса
@@ -86,7 +111,7 @@ class Course(models.Model):
 
                 while next_date.weekday() != self.get_weekday_index(self.days_of_week[day]):
                     next_date += timedelta(days=1)
-
+                print(f'Создано {self.title}. Занятие {i + 1} с датой {next_date.isoformat()}')
                 Lesson.objects.create(course_owner=self, mentor_owner=self.mentor,
                                       title=f'{self.title}. {self.difficulty}. Занятие {i + 1}',
                                       day_of_week=self.days_of_week[day], start_date=next_date.isoformat(),
