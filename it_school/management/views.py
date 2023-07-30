@@ -66,7 +66,8 @@ class LessonListView(View):
     def get(self, request, course_id):
         now = date.today()
         course = Course.objects.get(id=course_id)
-        if not request.user == course.mentor:
+        user = request.user
+        if not user == course.mentor and not user.is_staff and not user.is_superuser:
             return render(request, 'access_deny.html')
         self.queryset = Lesson.objects.filter(course_owner=course)
         formset = self.formset_class(queryset=self.queryset)
@@ -189,7 +190,7 @@ def remove_participant(request, pk):
         participant = get_object_or_404(CustomUser, email=participant_email)
         if not participant.is_staff or not participant.is_superuser:
             group.users.remove(participant)
-        return redirect('chat_room', room_name=pk)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         raise Http404('Invalid request method.')
 
@@ -200,7 +201,7 @@ def add_participant(request, pk):
         participant_email = request.POST.get('participant_email')
         participant = get_object_or_404(CustomUser, email=participant_email)
         group.users.add(participant)
-        return redirect('chat_room', room_name=pk)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         raise Http404('Invalid request method.')
 
@@ -216,7 +217,8 @@ class CourseDeleteView(DeleteView):
 @check_mentor_permission
 def create_lesson(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-    if not request.user ==  course.mentor:
+    user = request.user
+    if not user == course.mentor and not user.is_staff and not user.is_superuser:
         return render(request, 'access_deny.html')
     if request.method == 'POST':
         form = LessonForm(request.POST)
@@ -239,7 +241,8 @@ def create_lesson(request, course_id):
 def update_lesson(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     course_id = lesson.course_owner_id
-    if not request.user == lesson.course_owner.mentor:
+    user = request.user
+    if not user == lesson.course_owner.mentor and not user.is_staff and not user.is_superuser:
         return render(request, 'access_deny.html')
     if request.method == 'POST':
         form = LessonForm(request.POST, instance=lesson)

@@ -18,6 +18,7 @@
 
     {% if lesson %}
 <div class="wrapper-blank info" style="min-height: 700px;max-width: 1080px;width: 1080px;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
+    <div class="close-btn" id="wrapper-blank-close-btn" onclick="window.location.href = '{% url 'personal_cabinet'%}'">⨯</div>
     <h1>{{ lesson.title }}</h1>
     {{ lesson.course_owner.title }}<br>
     {{ lesson.start_date }}<br>
@@ -31,14 +32,20 @@
 
 <div class="chat" id="lobby-chat" style="display:none;">
     <div class="close-btn" id="chat-close-btn">⨯</div>
+    {% if is_group_member or user.is_mentor or user.is_staff or user.is_superuser %}
         <h2 class="chat-header">Комната сообщений</h2>
         <div id="chat-log"></div>
         <div id="chat-input-container">
             <textarea id="chat-input" rows="3"></textarea>
             <button id="chat-message-submit" class="chat-message-submit"></button>
+        {% else %}
+            <h2 class="chat-header">Нет доступа к чату группы</h2>
+            <p>Обратитесь к ментору курса, или руководству</p>
+        {% endif %}
         </div>
     </div>
-{% if request.user.is_mentor %}
+
+{% if user.is_mentor or user.is_staff or user.is_superuser %}
 <div class="chat" id="lobby-participants" style="display:none;">
 <div class="close-btn" id="participants-close-btn">⨯</div>
         <h3 class="chat-header">Участники занятия:</h3>
@@ -84,7 +91,7 @@
 </div>
 {% endif %}
 <button id="show-chat" class="side-btns">💬</button>
-{% if request.user.is_mentor %}
+{% if user.is_mentor or user.is_staff or user.is_superuser %}
 <button id="show-participants" class="side-btns chocolate" style="bottom: 40px;">🛇</button>
 {% endif %}
 
@@ -94,7 +101,7 @@
 <script type="text/javascript">
     const roomName = '{{ room_name }}';
     const user = '{{ user }}';
-
+    {% if is_group_member or user.is_mentor or user.is_staff or user.is_superuser %}
     // Функция для генерации случайного тёмного цвета
     function getRandomDarkColor() {
         const letters = '0123456789ABCDEF';
@@ -158,6 +165,7 @@
         }));
         messageInputDom.value = '';
     });
+    {% endif %}
 makeLayer('lobby-chat','block', 'show-chat', 'chat-close-btn')
 makeLayer('lobby-participants','block', 'show-participants', 'participants-close-btn')
 </script>

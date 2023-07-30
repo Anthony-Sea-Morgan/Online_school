@@ -29,7 +29,7 @@
         {% if user.is_staff %}
         <div onclick="location.href='{% url 'management:user_list' %}'"><p>Пользователи</p></div>
         {% endif %}
-        <div><p>Справка</p></div>
+        <div onclick="location.href='{% url 'courses_list' %}'"><p>Курсы</p></div>
         <div onclick="location.href='{% url 'about_us' %}'"><p>О нас</p></div>
         <div data-action="logout" onclick="location.href='{% url 'logout_view' %}?next={{ request.path }}';"><p>Выйти из аккаунта</p></div>
         {% else %}

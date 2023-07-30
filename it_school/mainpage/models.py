@@ -1,7 +1,7 @@
 from uuid import uuid4
 from logging import getLogger
 from datetime import datetime, time, timedelta
-
+from django.db.models import Avg, Count
 from django.contrib.auth.models import Group
 from multiselectfield import MultiSelectField
 from django.core.validators import MaxValueValidator
@@ -10,6 +10,8 @@ from django.contrib import admin
 from registration.models import CustomUser
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 DAYS_OF_WEEK_CHOICES = [
     ('monday', 'понедельник'),
@@ -38,7 +40,7 @@ class Course(models.Model):
     description = models.TextField('Полное описание', blank=True)  # Описание
     short_des = models.TextField('Краткое описание', default='', max_length=100)
     difficulty = models.CharField('Сложность курса', max_length=15, choices=DIFFICULTY_CHOICES)  # Сложность
-    rating = models.DecimalField('Рейтинг курса', max_digits=3, decimal_places=1)  # Рейтинг(оценка) курса
+    rating = models.IntegerField('Оценка', validators=[MinValueValidator(0), MaxValueValidator(10)], default=8) # Рейтинг
     price = models.DecimalField('Стоимость курса', max_digits=6, decimal_places=2)  # Стоимость курса
     mentor = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     start_date = models.DateField('Дата начала курса', default=timezone.now)  # Поле даты начала курса
@@ -190,16 +192,28 @@ class CustomGroupAdmin(admin.ModelAdmin):
 
 
 class Review(models.Model):
-    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reviews', null=False)
-    title = models.CharField(max_length=1000, blank=False)
-    objective = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='objective', null=False)
-
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reviews', null=False)
+    text = models.TextField('Текст отзыва',null=True)
+    rating = models.IntegerField('Оценка', validators=[MinValueValidator(0), MaxValueValidator(10)], default=8)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='objective', null=False)
+    def update_course_rating(self):
+        all_reviews = Review.objects.filter(course=self.course)
+        average_rating = all_reviews.aggregate(Avg('rating'))['rating__avg']
+        self.course.rating = average_rating
+        self.course.save()
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.update_course_rating()
+
+    def __str__(self):
+        return str(f'Отзыв на курс {self.course} от {self.user}')
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
+
 
 
 class Attendance(models.Model):

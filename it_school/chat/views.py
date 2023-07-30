@@ -12,8 +12,9 @@ def chat_room(request, room_name):
     user = request.user
     lesson = Lesson.objects.filter(pk=room_name).first()
     course_id = lesson.course_owner_id
+    is_course_added = user.courses.filter(id=course_id).exists()
     is_group_member = lesson.course_owner.group_course.filter(users=user).exists()
-    if not (lesson or is_group_member):
+    if not (is_course_added or user.is_staff or user.is_superuser):
         # Если пользователь не является владельцем курса и не является членом группы-владельца,
         # то перенаправляем его на другую страницу или показываем сообщение об ошибке.
         return render(request, 'access_deny.html')
@@ -33,4 +34,5 @@ def chat_room(request, room_name):
         'lesson': lesson,
         'user': user,
         'group': group,
+        'is_group_member': is_group_member,
     })

@@ -217,6 +217,9 @@ box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;
 margin: 30px 20px 0px 20px;
 width: 260px;
 }
+.date-unit-wrapper a:hover {
+    text-decoration: underline;
+    }
 .date-unit-wrapper{
 font-size: 20px;
 background-color: white;
@@ -250,7 +253,7 @@ color: black;
  display: flex;
  position: relative;
  left: 0;
- width: calc(100% - 580px);
+ width: calc(100% - 480px);
  height: max-content;
  justify-content: center;
 }
@@ -258,14 +261,15 @@ color: black;
     width: 500px;
     margin: 30px;
     padding: 20px;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
     color: white;
+    background: #00000066;
+    border-radius: 20px;
 }
 .personal-calendar tr{
 }
 .personal-calendar td{
     border: none;
+    border-radius: 20px;
 }
 .personal-calendar th{
     background-color: #ffffff00;
@@ -292,7 +296,7 @@ color: black;
   color: #dddddd;
 }
 #calendar tbody td:nth-child(n+6), #calendar .holiday {
-  color: #8b8b8b;
+  color: #dddddd;
 }
 #calendar tbody td.today {
   color: #ffb100;
