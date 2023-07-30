@@ -28,13 +28,14 @@ SECRET_KEY = 'django-insecure-acra!z23zgg$rqg5&80xby40lsf8wqxue8rgmm_xhvq^zwr4go
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['*']
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Application definition
-
 INSTALLED_APPS = [
     'channels',
     'django.contrib.admin',
@@ -49,11 +50,18 @@ INSTALLED_APPS = [
     'management',
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_yasg',
     'registration',
     'restapi',
     'rest_framework_simplejwt',
     'chat',
 ]
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_AUTO_SCHEMA_CLASS': 'drf_yasg.inspectors.SwaggerAutoSchema',
+
+}
+
 
 CHANNEL_LAYERS = {
     'default': {
