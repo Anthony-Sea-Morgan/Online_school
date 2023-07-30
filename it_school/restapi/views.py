@@ -18,7 +18,25 @@ class CourseListViewAPI(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
 
     def perform_create(self, serializer):
-        serializer.save()
+        instance = serializer.save()
+
+        # Получаем даты занятий с помощью метода get_lesson_dates()
+        lesson_dates = instance.get_lesson_dates()
+
+        # Создаем занятия и устанавливаем соответствующие даты перед сохранением
+        for i in range(instance.lessons_count):
+            Lesson.objects.create(
+                course_owner=instance,
+                mentor_owner=instance.mentor,
+                title=f'{instance.title}. {instance.difficulty}. Занятие {i + 1}',
+                day_of_week=instance.days_of_week[i % len(instance.days_of_week)],
+                start_date=lesson_dates[i + 1],
+                start_time=instance.start_time
+            )
+
+        # Возвращаем созданный курс вместе с датами занятий в ответе
+        data = self.get_serializer(instance).data
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
 class CourseDetailViewAPI(generics.RetrieveAPIView):
