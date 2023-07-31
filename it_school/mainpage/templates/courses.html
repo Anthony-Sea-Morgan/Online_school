@@ -1,5 +1,27 @@
-<div class="courses-base" style="display:flex;">
-    <div class="courses-filter-wrapper">
+<div class="courses-base" style="width: calc(100% - 240px);left: 240px;display:flex;background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');">
+    <div class="courses-list-wrapper jc-c">
+    <div class="courses-list-align">
+        {% for x in courses %}
+            {% if x not in request.user.courses.all or not request.user.is_authenticated %}
+    <div class="courses-unit-wrapper ib va" data-technology="{{ x.technologies }}" data-difficulty="{{ x.difficulty }}">
+        <div class="courses-unit-texture" style="background-image: url('media/{{ x.img }}');"></div>
+        <div class="courses-unit-rating ws-nw va">{{ x.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="/static/dist/img/PNG/icon/rating.png" class="icn"></div>
+            <div class="courses-unit-title"><h2><strong>{{ x.title }}</strong></h2></div>
+        <div class="courses-unit-a" style="position: initial;"><strong><a href="{% url 'course_detail' x.id %}">Подробнее→ </a></strong></div>
+        <div class="courses-unit-difficulty">{{ x.difficulty }}</div>
+        <div class="courses-unit-shortdes">{{ x.short_des }}</div>
+        <div class="courses-unit-price">{{ x.price }}$</div>
+        <div class="courses-unit-dos">Старт занятий с:<br> {{ x.start_date }}</div>
+
+    </div>
+        {% endif %}
+        {% empty %}
+                <p>Нет доступных курсов</p>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="courses-filter-wrapper" style="left:0;">
            <select class="form__input" id="technology-filter">
 
    {% for tech in technology %}
@@ -13,25 +35,3 @@
               </select>
 
     </div>
-    <div class="courses-list-wrapper jc-c">
-    <div class="courses-list-align">
-        {% for x in courses %}
-            {% if x not in request.user.courses.all or not request.user.is_authenticated %}
-    <div class="courses-unit-wrapper ib va" data-technology="{{ x.technologies }}" data-difficulty="{{ x.difficulty }}">
-        <div class="courses-unit-texture">
-        <div class="courses-unit-rating ws-nw va">{{ x.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="/static/dist/img/PNG/icon/rating.png" class="icn"></div>
-            <div class="courses-unit-title"><h2><strong>{{ x.title }}</strong></h2></div>
-        <div class="courses-unit-a" style="position: initial;"><strong></ыекщ><a href="{% url 'course_detail' x.id %}">Подробнее→ </a></strong></div>
-        <div class="courses-unit-difficulty">{{ x.difficulty }}</div>
-        <div class="courses-unit-shortdes">{{ x.short_des }}</div>
-        <div class="courses-unit-price">{{ x.price }}$</div>
-        <div class="courses-unit-dos">Старт занятий с:<br> {{ x.start_date }}</div>
-            </div>
-    </div>
-        {% endif %}
-        {% empty %}
-                <p>Нет доступных курсов</p>
-        {% endfor %}
-        </div>
-    </div>
-</div>

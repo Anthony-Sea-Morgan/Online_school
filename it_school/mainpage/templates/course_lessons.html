@@ -13,9 +13,25 @@
 {% endblock %}
 
 {% block content %}
-<div class="blank-global-container" style="position: inherit;background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');">
+<div class="block-base db" style="display: block;">
+    <div class="course-detail-wrapper">
+    <div class="course-detail-texture-container" id="puzzleContainer"></div>
+        <div class="course-detail-content">
+    <div class="white-space hcd"></div>
+        <div class="course-detail-rating ws-nw va ib">{{ course.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="" style="width:20px;height:15px;"></div>
+        <div class="course-detail-title ib va"><h2>{{ course.title }}</h2></div>
+        <div class="course-detail-difficulty">{{ course.difficulty }}</div>
+        <div class="course-detail-technologies">{{ course.technologies }}</div>
+        <div class="course-detail-shortdes">{{ course.short_des }}</div>
+        <div class="course-detail-mentor">ментор курса: {{ course.mentor }}</div>
+        <div class="course-detail-dos">Старт занятий с: {{ course.start_date }}</div>
+            <div></div>
+        </div>
+        <div class="course-detail-folder-img">
+        <div class="folder-transparent" style="background-image: url(/media/{{ course.img }})"></div>
+        </div>
+</div>
   <div class="wrapper-blank" style="max-width: 800px;width: 720px;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
-
         <h2>Уроки по курсу {{ course.title }}</h2>
         <table>
             <tr>
@@ -42,8 +58,28 @@
             </tr>
             {% endfor %}
         </table>
-
     </div>
-
+    <div>
+          <div class="wrapper-blank" style="max-width: 800px;width: 720px;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
+              <div class="course-detail-title ib va"><h2>Отзывы курса</h2></div>
+                  <div class="review">
+                  <form method="post">
+                    {% csrf_token %}
+                <div class="reviews-user"><h3>{{ user }}:  {{ form.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="" style="width:20px;height:15px;"></h3></div>
+                <div class="reviews-text">{{ form.text }}<button type="submit" class="btn">{{ form_save_btn }}</button></div>
+                  </form>
+              </div>
+          {% for review in reviews %}
+              {% if not review.user == user %}
+    <div class="review">
+        <div class="reviews-user"><h3>{{ review.user }}:  {{ review.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="" style="width:20px;height:15px;"></h3></div>
+        <div class="reviews-text">{{ review.text }}</div>
+    </div>
+              {% endif %}
+          {% endfor %}
+    </div>
 </div>
+{% endblock %}
+{% block script %}
+<script src="/static/dist/js/courseDescAct.js"></script>
 {% endblock %}

@@ -17,6 +17,9 @@
     {% endif %}
     <div class="m-a">☰</div>
     <div class="nav-dropdown-content" id="NAV">
+        {% if request.user.is_superuser%}
+        <div onclick="location.href='{% url 'index' %}sDgT6wR7AaZbF4xU9gBcX0hJkL3qPmV6aWnD8eR9dYfU3kK1rN3sP0mCpJ5dG6h/'"><p>Админ панель</p></div>
+        {% endif %}
         <div onclick="location.href='{% url 'index' %}'"><p>Главная страница</p></div>
         {% if user.is_authenticated %}
         <div onclick="location.href='{% url 'personal_cabinet' %}'"><p>Личный кабинет</p></div>
@@ -26,7 +29,7 @@
         {% if user.is_staff %}
         <div onclick="location.href='{% url 'management:user_list' %}'"><p>Пользователи</p></div>
         {% endif %}
-        <div><p>Справка</p></div>
+        <div onclick="location.href='{% url 'courses_list' %}'"><p>Курсы</p></div>
         <div onclick="location.href='{% url 'about_us' %}'"><p>О нас</p></div>
         <div data-action="logout" onclick="location.href='{% url 'logout_view' %}?next={{ request.path }}';"><p>Выйти из аккаунта</p></div>
         {% else %}

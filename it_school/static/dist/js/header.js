@@ -1,1 +1,1 @@
-makeLayer('reg-blank-login', 'LOGIN', 'wrapper-blank-close-btn')
+makeLayer('reg-blank-login', 'flex', 'LOGIN', 'wrapper-blank-close-btn')

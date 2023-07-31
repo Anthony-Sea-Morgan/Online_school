@@ -13,9 +13,44 @@
 {% endblock %}
 
 {% block content %}
-{% include "courses.html" %}
+<div class="block-base db" style="display: block;">
+<div class="course-detail-wrapper" style="backdrop-filter: blur(3px) invert(0%); background-color: #ffffff61;overflow: hidden;">
+    <div class="course-detail-texture-container" id="puzzleContainer"></div>
+        <div class="course-detail-content">
+    <div class="white-space hcd"></div>
+        <div class="course-detail-title ib va"><h2>Научим программировать и поможем стать ITшником</h2></div>
+        <div class="course-detail-shortdes" style="color:black; font-size: 25px;font-family: 'Jost-Medium';max-width:1000px;">TeachMeSkills - это школа программирования, где мы научим тебя востребованным сегодня знаниям. Все наши программы составлены Senior и Lead разработчиками ведущих IT компаний специально для новичков в IT.</div>
+        <div></div>
+        </div>
+        <div class="mainpage-detail-img">
+        </div>
+</div>
+<div class="white-space hcd"></div>
+            <h2 style="text-align: center; font-size: 50px;">Ближайшие курсы</h2>
+    <div class="courses-base" style=" min-height: max-content; height: max-content;width: 100%;display:flex;">
+
+    <div class="courses-list-wrapper jc-c" style="height: 400px;width: max-content; overflow-x: scroll;overflow-y: hidden; display: inline-block;white-space: nowrap; background-color: #ffffff61;">
+        {% for x in courses %}
+            {% if x not in request.user.courses.all or not request.user.is_authenticated %}
+    <div class="courses-unit-wrapper ib va" style="margin-top:50px;" data-technology="{{ x.technologies }}" data-difficulty="{{ x.difficulty }}">
+        <div class="courses-unit-texture" style="background-image: url('media/{{ x.img }}');"></div>
+        <div class="courses-unit-rating ws-nw va">{{ x.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="/static/dist/img/PNG/icon/rating.png" class="icn"></div>
+            <div class="courses-unit-title"><h2><strong>{{ x.title }}</strong></h2></div>
+        <div class="courses-unit-a" style="position: initial;"><strong><a href="{% url 'course_detail' x.id %}">Подробнее→ </a></strong></div>
+        <div class="courses-unit-difficulty">{{ x.difficulty }}</div>
+        <div class="courses-unit-shortdes">{{ x.short_des }}</div>
+        <div class="courses-unit-price">{{ x.price }}$</div>
+        <div class="courses-unit-dos">Старт занятий с:<br> {{ x.start_date }}</div>
+
+    </div>
+        {% endif %}
+        {% empty %}
+                <p>Нет доступных курсов</p>
+        {% endfor %}
+    </div>
+</div>
+</div>
 {% endblock %}
 
 {% block script %}
-<script src="/static/dist/js/coursesFilter.js"></script>
 {% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'index.html' %}
+
+{% block title %}
+{{ page_label }}
+{% endblock %}
+
+{% block page_label %}
+{{ page_label }}
+{% endblock %}
+
+{% block header %}
+{% include "header.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="blank-global-container" style="position: inherit;background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');">
+  <div class="wrapper-blank" style="max-width: max-content;min-width: 930px;min-height: 550px;width: max-content;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
+    <div class="close-btn" id="wrapper-blank-close-btn" onclick="window.location.href = '{% url 'personal_cabinet'%}'">⨯</div>
+    <h2>Уроки по курсу {{ course.title }}</h2>
+<form method="post">
+  {% csrf_token %}
+
+   {{ formset.management_form }}
+  <table id="user-table">
+    <tr>
+<th>Номер занятия</th>
+<th>Название занятия</th>
+<th>Ментор занятия</th>
+<th>Дата проведения</th>
+<th>Время начала</th>
+<th>Управление</th>
+    </tr>
+    {% for lesson_form in formset %}
+
+ <tr class="user-row">
+            <td>
+              <span class="past-lesson form-prefix">
+                 {{ lesson_form.prefix }}-{{ lesson_form.id }}
+              </span>
+            </td>
+             <td>
+              <span class="past-lesson form-prefix">
+                 {{ lesson_form.prefix }}-{{ lesson_form.title }}
+              </span>
+            </td>
+            <td>
+              <span class="past-lesson form-prefix">
+                 {{ lesson_form.prefix }}-{{ lesson_form.mentor_owner }}
+              </span>
+            </td>
+            <td>
+              <span class="past-lesson form-prefix">
+                 {{ lesson_form.prefix }}-{{ lesson_form.start_date }}
+              </span>
+            </td>
+                 <td>
+              <span class="past-lesson form-prefix">
+                 {{ lesson_form.prefix }}-{{ lesson_form.start_time }}
+              </span>
+            </td>
+            <td>
+                <div class="courses-control-form" style="width: 100%;" onclick="location.href='{% url 'management:update_lesson' lesson_form.instance.id %}'">🛠️</div>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+             <div class="courses-list-manage-unit courses-list-create" style="margin-top:20px;" onclick="location.href='{% url 'management:create_lesson' course.id %}'">
+          <h2>+</h2>
+         </div>
+      <button class="btn" type="submit">Применить</button>
+    </form>
+  </div>
+    {% if user.is_mentor or user.is_staff or user.is_superuser %}
+
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

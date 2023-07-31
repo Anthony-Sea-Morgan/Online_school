@@ -14,55 +14,60 @@
 
 
 {% block content %}
-
-<div class="courses-base" style="display:flex;">
-    <div class="courses-filter-wrapper">
-
-           <select class="form__input" id="technology-filter">
-
-
-    <option value="Все технологии">Все технологии</option>
-
-    <option value="Python">Python</option>
-
-    <option value="C++">C++</option>
-
-    <option value="Java">Java</option>
-
-    <option value="C#">C#</option>
-
-    <option value="Pascal">Pascal</option>
-
-    <option value="Frontend">Frontend</option>
-
-                 </select>
-        <select class="form__input" id="difficulty-filter">
-
-    <option value="Любая сложность">Любая сложность</option>
-
-    <option value="Начинающий">Начинающий</option>
-
-    <option value="Продвинутый">Продвинутый</option>
-
-              </select>
-
+<div class="block-base">
+<div class="courses-base" style="display:flex;height: max-content; min-height: max-content;">
+ <div class="personal-calendar-align">
+<table class="personal-calendar" id="calendar">
+ <thead>
+    <tr><td>‹<td colspan="5"><td>›
+    <tr><td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
+  <tbody>
+</table>
+</div>
+</div>
+    <div class="courses-base" style="display:flex;height: max-content;min-height: auto;">
+<div class="courses-base" style="display:flex;width: calc(100% - 480px);min-height: auto;">
+    <div class="courses-list-align">
+    <h2 style="color: black; text-align: center">Ближайшие занятия</h2>
+    {% for date, lessons in grouped_lessons.items %}
+    <div class="date-unit-wrapper ib va">
+        <h4> {{ date }}</h4>
+        {% for lesson in lessons %}
+        <div class="date-unit-lesson">
+            <h2><a href="{% url 'chat_room' lesson.id %}">{{ lesson.title }}</a></h2>
+            <h5>{{ lesson.start_time }}</h5>
+        </div>
+        {% endfor %}
     </div>
-    <div class="courses-base" style="width: 60%">
-        <div style="backdrop-filter: invert(20%); width: 100%; height: 100%;justify-content: center;display: flex;">
+    {% empty %}
+    <p>занятий нет</p>
+    {% endfor %}
+</div>
+</div>
+</div>
+
+<div class="courses-base" style="display:flex;min-height: auto;">
+
+    <div class="courses-base" style="width: calc(100% - 480px);min-height: auto;">
+        <div style="width: 100%; height: 100%;justify-content: center;display: flex;">
         <div class="courses-list-wrapper jc-c">
             <div class="courses-list-align">
+                                {% if request.user.is_mentor%}
+                <h2 style="color: black; text-align: center">Ваши курсы:</h2>
+                {% else %}
                 <h2 style="color: black; text-align: center">Имеющиеся курсы:</h2>
+                {% endif %}
                 {% for course in user.courses.all %}
-                <div class="courses-unit-wrapper ib va" data-technology="{{ course.technologies }}" data-difficulty="{{ course.difficulty }}" style="background: linear-gradient(1deg, #fffcfa7d, #ededed);">
+                <div class="courses-unit-wrapper ib va" data-technology="{{ course.technologies }}" data-difficulty="{{ course.difficulty }}">
                     <!--background: linear-gradient(1deg, #ffad5a47, #ffad5a);-->
                     <!--background: linear-gradient(1deg, #ffad5a7d, #ededed);-->
-                    <div class="courses-unit-texture">
+                    <div class="courses-unit-texture" style="background-image: url('/media/{{ course.img }}');"></div>
                         <div class="courses-unit-rating ws-nw va">{{ course.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="/static/dist/img/PNG/icon/rating.png" class="icn"></div>
                         <div class="courses-unit-title"><h2 style="background-color: #ffffff00;"><strong>{{ course.title }}</strong></h2></div>
                         <div class="courses-unit-difficulty">{{ course.difficulty }}</div>
                          <div class="courses-unit-shortdes">{{ course.short_des }}</div>
+                        {% if request.user.is_mentor%}<div class="courses-unit-a-management"><button onclick="location.href='{% url 'management:lessons_list' course.id %}'" class="btn" >🛠️</button></div>{% endif %}
                         <div class="courses-unit-a"><button onclick="location.href='{% url 'course_lessons' course.id %}'" class="btn">Перейти к занятиям →</button></div>
-                    </div>
                 </div>
                 {% empty %}
                 <p>Нет имеющихся курсов</p>
@@ -71,25 +76,145 @@
         </div>
     </div>
     </div>
-<div class="courses-filter-wrapper">
+
+
+</div>
+</div>
+<div class="courses-filter-wrapper" style="left:0;">
+
+<select class="form__input" id="technology-filter">
+
+   {% for tech in technology %}
+    <option value="{{ tech }}">{{ tech }}</option>
+  {% endfor %}
+                 </select>
+        <select class="form__input" id="difficulty-filter">
+   {% for diffic in difficulty %}
+    <option value="{{ diffic }}">{{ diffic }}</option>
+  {% endfor %}
+              </select>
+
+    </div>
+<div class="courses-filter-wrapper" style="right:15px">
 
         <h3>Информация о пользователе:</h3>
-        <p>Имя пользователя: {{ user.username }}</p>
+        <p>Идентификатор: {{ user.username }}</p>
         <p>Имя: {{ user.first_name }}</p>
         <p>Фамилия: {{ user.last_name }}</p>
         <p>Email: {{ user.email }}</p>
         <p>Номер телефона: {{ user.phone_number }}</p>
         <button id="edit-profile" class="btn">Редактировать профиль</button>
+        {% if not request.user.is_mentor%}
         <h4>Кошелек:</h4>
         <p>Баланс: {{ user.wallet }}</p>
         <button id="edit-wallet" class="btn">Пополнить кошелек</button>
+        {% endif %}
+</div>
 
-</div>
-</div>
+
 {% include "edit_profile.html" %}
 {% include "wallet_replenishment.html" %}
 {% endblock %}
 {% block script %}
+<script>
+  var selectedDates = [];
+function Calendar(id, year, month) {
+var Dlast = new Date(year,month+1,0).getDate(),
+    D = new Date(year,month,Dlast),
+    DNlast = new Date(D.getFullYear(),D.getMonth(),Dlast).getDay(),
+    DNfirst = new Date(D.getFullYear(),D.getMonth(),1).getDay(),
+    calendar = '<tr>',
+    month=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
+if (DNfirst != 0) {
+  for(var  i = 1; i < DNfirst; i++) calendar += '<td>';
+}else{
+  for(var  i = 0; i < 6; i++) calendar += '<td>';
+}
+for(var  i = 1; i <= Dlast; i++) {
+  if (i == new Date().getDate() && D.getFullYear() == new Date().getFullYear() && D.getMonth() == new Date().getMonth()) {
+    calendar += '<td class="today">' + i;
+  }else{
+    calendar += '<td>' + i;
+  }
+  if (new Date(D.getFullYear(),D.getMonth(),i).getDay() == 0) {
+    calendar += '<tr>';
+  }
+}
+for(var  i = DNlast; i < 7; i++) calendar += '<td>&nbsp;';
+document.querySelector('#'+id+' tbody').innerHTML = calendar;
+document.querySelector('#'+id+' thead td:nth-child(2)').innerHTML = month[D.getMonth()] +' '+ D.getFullYear();
+document.querySelector('#'+id+' thead td:nth-child(2)').dataset.month = D.getMonth();
+document.querySelector('#'+id+' thead td:nth-child(2)').dataset.year = D.getFullYear();
+if (document.querySelectorAll('#'+id+' tbody tr').length < 6) {  // чтобы при перелистывании месяцев не "подпрыгивала" вся страница, добавляется ряд пустых клеток. Итог: всегда 6 строк для цифр
+    document.querySelector('#'+id+' tbody').innerHTML += '<tr><td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;';
+}
+ highlightCalendarDays();
+}
+Calendar("calendar", new Date().getFullYear(), new Date().getMonth());
+// переключатель минус месяц
+document.querySelector('#calendar thead tr:nth-child(1) td:nth-child(1)').onclick = function() {
+  Calendar("calendar", document.querySelector('#calendar thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar thead td:nth-child(2)').dataset.month)-1);
+}
+// переключатель плюс месяц
+document.querySelector('#calendar thead tr:nth-child(1) td:nth-child(3)').onclick = function() {
+  Calendar("calendar", document.querySelector('#calendar thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar thead td:nth-child(2)').dataset.month)+1);
+}
+
+
+
+
+ function highlightCalendarDays() {
+        var calendarDays = document.querySelectorAll('.personal-calendar td');
+
+        calendarDays.forEach(function (calendarDay) {
+            var calendarDate = new Date(
+                document.querySelector('#calendar thead td:nth-child(2)').dataset.year,
+                parseFloat(document.querySelector('#calendar thead td:nth-child(2)').dataset.month),
+                parseInt(calendarDay.textContent, 10)
+            );
+
+            // Добавляем время в 00:00, чтобы сравнивать только даты
+            calendarDate.setHours(0, 0, 0, 0);
+
+            // Если дата есть в списке выбранных, то выделяем ячейку календаря
+            if (selectedDates.includes(calendarDate.getTime())) {
+                calendarDay.style.background = 'rgba(255, 165, 0, 0.5)'; // Измените на любой другой стиль выделения
+            } else {
+                calendarDay.style.background = 'none';
+            }
+        });
+    }
+
+    function parseCustomDate(dateString) {
+        var months = {
+            'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3,
+            'мая': 4, 'июня': 5, 'июля': 6, 'августа': 7,
+            'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11
+        };
+        var dateParts = dateString.split(' ');
+        var day = parseInt(dateParts[0], 10);
+        var month = months[dateParts[1]];
+        var year = parseInt(dateParts[2], 10);
+        return new Date(year, month, day);
+    }
+
+    // Получаем все даты из групп уроков
+    var lessonDates = document.querySelectorAll('.date-unit-wrapper.ib.va h4');
+
+    lessonDates.forEach(function (lessonDate) {
+        var date = parseCustomDate(lessonDate.textContent.trim());
+
+        // Добавляем время в 00:00, чтобы сравнивать только даты
+        date.setHours(0, 0, 0, 0);
+
+        // Сохраняем выбранную дату в список
+        selectedDates.push(date.getTime());
+    });
+
+    // Вызываем функцию для выделения ячеек в календаре
+    highlightCalendarDays();
+
+</script>
 <script src="/static/dist/js/coursesFilter.js"></script>
 <script src="/static/dist/js/userEdit.js"></script>
 {% endblock %}

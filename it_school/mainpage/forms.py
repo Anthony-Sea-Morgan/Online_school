@@ -1,5 +1,5 @@
 from django import forms
-from .models import CustomUser
+from .models import CustomUser, Review
 
 
 class ProfileForm(forms.ModelForm):
@@ -20,3 +20,10 @@ class WalletForm(forms.ModelForm):
     widgets ={
         'wallet': forms.NumberInput(attrs={'class': 'form-group', 'type': 'number'}),
     }
+class CourseReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'text']
+        widgets = {
+            'rating': forms.NumberInput(attrs={'class': 'form-group', 'type': 'number', 'style': 'width: 50px;'}),
+        }
