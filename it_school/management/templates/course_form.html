@@ -64,17 +64,17 @@
         {{ form.lessons_count }}
       </div>
 
-      <div class="form-group" {{ hide }}>
+      <div class="form-group">
         <label for="{{ form.start_date.id_for_label }}">Дата начала курса:</label>
         {{ form.start_date }}
       </div>
 
-      <div class="form-group" {{ hide }}>
+      <div class="form-group">
         <label for="{{ form.start_time.id_for_label }}">Время начала курса:</label>
         {{ form.start_time }}
       </div>
 
-      <div class="form-group" {{ hide }}>
+      <div class="form-group">
         <label>Дни недели занятий:</label>
         {% for choice in days_of_week_choices %}
           <div class="form-check" style="height: 20px; display: flex; margin-bottom: 10px;">

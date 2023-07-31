@@ -14,25 +14,24 @@
 
 {% block content %}
 <div class="block-base db" style="display: block;">
-<div class="course-detail-wrapper" style="backdrop-filter: blur(3px) invert(0%); background-color: #ffffff61;overflow: hidden;">
-    <div class="course-detail-texture-container" id="puzzleContainer"></div>
-        <div class="course-detail-content">
+<div class="course-detail-wrapper mainpage-detail">
+        <div class="mainpage-detail-texture-container" id="puzzleContainer"></div>
+        <div class="course-detail-content" style="padding-left: 5%;">
     <div class="white-space hcd"></div>
-        <div class="course-detail-title ib va"><h2>Научим программировать и поможем стать ITшником</h2></div>
-        <div class="course-detail-shortdes" style="color:black; font-size: 25px;font-family: 'Jost-Medium';max-width:1000px;">TeachMeSkills - это школа программирования, где мы научим тебя востребованным сегодня знаниям. Все наши программы составлены Senior и Lead разработчиками ведущих IT компаний специально для новичков в IT.</div>
+        <div class="course-detail-title ib va"><h2 style="color:black;">Научим программировать и поможем стать ITшником</h2></div>
+        <div class="course-detail-shortdes mainpage-detail-shortdes">OnlineSchool - это школа программирования, где мы научим тебя востребованным сегодня знаниям по Lorem Ipsum. Все наши программы составлены Junior и Trainee разработчиками ведущих IT компаний специально для профи в IT.</div>
         <div></div>
         </div>
         <div class="mainpage-detail-img">
         </div>
 </div>
-<div class="white-space hcd"></div>
-            <h2 style="text-align: center; font-size: 50px;">Ближайшие курсы</h2>
-    <div class="courses-base" style=" min-height: max-content; height: max-content;width: 100%;display:flex;">
+    <h2 class="mainpage-courses-label">Успей записаться на востребованные курсы:</h2>
+    <div class="courses-base" style=" min-height: max-content; height: max-content;width: 100%;display:flex;backdrop-filter: invert(60%);">
 
-    <div class="courses-list-wrapper jc-c" style="height: 400px;width: max-content; overflow-x: scroll;overflow-y: hidden; display: inline-block;white-space: nowrap; background-color: #ffffff61;">
+    <div class="courses-list-wrapper jc-c" style="height: 400px;width: max-content; overflow-x: scroll;overflow-y: hidden; display: inline-block;white-space: nowrap;">
         {% for x in courses %}
             {% if x not in request.user.courses.all or not request.user.is_authenticated %}
-    <div class="courses-unit-wrapper ib va" style="margin-top:50px;" data-technology="{{ x.technologies }}" data-difficulty="{{ x.difficulty }}">
+    <div class="courses-unit-wrapper ib va" style="margin-top:50px;background: linear-gradient(1deg, #f5d499, #ffffff);" data-technology="{{ x.technologies }}" data-difficulty="{{ x.difficulty }}">
         <div class="courses-unit-texture" style="background-image: url('media/{{ x.img }}');"></div>
         <div class="courses-unit-rating ws-nw va">{{ x.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="/static/dist/img/PNG/icon/rating.png" class="icn"></div>
             <div class="courses-unit-title"><h2><strong>{{ x.title }}</strong></h2></div>
@@ -49,8 +48,31 @@
         {% endfor %}
     </div>
 </div>
+    <h2 class="mainpage-courses-label">...или изучи весь список курсов <strong><a class="mainpage-courses-a" href="{% url 'courses_list' %}">здесь</a></strong></h2>
+    <div class="white-space hcd"></div>
+    <div class="t-list-wrapper">
+    <div class="courses-list-align">
+        <div class="t-list-skills transparent-box">
+            <div class="t-list-skills-label ib va"><h2>Упор на практику</h2><p>Даем структурированные знания, востребованные сегодня на рынке труда. Никакой воды в обучении: только 15% теории и 85% практики. А также дополнительные 100% заботы от преподавателей сверху.</p></div>
+            <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/mainpage1.svg');"></div>
+        </div>
+        <div class="t-list-skills transparent-box">
+            <div class="t-list-skills-label ib va"><h2>Поддержка и забота</h2><p>За каждой группой закреплен опытный аккаунт-менеджер, который помогает в решении актуальных задач / вопросов по телефону, онлайн и лично. А преподаватели всегда готовы помочь на занятии и онлайн в Telegram.</p></div>
+            <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/mainpage2.svg');"></div>
+        </div>
+        <div class="t-list-skills transparent-box">
+            <div class="t-list-skills-label ib va"><h2>Помощь в поиске работы</h2><p>Помогаем составить грамотное резюме. Учим, как готовиться к собеседованиям и успешно их проходить. Сотрудничаем с IT компаниями по трудоустройству.</p></div>
+            <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/mainpage3.svg');"></div>
+        </div>
+        <div class="t-list-skills transparent-box">
+            <div class="t-list-skills-label ib va"><h2>Работа на реальных проектах</h2><p>Уже в процессе обучения ты разработаешь реальный проект - твой первый проект в профессиональном портфолио.</p></div>
+            <div class="t-list-skills-img ib va" style="background-image: url('/static/dist/img/SVG/mainpage4.svg');"></div>
+    </div> </div>
+</div>
+    <div class="white-space hcd"></div>
 </div>
 {% endblock %}
 
 {% block script %}
+<script src="/static/dist/js/mainpage.js"></script>
 {% endblock %}

@@ -50,13 +50,15 @@ def index(request):
     """
     Отображает главную страницу и список курсов.
     """
-    course_object = Course.objects.all().order_by('-start_date')[:5]
-    for i in course_object:
+    current_date = date.today()
+    closest_courses = Course.objects.filter(start_date__gte=current_date)
+    closest_courses = closest_courses.order_by('start_date').order_by('-rating')[:5]
+    for i in closest_courses:
         i.img = str(i.img)
     data = {
         'title': 'Online school',
         'page_label': 'Главная страница',
-        'courses': course_object,
+        'courses': closest_courses,
     }
     template = 'mainpage.html'
     return render(request, template, data)
