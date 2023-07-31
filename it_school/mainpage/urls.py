@@ -10,7 +10,7 @@ from registration.views import CustomTokenObtainPairView, CustomTokenRefreshView
 urlpatterns = [
     path('', index, name='index'),
     path('courses/', courses_list, name='courses_list'), # В случае кэшировании класса -> path('', cache_page(60)(UnitsView.as_view()), name='index'),
-    path('api/', include('restapi.urls')),
+    path('api/v1/', include('restapi.urls')),
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
     path('personal_cabinet/', personal_cabinet, name='personal_cabinet'),

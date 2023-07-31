@@ -28,13 +28,14 @@ SECRET_KEY = 'django-insecure-acra!z23zgg$rqg5&80xby40lsf8wqxue8rgmm_xhvq^zwr4go
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['*']
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Application definition
-
 INSTALLED_APPS = [
     'channels',
     'django.contrib.admin',
@@ -49,11 +50,21 @@ INSTALLED_APPS = [
     'management',
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_yasg',
     'registration',
     'restapi',
     'rest_framework_simplejwt',
     'chat',
+    'django_celery_beat',
+
+
 ]
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_AUTO_SCHEMA_CLASS': 'drf_yasg.inspectors.SwaggerAutoSchema',
+
+}
+
 
 CHANNEL_LAYERS = {
     'default': {
@@ -160,7 +171,9 @@ AUTHENTICATION_BACKENDS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        #'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+
     ],
 }
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -229,6 +242,29 @@ LOGGING = {
     'root': {
         'handlers': ['console'],
         'level': 'INFO',
-    }
+    },
+    'loggers': {
+        'it_school.tasks': {  # Указываем модуль для логирования
+            'handlers': ['console'],
+            'level': 'INFO',  # Уровень логирования для этого модуля
+            'propagate': False,
+        },
+    },
 }
+
 LOGIN_REDIRECT_URL = 'index'
+
+locale.setlocale(locale.LC_TIME, settings.LANGUAGE_CODE)
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+CELERY_BEAT_SCHEDULE = {
+    'send_reminder_email_task': {
+        'task': 'it_school.tasks.send_reminder_email_task',
+        'schedule': timedelta(minutes=1),  # Укажите периодичность, например, каждый час
+        # 'schedule': crontab(minute=0, hour='*/1'),  # Пример с использованием crontab для каждого часа
+    },
+}
