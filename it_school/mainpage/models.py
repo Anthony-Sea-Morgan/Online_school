@@ -184,12 +184,7 @@ class Lesson(models.Model):
         verbose_name_plural = 'Занятия'
 
 
-class LessonRegistration(models.Model):
-    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
 
-    class Meta:
-        unique_together = ['student', 'lesson']
 
 
 class CustomGroup(Group):
