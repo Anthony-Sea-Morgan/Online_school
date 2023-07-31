@@ -142,10 +142,6 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
 #не рекомендую менять, ибо слетают формы связанные с временем/датой
 
 # Static files (CSS, JavaScript, Images)
@@ -253,9 +249,6 @@ LOGGING = {
 }
 
 LOGIN_REDIRECT_URL = 'index'
-
-locale.setlocale(locale.LC_TIME, settings.LANGUAGE_CODE)
-
 
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 
