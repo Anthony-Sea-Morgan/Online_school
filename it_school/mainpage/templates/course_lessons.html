@@ -1,5 +1,5 @@
 {% extends 'index.html' %}
-
+{% load static %}
 {% block title %}
 Уроки по курсу
 {% endblock %}
@@ -7,15 +7,17 @@
 {% block page_label %}
 Уроки по курсу {{ course.title }}
 {% endblock %}
-
+{% block style %}
+<link rel="stylesheet" href="{% static 'dist/scss/folderAnimation.css'%}">
+{% endblock %}
 {% block header %}
 {% include "header.html" %}
 {% endblock %}
 
 {% block content %}
 <div class="block-base db" style="display: block;">
-    <div class="course-detail-wrapper">
-    <div class="course-detail-texture-container" id="puzzleContainer"></div>
+    <div class="course-detail-wrapper" style="height: 500px;">
+    <div class="course-detail-texture-container" id="puzzleContainer" style="overflow: visible;"></div>
         <div class="course-detail-content">
     <div class="white-space hcd"></div>
         <div class="course-detail-rating ws-nw va ib">{{ course.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="" style="width:20px;height:15px;"></div>
@@ -27,7 +29,7 @@
         <div class="course-detail-dos">Старт занятий с: {{ course.start_date }}</div>
             <div></div>
         </div>
-        <div class="course-detail-folder-img">
+        <div class="course-detail-folder-img" style="bottom: -90px;">
         <div class="folder-transparent" style="background-image: url(/media/{{ course.img }})"></div>
         </div>
 </div>

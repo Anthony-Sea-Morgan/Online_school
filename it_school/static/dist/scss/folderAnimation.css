@@ -1,0 +1,39 @@
+@keyframes moveFolder {
+  0% {
+    transform: translateX(100%) rotate(-60deg);;
+  }
+  100% {
+    transform: translateX(0) rotate(30deg);;
+  }
+}
+
+/* Анимация для движения прозрачного куба */
+@keyframes moveTransparentCube {
+  0% {
+    transform: translateY(0%) translateX(50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Анимация для появления фонового изображения прозрачного куба */
+@keyframes fadeInBackground {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+/* Применяем анимации к нужным элементам */
+.folder-transparent {
+  /* ... Ваши текущие стили ... */
+  animation: moveTransparentCube 1s ease-out forwards, fadeInBackground 1s ease-out forwards;
+}
+
+.course-detail-folder-img {
+  /* ... Ваши текущие стили ... */
+      animation: moveFolder 1s cubic-bezier(0, 0, 0, 1.12) forwards;
+}

@@ -7,7 +7,7 @@ function createDetailPiece() {
 const detailContainer = document.getElementById('puzzleContainer');
 const containerWidth = detailContainer.offsetWidth;
 const containerHeight = detailContainer.offsetHeight;
-for (let i = 0; i < 30; i++) {
+for (let i = 0; i < 10; i++) {
   const piece = createDetailPiece();
   detailContainer.appendChild(piece);
 }
@@ -15,11 +15,38 @@ for (let i = 0; i < 30; i++) {
 const detailPieces = document.querySelectorAll('.course-detail-texture');
 
 
-detailPieces.forEach(piece => {
-  const randomX = Math.floor(Math.random() * 600 + (containerWidth/2));
-  const randomY = Math.floor(Math.random() * 600 + (containerHeight/4));
-  piece.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${30}deg)`;
-});
+function movePiecesSlowly() {
+  const centerX = containerWidth * 0.8;
+  const centerY = containerHeight * 0.7;
+
+  detailPieces.forEach(piece => {
+    // Генерируем случайный радиус для частицы
+    const randomRadius = Math.random() * 200 + 750;
+    // Генерируем случайный угол от 0 до 2 * PI (360 градусов)
+    const randomAngle = Math.random() * 2 * Math.PI;
+
+    let angle = randomAngle;
+
+    function animatePiece() {
+      // Вычисляем новые координаты частицы на основе полярных координат
+      const x = centerX + randomRadius * Math.cos(angle);
+      const y = centerY + randomRadius * Math.sin(angle);
+
+      // Увеличиваем угол, чтобы частица вращалась вокруг "папки"
+      angle += Math.PI / 180; // Здесь можно настроить скорость вращения частицы
+
+      // Устанавливаем новую позицию
+      piece.style.transform = `translate(${x}px, ${y}px)`;
+
+      // Запускаем анимацию
+      requestAnimationFrame(animatePiece);
+    }
+
+    animatePiece();
+  });
+}
+
+movePiecesSlowly();
 
 
 

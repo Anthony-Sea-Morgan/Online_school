@@ -20,6 +20,7 @@ body {
   overflow-x: hidden;
   background: linear-gradient(to top, #F4ECE1, #F4ECE1);/*#2c2c2c#1e5058#2c2823);*/
   background-size: cover;
+  /*background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');*/
 }
 .ib{display: inline-block;}
 .db{display: block;}
@@ -47,7 +48,8 @@ text-decoration-offset: 0.2em;
 font-weight: bold;
 }
 .transparent-box{
-backdrop-filter: url(filters.svg#filter) blur(2px) saturate(100%) brightness(110%);
+backdrop-filter: url(filters.svg#filter) blur(2px) saturate(100%) brightness(100%);
+background: linear-gradient(180deg, #ffffff8a, #ffffff42);
 border-radius: 10px;
 color: black;
 box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;
@@ -66,4 +68,12 @@ margin: -20px 0 0 -20px;
 }
 close-btn:hover .close-btn {
     background-color: #0b7dda;
+}
+.summernote-content{
+overflow-wrap: anywhere;
+text-wrap: wrap;
+}
+.block-base{
+display: block;
+background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');
 }
