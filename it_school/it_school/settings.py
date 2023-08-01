@@ -14,10 +14,8 @@ from pathlib import Path
 import os
 from datetime import datetime, timedelta
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -28,9 +26,7 @@ SECRET_KEY = 'django-insecure-acra!z23zgg$rqg5&80xby40lsf8wqxue8rgmm_xhvq^zwr4go
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
 ALLOWED_HOSTS = ['*']
-
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -56,12 +52,14 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'chat',
     'django_celery_beat',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.telegram',
     'allauth.socialaccount.providers.vk',
+
 ]
 
 SWAGGER_SETTINGS = {
@@ -69,13 +67,11 @@ SWAGGER_SETTINGS = {
 
 }
 
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',  # или используйте RedisChannelLayer для работы с Redis
     },
 }
-
 
 ASGI_APPLICATION = 'it_school.asgi.application'
 
@@ -109,7 +105,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'it_school.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -119,7 +114,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -139,7 +133,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -158,7 +151,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'mainpage', 'static'),
 ]
 
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -169,11 +161,10 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        #'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
 
     ],
@@ -188,6 +179,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'norepy.onlinecourses@gmail.com'
 # Добавьте следующие настройки JWT в конец файла settings.py
 from datetime import timedelta
+
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'auth/password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': 'auth/username/reset/confirm/{uid}/{token}',
@@ -231,7 +223,6 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
 
-
 AUTH_USER_MODEL = 'registration.CustomUser'
 LOGGING = {
     'version': 1,
@@ -244,13 +235,6 @@ LOGGING = {
     'root': {
         'handlers': ['console'],
         'level': 'INFO',
-    },
-    'loggers': {
-        'it_school.tasks': {  # Указываем модуль для логирования
-            'handlers': ['console'],
-            'level': 'INFO',  # Уровень логирования для этого модуля
-            'propagate': False,
-        },
     },
 }
 SITE_ID = 1
@@ -270,14 +254,23 @@ SOCIALACCOUNT_PROVIDERS = {
 
 LOGIN_REDIRECT_URL = 'index'
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 
 CELERY_BEAT_SCHEDULE = {
     'send_reminder_email_task': {
         'task': 'it_school.tasks.send_reminder_email_task',
-        'schedule': timedelta(minutes=1),  # Укажите периодичность, например, каждый час
-        # 'schedule': crontab(minute=0, hour='*/1'),  # Пример с использованием crontab для каждого часа
+        'schedule': timedelta(days=7),
+        'options': {
+            'expires': 60,
+        },
     },
 }
+
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True
+
