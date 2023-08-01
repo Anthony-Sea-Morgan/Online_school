@@ -21,7 +21,6 @@
         <div class="course-detail-shortdes">{{ course.short_des }}</div>
         <div class="course-detail-mentor">ментор курса: {{ course.mentor }}</div>
         <div class="course-detail-dos">Старт занятий с: {{ course.start_date }}</div>
-            <div></div>
         </div>
         <div class="course-detail-folder-img">
         <div class="folder-transparent" style="background-image: url(media/{{ course.img }})"></div>
@@ -129,7 +128,9 @@
     </div>
 
     </div>
+        {% if user.is_authenticated %}
 {% include "confirm_payment.html" %}
+{% endif %}
 {% endblock %}
 {% block script %}
 <script src="/static/dist/js/courseDescAct.js"></script>

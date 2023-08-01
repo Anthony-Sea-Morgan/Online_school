@@ -56,6 +56,7 @@ text-align: center;
 .courses-unit-wrapper{
 width: 400px;
 height: 300px;
+background: linear-gradient(1deg, #f5d4996e, #ffffff);
 backdrop-filter: blur(2px) saturate(100%) brightness(105%);
 margin: 10px 20px 50px 20px;
 border-radius: 25px;
@@ -64,7 +65,7 @@ position: relative;
 text-align: center;
 border: solid 1px #e8b266;
 overflow: hidden;
-    background: linear-gradient(1deg, #0e0e0e00, #ffffff42);
+    /*background: linear-gradient(1deg, #0e0e0e00, #ffffff42);*/
  /*background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg');*/
 }
 

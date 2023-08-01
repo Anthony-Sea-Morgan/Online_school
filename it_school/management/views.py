@@ -129,6 +129,7 @@ class CourseCreateView(CreateView):
         context['group_form'] = CustomGroupForm()
         context['lessons'] = Lesson.objects.filter(course_owner=self.object)
         context['view_name'] = self.request.resolver_match.view_name
+        context['form_status'] = 'Создать курс'
         return context
 
     def form_valid(self, form):
@@ -159,6 +160,7 @@ class CourseUpdateView(UpdateView):
         context['lessons'] = Lesson.objects.filter(course_owner=self.object)
         context['view_name'] = self.request.resolver_match.view_name
         context['hide'] = 'hidden'
+        context['form_status'] = 'Редактировать курс'
         self.prev_mentor = self.get_object().mentor
         return context
 
@@ -180,6 +182,8 @@ class CourseUpdateView(UpdateView):
                         new_mentor.save()
                 return super().post(request, *args, **kwargs)
             else:
+                print(form.cleaned_data['start_date'])  # Должно быть в формате 'd.m.Y'
+                print(form.cleaned_data['start_time'])  # Должно быть в формате 'H:i'
                 return self.form_invalid(form)
 
 @check_mentor_permission
