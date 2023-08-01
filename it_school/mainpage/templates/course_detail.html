@@ -9,9 +9,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="courses-base db" style="display: block;">
+<div class="block-base db" style="display: block;">
 <div class="course-detail-wrapper">
-    <div class="course-detail-texture">
+    <div class="course-detail-texture-container" id="puzzleContainer"></div>
         <div class="course-detail-content">
     <div class="white-space hcd"></div>
         <div class="course-detail-rating ws-nw va ib">{{ course.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="" style="width:20px;height:15px;"></div>
@@ -21,10 +21,11 @@
         <div class="course-detail-shortdes">{{ course.short_des }}</div>
         <div class="course-detail-mentor">ментор курса: {{ course.mentor }}</div>
         <div class="course-detail-dos">Старт занятий с: {{ course.start_date }}</div>
-            <div></div>
         </div>
-        <div class="course-detail-folder-img"><img src="media/{{ course.img }}" alt="media/{{ course.course.img }}"></div>
+        <div class="course-detail-folder-img">
+        <div class="folder-transparent" style="background-image: url(media/{{ course.img }})"></div>
         </div>
+
 
 </div>
 <div class="btn-reg-wrapper">
@@ -42,9 +43,9 @@
 </div>
     <div class="white-space hcd"></div>
 <div class="description-wrapper">
-    <div class="description-content">
-    {{ course.description }}
-    </div></div>
+    <pre class="summernote-content">
+    {{ course.description|safe }}
+    </pre></div>
 
 <div class="white-space hcd"></div>
     <div class="t-list-wrapper">
@@ -87,6 +88,21 @@
         </ul>
         </div></div></div>
     <div class="white-space hcd"></div>
+    <div class="wrapper-blank" style="max-width: 800px;width: 720px;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
+    <div class="course-detail-title ib va"><h2>Отзывы курса</h2></div>
+              {% for review in reviews %}
+              {% if not review.user == user %}
+    <div class="review">
+        <div class="reviews-user"><h3>{{ review.user }}:  {{ review.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="" style="width:20px;height:15px;"></h3></div>
+        <div class="reviews-text">{{ review.text }}</div>
+    </div>
+              {% endif %}
+        {% empty %}
+                <p>Пока еще нет отзывов на курс</p>
+          {% endfor %}
+
+    </div>
+                    <div class="white-space hcd"></div>
     <div class="g-list-wrapper" id="g-list">
         <div class="courses-list-align">
             <div class="g-list-unit ib va">
@@ -95,6 +111,7 @@
 <!--                <h4>Или сразу, но дешевле -  за весь курс.</h4>
                 <p>Стоимость в месяц указана при рассрочке на 12 месяцев. Подробную информацию по программам рассрочки и кредитования можно узнать у менеджеров.</p>-->
             </div>
+
     <div class="g-list-form ib va">
         <h2>Записаться на курс:</h2>
         <h3>Старт группы</h3>
@@ -111,7 +128,9 @@
     </div>
 
     </div>
+        {% if user.is_authenticated %}
 {% include "confirm_payment.html" %}
+{% endif %}
 {% endblock %}
 {% block script %}
 <script src="/static/dist/js/courseDescAct.js"></script>

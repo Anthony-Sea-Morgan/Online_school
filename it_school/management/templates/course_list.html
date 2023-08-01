@@ -12,8 +12,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="courses-base wr" style="display:flex;">
-    <div class="courses-filter-wrapper">
+<div class="courses-base wr" style="width: calc(100% - 240px);left: 240px;display:flex;">
+    <div class="courses-filter-wrapper" style="left:0;">
            <select class="form__input" id="technology-filter">
 
    {% for tech in technology %}
@@ -61,7 +61,7 @@
             <div class="courses-list-manage-lessons border-right-li">{{ x.lessons_count }}</div>
             <div class="courses-list-manage-mentor border-right-li">{{ x.mentor }}</div>
             <div class="courses-list-manage-start-date">{{ x.start_date }}</div>
-                  <button class="courses-control-form" onclick="location.href='{% url 'management:course_update' x.pk %}'">🔨</button>
+                  <button class="courses-control-form" onclick="location.href='{% url 'management:course_update' x.pk %}'">🛠️</button>
                   </div>
 
           </li>

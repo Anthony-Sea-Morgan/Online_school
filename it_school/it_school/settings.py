@@ -136,6 +136,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+#не рекомендую менять, ибо слетают формы связанные с временем/датой
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -231,6 +232,7 @@ LOGGING = {
         'level': 'INFO',
     },
 }
+
 LOGIN_REDIRECT_URL = 'index'
 
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
@@ -248,6 +250,5 @@ CELERY_BEAT_SCHEDULE = {
         },
     },
 }
-
 CELERY_TASK_ALWAYS_EAGER = True
 CELERY_TASK_EAGER_PROPAGATES = True

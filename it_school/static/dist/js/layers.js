@@ -1,6 +1,6 @@
 
 
-function makeLayer(blank, ...args) {
+function makeLayer(blank, display='flex', ...args) {
   if (!document.getElementById(blank)) {
     return 0;
   }
@@ -12,7 +12,7 @@ function makeLayer(blank, ...args) {
     if (button) {
       button.onclick = () => {
           if (blankLayer.style.display === 'none') {
-    blankLayer.style.display = 'block';
+    blankLayer.style.display = display;
     blankLayer.style.zIndex = 10;
   } else {
     blankLayer.style.display = 'none';

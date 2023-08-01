@@ -108,4 +108,8 @@ background-color: #e8b266;
 font-size: 30px;
 cursor: pointer;
 z-index: 0;
+transition: 0.3s;
+}
+.side-btns:hover {
+background-color: #ffc26b;
 }

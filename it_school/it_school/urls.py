@@ -38,8 +38,11 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+
+
+
 urlpatterns = [
-    path('admin/1881/', admin.site.urls),
+    path('sDgT6wR7AaZbF4xU9gBcX0hJkL3qPmV6aWnD8eR9dYfU3kK1rN3sP0mCpJ5dG6h/', admin.site.urls),
     path('api/', include('restapi.urls')),
     path('', include('registration.urls')),
     path('management/', include('management.urls')),
