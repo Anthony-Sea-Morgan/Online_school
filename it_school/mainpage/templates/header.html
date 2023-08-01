@@ -22,6 +22,7 @@
         {% endif %}
         <div onclick="location.href='{% url 'index' %}'"><p>Главная страница</p></div>
         <div onclick="location.href='{% url 'courses_list' %}'"><p>Курсы</p></div>
+        <div onclick="location.href='{% url 'about_us' %}'"><p>О нас</p></div>
         {% if user.is_authenticated %}
         <div onclick="location.href='{% url 'personal_cabinet' %}'"><p>Личный кабинет</p></div>
         {% if user.is_staff %}
@@ -30,7 +31,6 @@
         {% if user.is_staff %}
         <div onclick="location.href='{% url 'management:user_list' %}'"><p>Пользователи</p></div>
         {% endif %}
-        <div onclick="location.href='{% url 'about_us' %}'"><p>О нас</p></div>
         <div data-action="logout" onclick="location.href='{% url 'logout_view' %}?next={{ request.path }}';"><p>Выйти из аккаунта</p></div>
         {% else %}
         <div id="LOGIN" data-action="login"><p>Авторизация</p></div>

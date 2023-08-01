@@ -1,0 +1,93 @@
+.courses-base {
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.courses-content {
+width: 800px;
+padding: 40px;
+text-align: center;
+background-color: rgba(255, 255, 255, 0.8);
+border-radius: 10px;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.wrapper-blank h1 {
+font-size: 32px;
+font-weight: bold;
+margin-bottom: 20px;
+}
+.wrapper-blank h2{
+color: black;
+}
+.wrapper-blank p {
+font-size: 18px;
+line-height: 1.5;
+margin-bottom: 10px;
+color: black;
+}
+
+.section {
+margin-bottom: 40px;
+}
+
+.section-heading {
+font-size: 24px;
+font-weight: bold;
+margin-bottom: 20px;
+color: black;
+}
+
+.section-content {
+text-align: left;
+color: black;
+}
+
+.contact-section {
+margin-top: 40px;
+}
+
+.contact-section ul {
+list-style-type: none;
+padding: 0;
+margin: 0;
+text-align: center;
+}
+
+.contact-section ul li {
+font-size: 18px;
+line-height: 1.5;
+margin-bottom: 10px;
+font-weight: bold;
+color: black;
+}
+
+.graduate-list li {
+margin-bottom: 20px;
+color: black;
+}
+
+.graduate {
+display: flex;
+align-items: center;
+color: black;
+}
+
+.graduate-avatar img {
+width: 60px;
+height: 60px;
+border-radius: 50%;
+margin-right: 10px;
+}
+
+.graduate-details h3 {
+font-size: 18px;
+margin-bottom: 5px;
+color: black;
+}
+
+.graduate-details p {
+font-size: 16px;
+color: black;
+}
