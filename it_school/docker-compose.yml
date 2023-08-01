@@ -9,12 +9,25 @@ services:
     ports:
       - '8000:8000'
     depends_on:
-      - sqlite3
+      - redis
 
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
 
-  sqlite3:
-    image: nouchka/sqlite3:latest
-    stdin_open: true
-    tty: true
+  celery-worker:
+    build: ./it_school
+    command: celery -A celery_config worker --loglevel=info
     volumes:
-      - ./db/:/root/db/
+      - .:/it_school
+    depends_on:
+      - redis
+
+  celery-beat:
+    build: ./it_school
+    command: celery -A celery_config beat --loglevel=info
+    volumes:
+      - .:/it_school
+    depends_on:
+      - redis

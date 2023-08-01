@@ -264,7 +264,7 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_BEAT_SCHEDULE = {
     'send_reminder_email_task': {
         'task': 'it_school.tasks.send_reminder_email_task',
-        'schedule': timedelta(days=7),
+        'schedule': timedelta(minutes=2),
         'options': {
             'expires': 60,
         },
