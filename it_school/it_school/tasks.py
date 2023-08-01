@@ -50,5 +50,3 @@ def send_reminder_email_task():
                 logger.error(f"Ошибка при отправке напоминания для студента {student}: {str(e)}")
 
     logger.info("Завершение задачи send_reminder_email_task")
-
-
