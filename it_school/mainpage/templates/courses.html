@@ -4,7 +4,7 @@
         {% for x in courses %}
             {% if x not in request.user.courses.all or not request.user.is_authenticated %}
     <div class="courses-unit-wrapper ib va" data-technology="{{ x.technologies }}" data-difficulty="{{ x.difficulty }}">
-        <div class="courses-unit-texture" style="background-image: url('media/{{ x.img }}');"></div>
+        <div class="courses-unit-texture" style="background-image: url('/media/{{ x.img }}');"></div>
         <div class="courses-unit-rating ws-nw va">{{ x.rating }}<img src="/static/dist/img/PNG/icon/rating.png" alt="/static/dist/img/PNG/icon/rating.png" class="icn"></div>
             <div class="courses-unit-title"><h2><strong>{{ x.title }}</strong></h2></div>
         <div class="courses-unit-a" style="position: initial;"><strong><a href="{% url 'course_detail' x.id %}">Подробнее→ </a></strong></div>

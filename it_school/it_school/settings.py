@@ -53,6 +53,13 @@ INSTALLED_APPS = [
     'chat',
     'django_celery_beat',
 
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.telegram',
+    'allauth.socialaccount.providers.vk',
+
 ]
 
 SWAGGER_SETTINGS = {
@@ -133,9 +140,6 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
-
-USE_TZ = True
 #не рекомендую менять, ибо слетают формы связанные с временем/датой
 
 # Static files (CSS, JavaScript, Images)
@@ -154,6 +158,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 REST_FRAMEWORK = {
@@ -232,11 +237,26 @@ LOGGING = {
         'level': 'INFO',
     },
 }
+SITE_ID = 1
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '123',
+            'secret': '456',
+            'key': ''
+        }
+    }
+}
 
 LOGIN_REDIRECT_URL = 'index'
 
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+
 
 
 CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
@@ -250,5 +270,7 @@ CELERY_BEAT_SCHEDULE = {
         },
     },
 }
+
 CELERY_TASK_ALWAYS_EAGER = True
 CELERY_TASK_EAGER_PROPAGATES = True
+

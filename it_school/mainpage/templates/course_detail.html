@@ -1,12 +1,16 @@
 {% extends 'index.html' %}
-
+{% load static %}
 {% block title %}
 Информация о курсе {{ course.title }}
+{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'dist/scss/folderAnimation.css'%}">
 {% endblock %}
 
 {% block header %}
 {% include "header.html" %}
 {% endblock %}
+
 
 {% block content %}
 <div class="block-base db" style="display: block;">
