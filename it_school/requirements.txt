@@ -2,6 +2,9 @@ amqp==5.1.1
 anyio==3.7.1
 asgiref==3.7.2
 async-timeout==4.0.2
+attrs==23.1.0
+autobahn==23.6.2
+Automat==22.10.0
 billiard==4.1.0
 bleach==6.0.0
 celery==5.3.1
@@ -13,8 +16,10 @@ click==8.1.6
 click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.3.0
+constantly==15.1.0
 cron-descriptor==1.4.0
 cryptography==41.0.2
+daphne==4.0.0
 defusedxml==0.7.1
 Django==4.2.3
 django-allauth==0.54.0
@@ -29,9 +34,12 @@ djangorestframework-simplejwt==5.2.2
 djoser==2.2.0
 drf-yasg==1.21.7
 exceptiongroup==1.1.2
+gunicorn==21.2.0
 h11==0.14.0
 httptools==0.6.0
+hyperlink==21.0.0
 idna==3.4
+incremental==22.10.0
 inflection==0.5.1
 kombu==5.3.1
 oauthlib==3.2.2
@@ -39,8 +47,11 @@ packaging==23.1
 phonenumbers==8.13.17
 Pillow==10.0.0
 prompt-toolkit==3.0.39
+pyasn1==0.5.0
+pyasn1-modules==0.3.0
 pycparser==2.21
 PyJWT==2.8.0
+pyOpenSSL==23.2.0
 python-crontab==3.0.0
 python-dateutil==2.8.2
 python-dotenv==1.0.0
@@ -50,13 +61,15 @@ PyYAML==6.0.1
 redis==4.6.0
 requests==2.31.0
 requests-oauthlib==1.3.1
-redis==3.5.3
+service-identity==23.1.0
 six==1.16.0
 sniffio==1.3.0
 social-auth-app-django==5.2.0
 social-auth-core==4.4.2
 sqlparse==0.4.4
 tabulate==0.9.0
+Twisted==22.10.0
+txaio==23.1.1
 typing_extensions==4.7.1
 tzdata==2023.3
 uritemplate==4.1.1
@@ -68,3 +81,4 @@ watchfiles==0.19.0
 wcwidth==0.2.6
 webencodings==0.5.1
 websockets==11.0.3
+zope.interface==6.0
