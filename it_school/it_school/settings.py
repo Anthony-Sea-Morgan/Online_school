@@ -28,6 +28,7 @@ SECRET_KEY = 'django-insecure-acra!z23zgg$rqg5&80xby40lsf8wqxue8rgmm_xhvq^zwr4go
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+handler404 = 'mainpage.views.not_found'
 
 ALLOWED_HOSTS = ['*']
 

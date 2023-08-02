@@ -5,17 +5,17 @@
 </head>
 <body>
     <h1>Уважаемый(ая) {{ user.first_name }},</h1>
-    <p>Встречайте новый курс най сайте!</p>
+    <p>Встречайте новый курс на сайте!</p>
     <p>Детали курса</p>
     <ul>
         <li> {{ course.title }}</li>
-        <li> {{ course.shortdes }}</li>
+        <li> {{ course.short_des }}</li>
         <li><strong>Mentor:</strong> {{ course.mentor.first_name }} {{ course.mentor.last_name }}</li>
-        <li> {{ course.get_technology_display }}</li>
-        <li> {{ course.get_difficulty_display }}</li>
-        <!-- Add any other course details here -->
+        <li> {{ course.technologies }}</li>
+        <li> {{ course.difficulty }}</li>
+
     </ul>
-    <p>Вы также можете изучить другие курсы на нашем сайте! Найдется под любое направление</p>
-    <p>А также не пропустите Ближайшие курсы!</p>
+    <p>Вы также можете изучить другие курсы на нашем сайте! Найдется под любое направление!</p>
+
 </body>
 </html>

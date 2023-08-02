@@ -3,7 +3,7 @@ from django.views.decorators.cache import cache_page
 from django.urls import include, path
 import registration.views
 
-from .views import index, CourseDetailView, purchase_confirmation, courses_list, attendance_table, personal_cabinet, course_lessons, about_us_view
+from .views import index, CourseDetailView, purchase_confirmation, courses_list, attendance_table, personal_cabinet, course_lessons, about_us_view, not_found
 
 from registration.views import CustomTokenObtainPairView, CustomTokenRefreshView
 
@@ -18,5 +18,6 @@ urlpatterns = [
     path('course/<int:course_id>/lessons/', course_lessons, name='course_lessons'),
     path('<int:pk>', CourseDetailView.as_view(), name='course_detail'),
     path('attendance/', attendance_table, name='attendance_table'),
+    path('not_found/', not_found, name='not_found'),
     path('purchase_confirmation/<int:pk>/', purchase_confirmation, name='purchase_confirmation'),
 ]
