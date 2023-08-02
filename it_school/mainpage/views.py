@@ -339,7 +339,7 @@ def attendance_table(request):
     return render(request, 'attendance.html',
                   {'attendance_tables': attendance_tables, 'page_label': 'Журнал посещения'})
 
-def not_found(request):
-    return render(request, 'access_deny.html')
+def not_found(request, exception):
+    return render(request, 'access_deny.html', status=404)
 
 

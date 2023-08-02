@@ -18,6 +18,6 @@ urlpatterns = [
     path('course/<int:course_id>/lessons/', course_lessons, name='course_lessons'),
     path('<int:pk>', CourseDetailView.as_view(), name='course_detail'),
     path('attendance/', attendance_table, name='attendance_table'),
-    path('not_found/', not_found, name='not_found'),
     path('purchase_confirmation/<int:pk>/', purchase_confirmation, name='purchase_confirmation'),
+    path('not_found/', not_found, name='not_found'),
 ]
