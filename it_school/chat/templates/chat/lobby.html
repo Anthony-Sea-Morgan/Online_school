@@ -5,7 +5,7 @@
 {% endblock %}
 {% block style %}
 <link rel="stylesheet" href="{% static 'dist/scss/chat.css'%}">
-<link rel="stylesheet" href="{% static 'dist/scss/wrapper-blank.css'%}">
+<link rel="stylesheet" href="{% static 'dist/scss/wrapper-form.css'%}">
 {% endblock %}
 {% block header %}
 {% include "header.html" %}
@@ -101,16 +101,29 @@
 <script type="text/javascript">
     const roomName = '{{ room_name }}';
     const user = '{{ user }}';
+    console.log('{{ user.username }}', '{{ user.email }}', '{{ user.phone_number }}')
     {% if is_group_member or user.is_mentor or user.is_staff or user.is_superuser %}
-    // Функция для генерации случайного тёмного цвета
-    function getRandomDarkColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
+    // Функция для генерации уникального тёмного цвета
+function getUniqueDarkColor(seedUsername, seedEmail, seedPhone) {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+
+    // Используем переданные сиды для создания уникальных цветов
+const seeds = [
+        `${seedUsername.charCodeAt(0)}${seedUsername.charCodeAt(1)}`,
+        `${seedUsername.charCodeAt(2)}${seedUsername.charCodeAt(3)}`,
+        `${seedEmail.charCodeAt(0)}${seedEmail.charCodeAt(1)}`,
+        `${seedEmail.charCodeAt(2)}${seedEmail.charCodeAt(3)}`,
+        `${seedPhone.charCodeAt(seedPhone.length - 1) + seedPhone.charCodeAt(seedPhone.length - 2)}${seedPhone.charCodeAt(seedPhone.length - 3)}`,
+        `${seedPhone.charCodeAt(seedPhone.length - 4) + seedPhone.charCodeAt(seedPhone.length - 5)}${seedPhone.charCodeAt(seedPhone.length - 6)}`
+    ];
+
+    for (let i = 0; i < seeds.length; i++) {
+         color += letters[parseInt(seeds[i]) % 16];
     }
+
+    return color;
+}
 
     // Объект для хранения цветов пользователей
     const userColors = {};
@@ -122,12 +135,15 @@
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
         const message = data.message;
+        const phone_number = data.phone_number;
+        const email = data.email;
         const author = data.author; // Получаем автора сообщения из данных
+        console.log(phone_number,email,author);
 
         // Получаем цвет пользователя из объекта userColors или генерируем новый цвет
         let userColor = userColors[author];
         if (!userColor) {
-            userColor = getRandomDarkColor();
+            userColor = getUniqueDarkColor(author, email, phone_number);
             userColors[author] = userColor;
         }
 

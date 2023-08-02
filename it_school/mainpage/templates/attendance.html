@@ -1,4 +1,39 @@
+
+{% extends 'index.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block header %}
+{% include "header.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="blank-global-container" style="position: inherit; background-image: url('https://img.freepik.com/free-vector/topographic-contour-lines-map-seamless-pattern_1284-52862.jpg?t=st=1686950979~exp=1686951579~hmac=2c9c70a24bea4d4196297c64e44526ceda26ce5d09203cd56a6cb02e5736bd5e');">
+  <div class="wrapper-blank" style="max-width: 800px;width: 720px;padding-top: 20px;margin-top: 20px;box-shadow: 0px 0.6rem 0.6rem rgba(0,0,0,0.1) !important;">
 {% for attendance_table in attendance_tables %}
+        <h2>Группа: {{ attendance_table.group }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    {% for header in attendance_table.table.headers %}
+                        <th>{{ header }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in attendance_table.table.rows %}
+                    <tr>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+      {% for attendance_table in attendance_tables %}
     <h2>{{ attendance_table.group.name }} Attendance</h2>
     <pre>{{ attendance_table.table }}</pre>
 
@@ -6,3 +41,6 @@
         <hr>
     {% endif %}
 {% endfor %}
+      </div>
+      </div>
+{% endblock %}

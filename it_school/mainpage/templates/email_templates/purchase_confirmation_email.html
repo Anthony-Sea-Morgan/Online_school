@@ -1,11 +1,27 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Успешное приобретение записи на курс</title>
+    <title>Успешное приобретение записи на курс "{{ course.title }}"</title>
+    <link rel="stylesheet" href="{% static 'dist/scss/style.css'%}">
 </head>
 <body>
-    <h1>Благодарим что выбрали нас!</h1>
-    <p>Покупка курса прошла успешно, приобретенный курс вы можете найти в личном кабинете на сайте</p>
-    <!-- Дополнительный контент шаблона -->
+    <div class="wrapper-blank" style="border-radius: 5px;padding: 50px;">
+    <h1>Поздравляем, {{ user.first_name }}!</h1>
+    <p>Покупка курса прошла успешно, приобретенный курс вы можете найти в личном кабинете на сайте Online_courses.com</p>
+    <p>Благодарим что выбрали нас!</p>
+  <ul>
+    <li>Название: {{ course.title }}</li>
+    <li>Сложность: {{ course.difficulty }}</li>
+    <li>Рейтинг: {{ course.rating }}</li>
+    <li>Стоимость: {{ course.price }}</li>
+    <li>Ментор: {{ course.mentor.username }}</li>
+    <li>Дата начала: {{ course.start_date }}</li>
+    <li>Время начала: {{ course.start_time }}</li>
+    <li>Дни недели занятий: {{ course.get_days_of_week_display }}</li>
+    <li>Применяемые языки: {{ course.get_technologies_display }}</li>
+    <li>Количество уроков: {{ course.lessons_count }}</li>
+  </ul>
+</div>
 </body>
 </html>

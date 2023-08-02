@@ -1,6 +1,8 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from datetime import datetime
+import random
+
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -46,6 +48,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         author = self.scope['user'].username
+        email = self.scope['user'].email
+        phone_number = self.scope['user'].phone_number
         timestamp = datetime.now().strftime('%H:%M')  # Получение текущего времени
 
         # Отправка сообщения всем в группе комнаты
@@ -55,6 +59,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'type': 'chat_message',
                 'message': message,
                 'author': author,
+                'phone_number': phone_number,
+                'email': email,
                 'timestamp': timestamp
             }
         )
@@ -67,10 +73,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Отправка сообщения клиенту
         message = event['message']
         author = event['author']
+        email = str(event['email'])  # Получение email из события, если есть, или пустая строка, если нет
+        phone_number = str(event['phone_number'])
         timestamp = event['timestamp']
 
         await self.send(text_data=json.dumps({
             'message': message,
             'author': author,
+            'email': email,
+            'phone_number': phone_number,
             'timestamp': timestamp
         }))
