@@ -22,7 +22,7 @@ DAYS_OF_WEEK_CHOICES = [
     ('saturday', 'суббота'),
     ('sunday', 'воскресенье'),
 ]
-TECHNOLOGIES = ['Python', 'C++', 'Java', 'C#', 'Pascal', 'Frontend']
+TECHNOLOGIES = ['Python', 'C++', 'Java', 'C#', 'Pascal', 'JavaScript', 'Ruby', 'Swift', 'PHP', 'TypeScript', 'Go', 'Kotlin']
 TECHNOLOGY_CHOICES = [(tech, tech) for tech in TECHNOLOGIES]
 DIFFICULTY_CHOICES = [
     ('Начинающий', 'Beginner'),
