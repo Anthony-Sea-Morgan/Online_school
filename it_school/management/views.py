@@ -15,7 +15,9 @@ from django.http import Http404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
 from datetime import date
-
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 @method_decorator(check_staff_permission, name='dispatch')
 class UserListView(View):
     template_name = 'user_list.html'
@@ -84,8 +86,21 @@ class LessonListView(View):
         formset = self.formset_class(request.POST, queryset=self.queryset)
         if formset.is_valid():
             instances = formset.save()
+            changed_lessons = []
+            for form, instance in zip(formset.forms, instances):
+                if not form == instance:
+                    changed_lessons.append(instance)
             for instance in instances:
                 instance.save()
+            if changed_lessons:
+                for user in CustomUser.objects.filter(courses=course):
+                    subject = 'Перенос занятий'
+                    html_message = render_to_string('email_templates/lessons_changed_notification.html',
+                                                    {'user': user, 'changed_lessons': changed_lessons, 'course':course})
+                    plain_message = strip_tags(html_message)
+                    from_email = 'norepy.onlinecourses@gmail.com'
+                    to_email = user.email
+                    send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
             return redirect(reverse('management:lessons_list', args=[course_id]))
         else:
             print(formset.errors)
@@ -134,9 +149,17 @@ class CourseCreateView(CreateView):
 
     def form_valid(self, form):
         self.object = form.save()
-        user = self.object.mentor
+        new_course = self.object
+        user = new_course.mentor
         if add_users_in_group(user=user, course=self.object) == 0:
             user.save()
+        for user in CustomUser.objects.filter(is_student=True):
+            subject = 'Новый курс'
+            html_message = render_to_string('email_templates/new_course_notification.html', {'user': user, 'course': new_course})
+            plain_message = strip_tags(html_message)
+            from_email = 'norepy.onlinecourses@gmail.com'
+            to_email = user.email
+            send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
         return super().form_valid(form)
 
 

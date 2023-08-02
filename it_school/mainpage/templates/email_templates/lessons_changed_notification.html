@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Уведомление о переносе занятий</title>
+</head>
+<body>
+    <h2>Уважаемый(ая) {{ user.first_name }} {{ user.last_name }},</h2>
+    <p>Хотим вам сообщить, что в расписании курса "{{ course.title }}" были внесены изменения:</p>
+    <ul>
+        {% for lesson in changed_lessons %}
+            <li>{{ lesson.title }} - {{ lesson.start_date }} - {{ lesson.start_time }}</li>
+        {% endfor %}
+    </ul>
+    <p>Пожалуйста, проверьте обновленное расписание и убедитесь, что вам удобны новые даты и время.</p>
+    <p>С уважением,<br>Команда онлайн курсов</p>
+</body>
+</html>

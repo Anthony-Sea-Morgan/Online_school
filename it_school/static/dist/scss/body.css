@@ -48,7 +48,7 @@ text-decoration-offset: 0.2em;
 font-weight: bold;
 }
 .transparent-box{
-backdrop-filter: url(filters.svg#filter) blur(2px) saturate(100%) brightness(100%);
+backdrop-filter: blur(2px) saturate(100%) brightness(100%);
 background: linear-gradient(180deg, #ffffff8a, #ffffff42);
 border-radius: 10px;
 color: black;

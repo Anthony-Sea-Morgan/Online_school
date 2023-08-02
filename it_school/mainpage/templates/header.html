@@ -13,7 +13,7 @@
 
    <div class="nav-dropdown">
        {% if user.is_authenticated %}
-    <div data-action="profile" class="nav-username">{{ user.username }}</div>
+    <div data-action="profile" class="nav-username">{% if not user.first_name %}{{ user.username }}{% else %}{{ user.first_name }} {{ user.last_name }}{% endif %}</div>
     {% endif %}
     <div class="m-a">☰</div>
     <div class="nav-dropdown-content" id="NAV">

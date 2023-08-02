@@ -224,7 +224,7 @@ class CourseDetailView(DetailView):
                     user.wallet -= course_price
                     user.save()
                     subject = 'Запись на курс успешна'
-                    html_message = render_to_string('email_templates/purchase_confirmation_email.html')
+                    html_message = render_to_string('email_templates/purchase_confirmation_email.html', {'user':user,'course':course})
                     plain_message = strip_tags(html_message)
                     from_email = 'norepy.onlinecourses@gmail.com'
                     to_email = user.email
