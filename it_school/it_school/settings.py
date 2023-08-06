@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-acra!z23zgg$rqg5&80xby40lsf8wqxue8rgmm_xhvq^zwr4go'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 
 handler404 = 'mainpage.views.not_found'
@@ -61,8 +61,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.telegram',
-    'allauth.socialaccount.providers.vk',
+    #'allauth.socialaccount.providers.telegram',
+    #'allauth.socialaccount.providers.vk',
 
 ]
 
@@ -242,21 +242,22 @@ LOGGING = {
     },
 }
 SITE_ID = 1
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/accounts/google/login/callback/'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
         'APP': {
-            'client_id': '123',
-            'secret': '456',
+            'client_id': '101488920732-4g7s79jqsmvfmmmt039olkuv0t936e14.apps.googleusercontent.com',
+            'secret': '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',
             'key': ''
-        }
+        },
+        'VERIFIED_EMAIL': False,
+        'LOCAL_DOMAINS': ['localhost'],
     }
 }
 
-LOGIN_REDIRECT_URL = 'index'
 
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'

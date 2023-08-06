@@ -5,6 +5,7 @@
 @import url("course-detail.css");
 @import url("wrapper-form.css");
 @import url("management.css");
+@import url("media.css");
 
 [type="selectable"] {
   background-color: cyan;

@@ -346,7 +346,7 @@ backdrop-filter: blur(1px) invert(30%);
  height: calc(100vh - 50px);
 }
 .mainpage-detail-shortdes{
-color:black;
+color: #5a5a5a;
 font-size: 25px;
 font-family: 'Jost-Medium';
 max-width:1000px;

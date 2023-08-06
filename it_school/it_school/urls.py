@@ -43,6 +43,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('sDgT6wR7AaZbF4xU9gBcX0hJkL3qPmV6aWnD8eR9dYfU3kK1rN3sP0mCpJ5dG6h/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
     path('api/', include('restapi.urls')),
     path('', include('registration.urls')),
     path('management/', include('management.urls')),
@@ -55,7 +56,6 @@ urlpatterns = [
     re_path(r'^chat/(?P<room_name>\w+)/$', chat_room, name='chat_room'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    path('accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:
