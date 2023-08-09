@@ -55,13 +55,14 @@ def register_view(request):
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
-        password = request.POST.get('password')
+        password = request.POST.get('password1')
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             messages.success(request, 'Вы успешно авторизованы.')
             redirect_url = request.META.get('HTTP_REFERER')
         else:
+            print("Form:", username, password)
             error_message = 'Некорректные введеные данные'
             params = {'error_message': 'Некорректные введеные данные', 'style': 'display :flex;'}
             redirect_url = request.META.get('HTTP_REFERER')
