@@ -21,13 +21,14 @@
     font-size: 35px;
     }
     .mainpage-detail-shortdes {
-    font-size: 20px;
+    font-size: 15px;
     }
     .t-list-skills {
     width: 90%;
     height: 320px;
     display: inline-block;
     font-size: 15px;
+    margin-left: 0px;
     }
     .courses-filter-wrapper{
     width: 100vw;
@@ -54,6 +55,10 @@
     .g-list-unit h1{
     font-size: 25px;
     text-align: center;
+    }
+    .t-container {
+    width: 80%;
+    height: max-content;
     }
 }
 @media only screen and (min-width: 1440px) {

@@ -30,7 +30,7 @@ def register_view(request):
         form = RegisterUserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            redirect_url = request.GET.get('next', '/')
+            redirect_url = request.META.get('HTTP_REFERER')
             subject = 'Регистрация успешна'
             html_message = render_to_string('email_templates/registration_confirmation.html', {'user': user})
             plain_message = strip_tags(html_message)
@@ -41,7 +41,7 @@ def register_view(request):
             auth_user = authenticate(request, username=user.username, password=form.cleaned_data['password'])
             if auth_user:
                 login(request, auth_user)
-                return redirect(redirect_url)
+                return HttpResponseRedirect(redirect_url)
         else:
             # Если форма неверна, поля не будут опустошаться
             error_message = 'Некорректные данные при регистрации'

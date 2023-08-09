@@ -40,7 +40,7 @@ color: aliceblue;
 }
 .courses-list-wrapper{
 display: flex;
-width: 80%;
+width: 100%;
 height: 100%;
 align-items: center;
 justify-content: center;
@@ -150,6 +150,7 @@ height: 100%;
   z-index: -1;
   transform: rotate(30deg);
   opacity: 0.3;
+  filter: blur(1px);
 }
 .courses-control-btn{
 display: flex;

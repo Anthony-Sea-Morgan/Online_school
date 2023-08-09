@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_summernote',
@@ -56,14 +55,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'chat',
     'django_celery_beat',
-
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    #'allauth.socialaccount.providers.telegram',
-    #'allauth.socialaccount.providers.vk',
-
 ]
 
 SWAGGER_SETTINGS = {
@@ -162,7 +153,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 REST_FRAMEWORK = {
@@ -241,23 +231,6 @@ LOGGING = {
         'level': 'INFO',
     },
 }
-SITE_ID = 1
-LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/accounts/google/login/callback/'
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'},
-        'APP': {
-            'client_id': '101488920732-4g7s79jqsmvfmmmt039olkuv0t936e14.apps.googleusercontent.com',
-            'secret': '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',
-            'key': ''
-        },
-        'VERIFIED_EMAIL': False,
-        'LOCAL_DOMAINS': ['localhost'],
-    }
-}
-
 
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
@@ -279,3 +252,4 @@ CELERY_BEAT_SCHEDULE = {
 CELERY_TASK_ALWAYS_EAGER = True
 CELERY_TASK_EAGER_PROPAGATES = True
 
+LOGIN_REDIRECT_URL = '/'

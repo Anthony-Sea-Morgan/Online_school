@@ -1,6 +1,5 @@
 from django.urls import include, path, re_path
 from . import views
-from allauth.account.views import LoginView
 from djoser import views as djoser_views
 from djoser import urls as djoser_urls
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
