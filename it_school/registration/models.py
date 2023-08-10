@@ -22,7 +22,7 @@ class CustomUser(AbstractUser):
 
     def save(self, *args, **kwargs):
         if not self.username:
-            self.username = f"{self.first_name.lower()} {self.last_name.lower()}"
+            self.username = f"{self.email}"
         super().save(*args, **kwargs)
     def __str__(self):
         return self.username
