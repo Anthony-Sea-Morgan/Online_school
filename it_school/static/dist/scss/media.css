@@ -1,7 +1,66 @@
 @media only screen and (min-width: 960px) {
   /* styles for browsers larger than 960px; */
-}
 
+}
+@media only screen and (max-width: 960px) {
+  /* styles for mobile browsers smaller than 480px; (iPhone) */
+    .mainpage-detail-img {
+    width: 500px;
+    height: 500px;
+    bottom: -140px;
+    right: -200px;
+    background-position: -185px -100px;
+    top: auto;
+    border: 35px solid #fffffff0;
+    }
+    .course-detail-content {
+    width: 80%;
+    padding-left: 10%;
+    }
+    .course-detail-title h2 {
+    font-size: 35px;
+    }
+    .mainpage-detail-shortdes {
+    font-size: 15px;
+    }
+    .t-list-skills {
+    width: 90%;
+    height: 320px;
+    display: inline-block;
+    font-size: 15px;
+    margin-left: 0px;
+    }
+    .courses-filter-wrapper{
+    width: 100vw;
+    height: max-content;
+    position: relative;
+    top: 0;
+    }
+    .personal-calendar-align{
+    width: 100%;
+    }
+    .courses-base{
+    width: 100% !important;
+    left: 0px !important;
+    display: block !important;
+    }
+    .wrapper-blank{
+    max-width: 80% !important;
+    min-width: 0px;
+    }
+    .g-list-unit {
+    width: 80%;
+    margin-left:0;
+    }
+    .g-list-unit h1{
+    font-size: 25px;
+    text-align: center;
+    }
+    .t-container {
+    width: 80%;
+    height: max-content;
+    }
+}
 @media only screen and (min-width: 1440px) {
   /* styles for browsers larger than 1440px; */
 }

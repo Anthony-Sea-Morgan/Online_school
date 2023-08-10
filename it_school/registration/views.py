@@ -19,7 +19,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import send_mail
-
+from .forms import RegisterUserForm
 from django.shortcuts import render
 from django.utils import timezone
 
@@ -27,28 +27,28 @@ from django.utils import timezone
 @csrf_protect
 def register_view(request):
     if request.method == 'POST':
-        serializer = UserSerializer(data=request.POST)
-        if serializer.is_valid():
-            serializer.save()
-            user = serializer.save()
-            redirect_url = request.GET.get('next', '/')
+        form = RegisterUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            redirect_url = request.META.get('HTTP_REFERER')
             subject = 'Регистрация успешна'
             html_message = render_to_string('email_templates/registration_confirmation.html', {'user': user})
             plain_message = strip_tags(html_message)
-            from_email = 'norepy.onlinecourses@gmail.com'
+            from_email = 'noreply.onlinecourses@gmail.com'
             to_email = user.email
             send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
             # Авторизация пользователя
-            auth_user = authenticate(request, username=user.username, password=request.POST['password'])
+            auth_user = authenticate(request, username=user.username, password=form.cleaned_data['password'])
             if auth_user:
                 login(request, auth_user)
-                return redirect(redirect_url)
-
-        error_message = serializer.errors.get('password')[0] if serializer.errors.get(
-            'password') else 'Некорректно введенные данные'
-        return render(request, 'registration.html', {'error_message': error_message})
+                return HttpResponseRedirect(redirect_url)
+        else:
+            # Если форма неверна, поля не будут опустошаться
+            error_message = 'Некорректные данные при регистрации'
+            return render(request, 'registration.html', {'form': form, 'error_message': error_message})
     else:
-        return render(request, 'registration.html')
+        form = RegisterUserForm()
+    return render(request, 'registration.html', {'form': form})
 
 
 @csrf_protect
@@ -60,14 +60,14 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'Вы успешно авторизованы.')
-            redirect_url = request.GET.get('next', '/')
+            redirect_url = request.META.get('HTTP_REFERER')
         else:
             error_message = 'Некорректные введеные данные'
             params = {'error_message': 'Некорректные введеные данные', 'style': 'display :flex;'}
-            redirect_url = request.GET.get('next', '/')
+            redirect_url = request.META.get('HTTP_REFERER')
             return HttpResponseRedirect(f'{redirect_url}?error_message={error_message}&style=display:flex;')
 
-        return redirect(redirect_url)
+        return HttpResponseRedirect(redirect_url)
 
 
 @login_required

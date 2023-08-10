@@ -1,6 +1,4 @@
-
 let pieceDetail = ['╳','▷','☐','│','○','●','◣']
-
 function createDetailPiece() {
   const piece = document.createElement('div');
   piece.classList.add('mainpage-detail-texture');
@@ -21,16 +19,25 @@ const detailPieces = document.querySelectorAll('.mainpage-detail-texture');
 
 
 detailPieces.forEach(piece => {
-  const randomX = Math.floor(Math.random() *  (containerWidth/1.8));
+let randomX;
+if (containerWidth <= 1000){
+  randomX = Math.floor(Math.random() *  (containerWidth));
+  } else{
+  randomX = Math.floor(Math.random() *  (containerWidth /1.8));
+  }
   const randomY = Math.floor(Math.random() *  (containerHeight));
-
   piece.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${Math.random()*360}deg)`;
   piece.style.fontSize = `${Math.floor((Math.random()%10+5)*10)}px`;
 });
 
 function movePiecesSlowly() {
   detailPieces.forEach(piece => {
-    const randomX = Math.floor(Math.random() * (containerWidth / 1.8));
+let randomX;
+if (containerWidth <= 1000){
+  randomX = Math.floor(Math.random() *  (containerWidth));
+  } else{
+  randomX = Math.floor(Math.random() *  (containerWidth /1.8));
+  }
     const randomY = Math.floor(Math.random() * containerHeight);
     const randomRotation = Math.random() * 360;
 
