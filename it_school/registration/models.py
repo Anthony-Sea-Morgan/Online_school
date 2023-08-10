@@ -14,13 +14,16 @@ class CustomUser(AbstractUser):
                                      default=[])  # список курсов к которому у порльзователя имеется доступ
     groups = models.ManyToManyField('mainpage.CustomGroup', blank=True, related_name='customuser_set')
     user_permissions = models.ManyToManyField('auth.Permission', blank=True, related_name='customuser_set')
-    phone_number = PhoneNumberField(null=False, blank=False, unique=False)  # телефонный номер с проверкой
+    phone_number = PhoneNumberField(null=False, blank=False, unique=True)  # телефонный номер с проверкой
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
 
-
+    def save(self, *args, **kwargs):
+        if not self.username:
+            self.username = f"{self.first_name.lower()} {self.last_name.lower()}"
+        super().save(*args, **kwargs)
     def __str__(self):
         return self.username
 

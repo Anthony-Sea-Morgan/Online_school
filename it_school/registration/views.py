@@ -30,7 +30,7 @@ def register_view(request):
         form = RegisterUserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            redirect_url = request.META.get('HTTP_REFERER')
+            redirect_url = 'index'
             subject = 'Регистрация успешна'
             html_message = render_to_string('email_templates/registration_confirmation.html', {'user': user})
             plain_message = strip_tags(html_message)
@@ -38,17 +38,17 @@ def register_view(request):
             to_email = user.email
             send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
             # Авторизация пользователя
-            auth_user = authenticate(request, username=user.username, password=form.cleaned_data['password'])
+            auth_user = authenticate(request, username=user.username, password=form.cleaned_data['password1'])
             if auth_user:
                 login(request, auth_user)
-                return HttpResponseRedirect(redirect_url)
-        else:
-            # Если форма неверна, поля не будут опустошаться
-            error_message = 'Некорректные данные при регистрации'
-            return render(request, 'registration.html', {'form': form, 'error_message': error_message})
+                return redirect(redirect_url)
+        # Если форма неверна, поля не будут опустошаться
+        print("Form errors:", form.errors)
+        error_message = 'Некорректные данные при регистрации'
+        return render(request, 'registration.html', {'form': form, 'error_message': error_message})
     else:
         form = RegisterUserForm()
-    return render(request, 'registration.html', {'form': form})
+        return render(request, 'registration.html', {'form': form})
 
 
 @csrf_protect
